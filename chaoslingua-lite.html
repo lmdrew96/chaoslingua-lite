@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ChaosLingua Lite — Latin Drills</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Space+Grotesk:wght@400;500;600&family=Geist+Mono:wght@400&display=swap');
+
+:root {
+  --color-mauve:       #CB96BA;
+  --color-bluebell:    #B0B3D6;
+  --color-venus:       #E0E4E7;
+  --color-beryl:       #D0DDC4;
+  --color-duckegg:     #9BBCAC;
+  --color-forest:      #77A39A;
+
+  --color-teal-deep:   #4A6B62;
+  --color-purple:      #6A6A99;
+  --color-gold:        var(--color-mauve);
+  --color-mint:        var(--color-duckegg);
+  --color-green:       var(--color-beryl);
+  --color-lavender:    var(--color-bluebell);
+  --color-surface:     var(--color-venus);
+  --color-ink:         #2B2233;
+  --color-white:       #FFFFFF;
+  --color-mauve-deep:  #8C5678;
+  --color-mauve-tint:  #F3E4EE;
+  --color-beryl-deep:  #3E5230;
+
+  --font-display:  'Fraunces', Georgia, serif;
+  --font-body:     'Space Grotesk', system-ui, sans-serif;
+  --font-mono:     'Geist Mono', 'Fira Code', monospace;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  background-color: var(--color-surface);
+  color: var(--color-ink);
+  font-size: 18px;
+  line-height: 1.56;
+}
+
+.wrap {
+  max-width: 620px;
+  margin: 0 auto;
+  padding: 32px 20px 64px;
+}
+
+h1, h2, h3 {
+  font-family: var(--font-display);
+  font-variation-settings: 'SOFT' 0, 'WONK' 1;
+  color: var(--color-ink);
+  line-height: 1.1;
+  margin: 0;
+}
+
+h1 { font-size: 2rem; font-weight: 600; }
+h2 { font-size: 1.4rem; font-weight: 500; margin-bottom: 4px; }
+
+.subtitle {
+  font-size: 0.95rem;
+  color: var(--color-teal-deep);
+  margin-top: 6px;
+}
+
+.card {
+  background: var(--color-white);
+  border-radius: 24px;
+  box-shadow: 0px 1px 1.5px rgba(0,0,0,0.10), 0px 1px 1px rgba(0,0,0,0.10);
+  padding: 28px;
+  margin-top: 24px;
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border-radius: 9999px;
+  padding: 6px 14px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  background: var(--color-lavender);
+  color: var(--color-ink);
+}
+
+.top-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.stats {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 16px;
+}
+
+.stat {
+  background: var(--color-surface);
+  border-radius: 16px;
+  padding: 10px 16px;
+  font-size: 0.85rem;
+  color: var(--color-teal-deep);
+  font-weight: 500;
+}
+
+.stat b { color: var(--color-ink); font-family: var(--font-mono); font-weight: 400; }
+
+.drill-type-label {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-purple);
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.prompt {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-variation-settings: 'SOFT' 0, 'WONK' 1;
+  margin: 14px 0 20px;
+  color: var(--color-ink);
+}
+
+.prompt .latin { color: var(--color-teal-deep); }
+
+.options {
+  display: grid;
+  gap: 10px;
+}
+
+.option-btn {
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 1rem;
+  text-align: left;
+  border-radius: 16px;
+  padding: 14px 18px;
+  border: 2px solid var(--color-lavender);
+  background: var(--color-white);
+  cursor: pointer;
+  transition: opacity 0.15s ease, border-color 0.15s ease;
+}
+
+.option-btn:hover:not(:disabled) { border-color: var(--color-purple); }
+
+.option-btn.correct {
+  background: var(--color-green);
+  border-color: var(--color-green);
+  color: var(--color-ink);
+}
+
+.option-btn.incorrect {
+  background: var(--color-mauve-tint);
+  border-color: var(--color-mauve-deep);
+  color: var(--color-ink);
+}
+
+.option-btn:disabled { cursor: default; opacity: 0.75; }
+.option-btn:disabled.correct, .option-btn:disabled.incorrect { opacity: 1; }
+
+.text-input-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+input[type="text"] {
+  flex: 1;
+  min-width: 180px;
+  font-family: var(--font-mono);
+  font-size: 1.05rem;
+  padding: 12px 16px;
+  border-radius: 16px;
+  border: 2px solid var(--color-lavender);
+  background: var(--color-surface);
+  color: var(--color-ink);
+}
+
+input[type="text"]:focus {
+  outline: none;
+  border-color: var(--color-purple);
+}
+
+.btn {
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 1rem;
+  border-radius: 9999px;
+  padding: 12px 24px;
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+}
+
+.btn:hover { opacity: 0.88; }
+.btn:disabled { opacity: 0.5; cursor: default; }
+
+.btn-primary   { background: var(--color-gold);      color: var(--color-ink); }
+.btn-secondary { background: var(--color-teal-deep); color: var(--color-surface); }
+.btn-ghost     { background: var(--color-lavender);  color: var(--color-ink); }
+
+.feedback {
+  margin-top: 16px;
+  padding: 14px 18px;
+  border-radius: 16px;
+  font-size: 0.98rem;
+  display: none;
+}
+
+.feedback.show { display: block; }
+.feedback.good { background: var(--color-beryl); color: var(--color-beryl-deep); }
+.feedback.bad  { background: var(--color-mauve-tint); color: var(--color-mauve-deep); }
+
+.footer-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 22px;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.progress-track {
+  height: 6px;
+  border-radius: 9999px;
+  background: var(--color-lavender);
+  overflow: hidden;
+  margin-top: 20px;
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--color-gold);
+  border-radius: 9999px;
+  transition: width 0.2s ease;
+}
+
+.reset-link {
+  font-size: 0.8rem;
+  color: var(--color-teal-deep);
+  text-decoration: underline;
+  cursor: pointer;
+  background: none;
+  border: none;
+  font-family: var(--font-body);
+  padding: 0;
+}
+
+.loading { color: var(--color-teal-deep); font-size: 0.9rem; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top-row">
+    <div>
+      <h1>ChaosLingua Lite</h1>
+      <div class="subtitle">Wheelock's Ch. 1 — present active, amāre &amp; monēre</div>
+    </div>
+    <span class="pill" id="streak-pill">🔥 0 streak</span>
+  </div>
+
+  <div class="stats" id="stats-row">
+    <div class="stat">Attempted: <b id="stat-attempted">0</b></div>
+    <div class="stat">Correct: <b id="stat-correct">0</b></div>
+    <div class="stat">Accuracy: <b id="stat-accuracy">—</b></div>
+  </div>
+
+  <div class="card">
+    <div class="drill-type-label" id="drill-label">Loading…</div>
+    <div class="prompt" id="prompt-area" class="loading">Setting up your drill session…</div>
+
+    <div id="options-area" class="options"></div>
+
+    <div id="text-input-area" style="display:none;" class="text-input-row">
+      <input type="text" id="text-answer" placeholder="Type your answer" autocomplete="off" spellcheck="false">
+      <button class="btn btn-primary" id="submit-text-btn">Check</button>
+    </div>
+
+    <div class="feedback" id="feedback"></div>
+
+    <div class="progress-track"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+
+    <div class="footer-row">
+      <button class="reset-link" id="reset-btn">Reset progress</button>
+      <button class="btn btn-secondary" id="next-btn" style="display:none;">Next drill →</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const conjugations = {
+  amare: {
+    stem: 'amā', stem1: 'am', vowel: 'ā', gloss: 'love',
+    forms: {
+      '1sg': 'amō', '2sg': 'amās', '3sg': 'amat',
+      '1pl': 'amāmus', '2pl': 'amātis', '3pl': 'amant'
+    },
+    imperativeSg: 'amā', imperativePl: 'amāte'
+  },
+  monere: {
+    stem: 'monē', stem1: 'mon', vowel: 'ē', gloss: 'warn, advise',
+    forms: {
+      '1sg': 'moneō', '2sg': 'monēs', '3sg': 'monet',
+      '1pl': 'monēmus', '2pl': 'monētis', '3pl': 'monent'
+    },
+    imperativeSg: 'monē', imperativePl: 'monēte'
+  }
+};
+
+const personLabels = {
+  '1sg': 'I', '2sg': 'you (sg.)', '3sg': 'he/she/it',
+  '1pl': 'we', '2pl': 'you (pl.)', '3pl': 'they'
+};
+
+const englishFor = (verbKey, person) => {
+  const gloss = conjugations[verbKey].gloss.split(',')[0].trim();
+  const base = { '1sg': 'I', '2sg': 'you', '3sg': 'he/she/it', '1pl': 'we', '2pl': 'you (all)', '3pl': 'they' }[person];
+  const verbForm = (person === '3sg') ? gloss + 's' : gloss;
+  return base + ' ' + verbForm;
+};
+
+const persons = ['1sg','2sg','3sg','1pl','2pl','3pl'];
+const verbKeys = ['amare','monere'];
+
+function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+function shuffle(arr) { const a = [...arr]; for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i+1)); [a[i],a[j]] = [a[j],a[i]]; } return a; }
+
+const DRILL_TYPES = ['conjugate_mc', 'translate_latin_mc', 'translate_english_type', 'identify_person_mc'];
+
+let session = { attempted: 0, correct: 0, streak: 0, sessionsGoal: 12, current: null };
+
+function makeDrill() {
+  const type = pick(DRILL_TYPES);
+  const verbKey = pick(verbKeys);
+  const person = pick(persons);
+  const verb = conjugations[verbKey];
+  const correctForm = verb.forms[person];
+
+  if (type === 'conjugate_mc') {
+    const wrongPersons = shuffle(persons.filter(p => p !== person)).slice(0, 3);
+    const options = shuffle([correctForm, ...wrongPersons.map(p => verb.forms[p])]);
+    return {
+      type, label: 'Conjugate',
+      prompt: `Give the Latin form for <span class="latin">${personLabels[person]}</span> — ${verb.gloss.split(',')[0]} (${verbKey === 'amare' ? '1st' : '2nd'} conj.)`,
+      options, answer: correctForm
+    };
+  }
+
+  if (type === 'translate_latin_mc') {
+    const otherVerb = verbKey === 'amare' ? 'monere' : 'amare';
+    const wrongEnglish = shuffle([
+      englishFor(verbKey, pick(persons.filter(p => p !== person))),
+      englishFor(otherVerb, person),
+      englishFor(otherVerb, pick(persons.filter(p => p !== person)))
+    ]);
+    const options = shuffle([englishFor(verbKey, person), ...wrongEnglish]);
+    return {
+      type, label: 'Translate to English',
+      prompt: `<span class="latin">${correctForm}</span>`,
+      options, answer: englishFor(verbKey, person)
+    };
+  }
+
+  if (type === 'translate_english_type') {
+    return {
+      type, label: 'Translate to Latin (type it)',
+      prompt: `"${englishFor(verbKey, person)}" — ${verb.gloss.split(',')[0]} (${verbKey === 'amare' ? '1st' : '2nd'} conj.)`,
+      answer: correctForm,
+      accept: [correctForm, correctForm.replace(/ā/g,'a').replace(/ē/g,'e')]
+    };
+  }
+
+  if (type === 'identify_person_mc') {
+    const wrongPersons = shuffle(persons.filter(p => p !== person)).slice(0, 3);
+    const options = shuffle([person, ...wrongPersons]).map(p => personLabels[p]);
+    return {
+      type, label: 'Identify the person',
+      prompt: `Who does <span class="latin">${correctForm}</span> refer to?`,
+      options, answer: personLabels[person]
+    };
+  }
+}
+
+const promptEl = document.getElementById('prompt-area');
+const optionsEl = document.getElementById('options-area');
+const textAreaEl = document.getElementById('text-input-area');
+const textInputEl = document.getElementById('text-answer');
+const submitTextBtn = document.getElementById('submit-text-btn');
+const feedbackEl = document.getElementById('feedback');
+const nextBtn = document.getElementById('next-btn');
+const resetBtn = document.getElementById('reset-btn');
+const labelEl = document.getElementById('drill-label');
+const progressFill = document.getElementById('progress-fill');
+const streakPill = document.getElementById('streak-pill');
+
+function updateStats() {
+  document.getElementById('stat-attempted').textContent = session.attempted;
+  document.getElementById('stat-correct').textContent = session.correct;
+  document.getElementById('stat-accuracy').textContent = session.attempted ? Math.round(100 * session.correct / session.attempted) + '%' : '—';
+  streakPill.textContent = '🔥 ' + session.streak + ' streak';
+  const pct = Math.min(100, Math.round(100 * session.attempted / session.sessionsGoal));
+  progressFill.style.width = pct + '%';
+}
+
+async function saveProgress() {
+  try {
+    await window.storage.set('chaoslingua-lite-progress', JSON.stringify({
+      attempted: session.attempted, correct: session.correct, streak: session.streak
+    }));
+  } catch (e) { console.error('save failed', e); }
+}
+
+async function loadProgress() {
+  try {
+    const res = await window.storage.get('chaoslingua-lite-progress');
+    if (res && res.value) {
+      const d = JSON.parse(res.value);
+      session.attempted = d.attempted || 0;
+      session.correct = d.correct || 0;
+      session.streak = d.streak || 0;
+    }
+  } catch (e) {}
+  updateStats();
+}
+
+function renderDrill() {
+  const d = makeDrill();
+  session.current = d;
+  labelEl.textContent = d.label;
+  promptEl.innerHTML = d.prompt;
+  feedbackEl.className = 'feedback';
+  feedbackEl.textContent = '';
+  nextBtn.style.display = 'none';
+
+  if (d.type === 'translate_english_type') {
+    optionsEl.style.display = 'none';
+    textAreaEl.style.display = 'flex';
+    textInputEl.value = '';
+    textInputEl.disabled = false;
+    submitTextBtn.disabled = false;
+    setTimeout(() => textInputEl.focus(), 50);
+  } else {
+    textAreaEl.style.display = 'none';
+    optionsEl.style.display = 'grid';
+    optionsEl.innerHTML = '';
+    d.options.forEach(opt => {
+      const btn = document.createElement('button');
+      btn.className = 'option-btn';
+      btn.innerHTML = opt;
+      btn.onclick = () => handleAnswer(opt === d.answer, btn);
+      optionsEl.appendChild(btn);
+    });
+  }
+}
+
+function handleAnswer(isCorrect, chosenBtn) {
+  session.attempted++;
+  if (isCorrect) { session.correct++; session.streak++; } else { session.streak = 0; }
+  updateStats();
+  saveProgress();
+
+  if (optionsEl.style.display !== 'none') {
+    Array.from(optionsEl.children).forEach(btn => {
+      btn.disabled = true;
+      if (btn.innerHTML === session.current.answer) btn.classList.add('correct');
+      else if (btn === chosenBtn) btn.classList.add('incorrect');
+    });
+  }
+
+  feedbackEl.className = 'feedback show ' + (isCorrect ? 'good' : 'bad');
+  feedbackEl.textContent = isCorrect ? 'Recte! Correct.' : `Not quite — correct answer: ${session.current.answer}`;
+  nextBtn.style.display = 'inline-flex';
+}
+
+submitTextBtn.onclick = () => {
+  const raw = textInputEl.value.trim();
+  const accept = session.current.accept.map(a => a.toLowerCase());
+  const isCorrect = accept.includes(raw.toLowerCase());
+  textInputEl.disabled = true;
+  submitTextBtn.disabled = true;
+  handleAnswer(isCorrect, null);
+};
+
+textInputEl.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && !submitTextBtn.disabled) submitTextBtn.click();
+});
+
+nextBtn.onclick = renderDrill;
+
+resetBtn.onclick = async () => {
+  session.attempted = 0; session.correct = 0; session.streak = 0;
+  updateStats();
+  await saveProgress();
+  renderDrill();
+};
+
+(async function init() {
+  await loadProgress();
+  renderDrill();
+})();
+</script>
+</body>
+</html>
