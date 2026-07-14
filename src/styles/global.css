@@ -118,6 +118,9 @@ h2 { font-size: 1.4rem; font-weight: 500; margin-bottom: 4px; }
   font-size: 0.9rem;
   border-radius: 9999px;
   padding: 8px 18px;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
   border: 2px solid var(--color-lavender);
   background: var(--color-white);
   color: var(--color-ink);
@@ -151,14 +154,19 @@ h2 { font-size: 1.4rem; font-weight: 500; margin-bottom: 4px; }
 
 .learn-section summary::marker { color: var(--color-purple); }
 
+.table-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin-top: 14px;
+}
+
+.table-scroll + .table-scroll { margin-top: 24px; }
+
 .learn-table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 14px;
   font-size: 0.95rem;
 }
-
-.learn-table + .learn-table { margin-top: 24px; }
 
 .learn-table caption {
   text-align: left;
@@ -352,7 +360,10 @@ input[type="text"]:focus {
   background: none;
   border: none;
   font-family: var(--font-body);
-  padding: 0;
+  padding: 10px 4px;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
 }
 
 .loading { color: var(--color-teal-deep); font-size: 0.9rem; }
