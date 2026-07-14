@@ -11,7 +11,7 @@ function App() {
       <div className="top-row">
         <div>
           <h1>ChaosLingua Lite</h1>
-          <div className="subtitle">Wheelock's Ch. 1 — present active &amp; imperative, amāre &amp; monēre</div>
+          <div className="subtitle">Wheelock's Ch. 1-2 — present active &amp; imperative verbs; 1st declension nouns</div>
         </div>
         <StreakPill streak={stats.streak} />
       </div>
