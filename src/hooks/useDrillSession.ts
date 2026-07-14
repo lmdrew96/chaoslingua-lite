@@ -13,7 +13,7 @@ export interface SessionStats {
 const SESSION_GOAL = 12;
 const ZERO_STATS: SessionStats = { attempted: 0, correct: 0, streak: 0 };
 
-export function useDrillSession() {
+export function useDrillSession(chapters: Set<number>, types: Set<string>) {
   const progress = useQuery(api.progress.getProgress);
   const saveProgress = useMutation(api.progress.saveProgress);
 
@@ -25,9 +25,9 @@ export function useDrillSession() {
     if (progress && !hydrated.current) {
       hydrated.current = true;
       setStats({ attempted: progress.attempted, correct: progress.correct, streak: progress.streak });
-      setCurrent(makeDrill());
+      setCurrent(makeDrill({ chapters, types }));
     }
-  }, [progress]);
+  }, [progress, chapters, types]);
 
   const handleAnswer = (isCorrect: boolean) => {
     const next: SessionStats = {
@@ -39,12 +39,12 @@ export function useDrillSession() {
     void saveProgress(next);
   };
 
-  const nextDrill = () => setCurrent(makeDrill());
+  const nextDrill = () => setCurrent(makeDrill({ chapters, types }));
 
   const reset = () => {
     setStats(ZERO_STATS);
     void saveProgress(ZERO_STATS);
-    setCurrent(makeDrill());
+    setCurrent(makeDrill({ chapters, types }));
   };
 
   return {

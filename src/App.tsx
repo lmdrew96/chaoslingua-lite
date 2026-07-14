@@ -1,15 +1,18 @@
 import { useState } from 'react';
 import { useDrillSession } from './hooks/useDrillSession';
+import { usePracticeFilter } from './hooks/usePracticeFilter';
 import { StatsRow } from './components/StatsRow';
 import { StreakPill } from './components/StreakPill';
 import { DrillCard } from './components/DrillCard';
 import { LearnView } from './components/LearnView';
+import { PracticeFilter } from './components/PracticeFilter';
 
 type View = 'drill' | 'learn';
 
 function App() {
   const [view, setView] = useState<View>('drill');
-  const { loading, stats, current, sessionGoal, handleAnswer, nextDrill, reset } = useDrillSession();
+  const { chapters, types, toggleChapter, toggleType, resetFilter } = usePracticeFilter();
+  const { loading, stats, current, sessionGoal, handleAnswer, nextDrill, reset } = useDrillSession(chapters, types);
 
   return (
     <div className="wrap">
@@ -40,6 +43,13 @@ function App() {
         <LearnView />
       ) : (
         <>
+          <PracticeFilter
+            chapters={chapters}
+            types={types}
+            onToggleChapter={toggleChapter}
+            onToggleType={toggleType}
+            onReset={resetFilter}
+          />
           <StatsRow attempted={stats.attempted} correct={stats.correct} />
 
           {loading || !current ? (
