@@ -10,6 +10,7 @@
 
 import type * as attempts from "../attempts.js";
 import type * as progress from "../progress.js";
+import type * as users from "../users.js";
 
 import type {
   ApiFromModules,
@@ -20,6 +21,7 @@ import type {
 declare const fullApi: ApiFromModules<{
   attempts: typeof attempts;
   progress: typeof progress;
+  users: typeof users;
 }>;
 
 /**

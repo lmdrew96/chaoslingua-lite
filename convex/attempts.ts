@@ -3,6 +3,7 @@ import { v } from "convex/values";
 
 export const logTutoringAttempt = mutation({
   args: {
+    userId: v.id("users"),
     drillType: v.string(),
     chapter: v.number(),
     correct: v.boolean(),
@@ -13,9 +14,12 @@ export const logTutoringAttempt = mutation({
 });
 
 export const getWeakAreas = query({
-  args: {},
-  handler: async (ctx) => {
-    const attempts = await ctx.db.query("attempts").collect();
+  args: { userId: v.id("users") },
+  handler: async (ctx, args) => {
+    const attempts = await ctx.db
+      .query("attempts")
+      .withIndex("by_user", (q) => q.eq("userId", args.userId))
+      .collect();
 
     const byDrillType = new Map<string, { chapter: number; attempted: number; correct: number }>();
     for (const a of attempts) {
