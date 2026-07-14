@@ -7,13 +7,23 @@ interface PracticeFilterProps {
   onToggleChapter: (chapter: number) => void;
   onToggleType: (label: string) => void;
   onReset: () => void;
+  weakSpotsAvailable: boolean;
+  onFocusWeakSpots: (() => void) | null;
 }
 
 function summarize(size: number, total: number, allLabel: string, unit: string): string {
   return size === total ? allLabel : `${size}/${total} ${unit}`;
 }
 
-export function PracticeFilter({ chapters, types, onToggleChapter, onToggleType, onReset }: PracticeFilterProps) {
+export function PracticeFilter({
+  chapters,
+  types,
+  onToggleChapter,
+  onToggleType,
+  onReset,
+  weakSpotsAvailable,
+  onFocusWeakSpots,
+}: PracticeFilterProps) {
   const [open, setOpen] = useState(false);
 
   const chapterSummary = summarize(chapters.size, CHAPTERS.length, 'All chapters', 'chapters');
@@ -71,13 +81,29 @@ export function PracticeFilter({ chapters, types, onToggleChapter, onToggleType,
             </div>
           )}
 
+          {onFocusWeakSpots && !weakSpotsAvailable && (
+            <p className="filter-hint">Keep practicing — weak-spot tracking needs a few more logged attempts.</p>
+          )}
+
           <div className="filter-footer">
             <p className="filter-hint">Applies to your next drill.</p>
-            {isNarrowed && (
-              <button type="button" className="reset-link" onClick={onReset}>
-                Reset filter
-              </button>
-            )}
+            <div className="filter-footer-actions">
+              {onFocusWeakSpots && (
+                <button
+                  type="button"
+                  className="btn btn-ghost"
+                  disabled={!weakSpotsAvailable}
+                  onClick={onFocusWeakSpots}
+                >
+                  🎯 Focus on weak spots
+                </button>
+              )}
+              {isNarrowed && (
+                <button type="button" className="reset-link" onClick={onReset}>
+                  Reset filter
+                </button>
+              )}
+            </div>
           </div>
         </div>
       )}

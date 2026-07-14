@@ -218,6 +218,17 @@ h2 { font-size: 1.4rem; font-weight: 500; margin-bottom: 4px; }
   flex-wrap: wrap;
 }
 
+.filter-footer-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.account-panel {
+  margin-top: 16px;
+}
+
 .filter-hint {
   font-size: 0.8rem;
   color: var(--color-teal-deep);

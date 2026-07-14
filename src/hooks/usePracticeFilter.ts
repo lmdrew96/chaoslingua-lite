@@ -64,5 +64,15 @@ export function usePracticeFilter() {
     persist(allChapters, allTypes);
   };
 
-  return { chapters, types, toggleChapter, toggleType, resetFilter };
+  // Bulk-replace the whole selection at once — used by "focus on weak spots" rather
+  // than toggle-by-toggle, since that always has an exact target combination in mind.
+  const applyFilter = (nextChapters: number[], nextTypes: string[]) => {
+    const chaptersSet = new Set(nextChapters.length ? nextChapters : CHAPTERS);
+    const typesSet = new Set(nextTypes.length ? nextTypes : ALL_LABELS);
+    setChapters(chaptersSet);
+    setTypes(typesSet);
+    persist(chaptersSet, typesSet);
+  };
+
+  return { chapters, types, toggleChapter, toggleType, resetFilter, applyFilter };
 }
