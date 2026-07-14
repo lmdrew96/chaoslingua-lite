@@ -31,7 +31,10 @@ import {
 
 export type Gender = 'm' | 'f';
 
-const secondDeclensionEndings: Record<GNumber, Record<Case, string>> = {
+// Exported so Ch.4 can build the neuter endings table by overriding just nom/acc
+// (gen/dat/abl are identical between 2nd declension masc. and neuter) instead of
+// re-typing the shared endings.
+export const secondDeclensionEndings: Record<GNumber, Record<Case, string>> = {
   sg: { nom: 'us', gen: 'ī', dat: 'ō', acc: 'um', abl: 'ō' },
   pl: { nom: 'ī', gen: 'ōrum', dat: 'īs', acc: 'ōs', abl: 'īs' },
 };

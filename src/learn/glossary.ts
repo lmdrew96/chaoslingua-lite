@@ -12,7 +12,7 @@ export const glossary: GlossaryTerm[] = [
   {
     term: 'Declension',
     definition:
-      'The pattern of case endings a Latin noun follows. Nouns fall into five declensions; porta/portae (1st declension) is the pattern covered so far.',
+      'The pattern of case endings a Latin noun follows. Nouns fall into five declensions; 1st (porta/portae) and 2nd (amicus/amicī, donum/donī) are the patterns covered so far.',
   },
   {
     term: 'Case',
@@ -50,5 +50,10 @@ export const glossary: GlossaryTerm[] = [
     term: 'Agreement',
     definition:
       "An adjective's endings must match the noun it describes in case, number, and gender — but not necessarily in declension. A masculine noun that declines like a 1st declension noun (e.g. nauta, \"sailor\") still takes masculine (2nd declension) adjective endings, because agreement follows gender, not the noun's own pattern.",
+  },
+  {
+    term: 'Predicate nominative',
+    definition:
+      'A noun or adjective linked to the subject by sum ("to be") instead of describing an action. It agrees with the subject in the nominative case — not the accusative, even though most other verbs take an accusative object. "Puella est bona" (the girl is good): bona is nominative, agreeing with puella, not a direct object.',
   },
 ];

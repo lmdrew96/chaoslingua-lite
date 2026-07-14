@@ -16,7 +16,7 @@ function App() {
       <div className="top-row">
         <div>
           <h1>ChaosLingua Lite</h1>
-          <div className="subtitle">Wheelock's Ch. 1-3 — verbs; 1st/2nd declension nouns &amp; adjective agreement</div>
+          <div className="subtitle">Wheelock's Ch. 1-4 — verbs &amp; sum; 1st/2nd declension nouns &amp; adjective agreement</div>
         </div>
         <StreakPill streak={stats.streak} />
       </div>
