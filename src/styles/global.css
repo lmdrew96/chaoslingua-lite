@@ -1,0 +1,254 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Space+Grotesk:wght@400;500;600&family=Geist+Mono:wght@400&display=swap');
+
+:root {
+  --color-mauve:       #CB96BA;
+  --color-bluebell:    #B0B3D6;
+  --color-venus:       #E0E4E7;
+  --color-beryl:       #D0DDC4;
+  --color-duckegg:     #9BBCAC;
+  --color-forest:      #77A39A;
+
+  --color-teal-deep:   #4A6B62;
+  --color-purple:      #6A6A99;
+  --color-gold:        var(--color-mauve);
+  --color-mint:        var(--color-duckegg);
+  --color-green:       var(--color-beryl);
+  --color-lavender:    var(--color-bluebell);
+  --color-surface:     var(--color-venus);
+  --color-ink:         #2B2233;
+  --color-white:       #FFFFFF;
+  --color-mauve-deep:  #8C5678;
+  --color-mauve-tint:  #F3E4EE;
+  --color-beryl-deep:  #3E5230;
+
+  --font-display:  'Fraunces', Georgia, serif;
+  --font-body:     'Space Grotesk', system-ui, sans-serif;
+  --font-mono:     'Geist Mono', 'Fira Code', monospace;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  background-color: var(--color-surface);
+  color: var(--color-ink);
+  font-size: 18px;
+  line-height: 1.56;
+}
+
+.wrap {
+  max-width: 620px;
+  margin: 0 auto;
+  padding: 32px 20px 64px;
+}
+
+h1, h2, h3 {
+  font-family: var(--font-display);
+  font-variation-settings: 'SOFT' 0, 'WONK' 1;
+  color: var(--color-ink);
+  line-height: 1.1;
+  margin: 0;
+}
+
+h1 { font-size: 2rem; font-weight: 600; }
+h2 { font-size: 1.4rem; font-weight: 500; margin-bottom: 4px; }
+
+.subtitle {
+  font-size: 0.95rem;
+  color: var(--color-teal-deep);
+  margin-top: 6px;
+}
+
+.card {
+  background: var(--color-white);
+  border-radius: 24px;
+  box-shadow: 0px 1px 1.5px rgba(0,0,0,0.10), 0px 1px 1px rgba(0,0,0,0.10);
+  padding: 28px;
+  margin-top: 24px;
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border-radius: 9999px;
+  padding: 6px 14px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  background: var(--color-lavender);
+  color: var(--color-ink);
+}
+
+.top-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.stats {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 16px;
+}
+
+.stat {
+  background: var(--color-surface);
+  border-radius: 16px;
+  padding: 10px 16px;
+  font-size: 0.85rem;
+  color: var(--color-teal-deep);
+  font-weight: 500;
+}
+
+.stat b { color: var(--color-ink); font-family: var(--font-mono); font-weight: 400; }
+
+.drill-type-label {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-purple);
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.prompt {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-variation-settings: 'SOFT' 0, 'WONK' 1;
+  margin: 14px 0 20px;
+  color: var(--color-ink);
+}
+
+/* Fraunces mis-measures the advance width of precomposed macron vowels (e.g. ō, ē)
+   at word end, so a trailing macron glues into the next word ("amōrefer"). Georgia
+   doesn't have this bug, so inline Latin terms fall back to it instead of Fraunces. */
+.prompt .latin { color: var(--color-teal-deep); font-family: Georgia, serif; }
+
+.options {
+  display: grid;
+  gap: 10px;
+}
+
+.option-btn {
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 1rem;
+  text-align: left;
+  border-radius: 16px;
+  padding: 14px 18px;
+  border: 2px solid var(--color-lavender);
+  background: var(--color-white);
+  cursor: pointer;
+  transition: opacity 0.15s ease, border-color 0.15s ease;
+}
+
+.option-btn:hover:not(:disabled) { border-color: var(--color-purple); }
+
+.option-btn.correct {
+  background: var(--color-green);
+  border-color: var(--color-green);
+  color: var(--color-ink);
+}
+
+.option-btn.incorrect {
+  background: var(--color-mauve-tint);
+  border-color: var(--color-mauve-deep);
+  color: var(--color-ink);
+}
+
+.option-btn:disabled { cursor: default; opacity: 0.75; }
+.option-btn:disabled.correct, .option-btn:disabled.incorrect { opacity: 1; }
+
+.text-input-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+input[type="text"] {
+  flex: 1;
+  min-width: 180px;
+  font-family: var(--font-mono);
+  font-size: 1.05rem;
+  padding: 12px 16px;
+  border-radius: 16px;
+  border: 2px solid var(--color-lavender);
+  background: var(--color-surface);
+  color: var(--color-ink);
+}
+
+input[type="text"]:focus {
+  outline: none;
+  border-color: var(--color-purple);
+}
+
+.btn {
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 1rem;
+  border-radius: 9999px;
+  padding: 12px 24px;
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+}
+
+.btn:hover { opacity: 0.88; }
+.btn:disabled { opacity: 0.5; cursor: default; }
+
+.btn-primary   { background: var(--color-gold);      color: var(--color-ink); }
+.btn-secondary { background: var(--color-teal-deep); color: var(--color-surface); }
+.btn-ghost     { background: var(--color-lavender);  color: var(--color-ink); }
+
+.feedback {
+  margin-top: 16px;
+  padding: 14px 18px;
+  border-radius: 16px;
+  font-size: 0.98rem;
+  display: none;
+}
+
+.feedback.show { display: block; }
+.feedback.good { background: var(--color-beryl); color: var(--color-beryl-deep); }
+.feedback.bad  { background: var(--color-mauve-tint); color: var(--color-mauve-deep); }
+
+.footer-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 22px;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.progress-track {
+  height: 6px;
+  border-radius: 9999px;
+  background: var(--color-lavender);
+  overflow: hidden;
+  margin-top: 20px;
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--color-gold);
+  border-radius: 9999px;
+  transition: width 0.2s ease;
+}
+
+.reset-link {
+  font-size: 0.8rem;
+  color: var(--color-teal-deep);
+  text-decoration: underline;
+  cursor: pointer;
+  background: none;
+  border: none;
+  font-family: var(--font-body);
+  padding: 0;
+}
+
+.loading { color: var(--color-teal-deep); font-size: 0.9rem; }
