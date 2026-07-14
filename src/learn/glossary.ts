@@ -46,4 +46,9 @@ export const glossary: GlossaryTerm[] = [
     term: 'Imperative',
     definition: 'The command form of a verb ("Love!", "Warn!") — formed differently from the indicative.',
   },
+  {
+    term: 'Agreement',
+    definition:
+      "An adjective's endings must match the noun it describes in case, number, and gender — but not necessarily in declension. A masculine noun that declines like a 1st declension noun (e.g. nauta, \"sailor\") still takes masculine (2nd declension) adjective endings, because agreement follows gender, not the noun's own pattern.",
+  },
 ];

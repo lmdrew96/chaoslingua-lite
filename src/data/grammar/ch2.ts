@@ -30,7 +30,9 @@ export const caseFunctions: Record<Case, string> = {
   abl: 'means/agent',
 };
 
-const endings: Record<GNumber, Record<Case, string>> = {
+// Exported so Ch.3's adjective-agreement drills can reuse the same 1st declension
+// endings for feminine adjective forms without re-typing them.
+export const firstDeclensionEndings: Record<GNumber, Record<Case, string>> = {
   sg: { nom: 'a', gen: 'ae', dat: 'ae', acc: 'am', abl: 'ā' },
   pl: { nom: 'ae', gen: 'ārum', dat: 'īs', acc: 'ās', abl: 'īs' },
 };
@@ -57,7 +59,7 @@ export const nouns: FirstDeclensionNoun[] = vocab
   });
 
 export const declinedForm = (noun: FirstDeclensionNoun, c: Case, n: GNumber): string =>
-  noun.stem + endings[n][c];
+  noun.stem + firstDeclensionEndings[n][c];
 
 export const numberWord = (n: GNumber): string => (n === 'sg' ? 'singular' : 'plural');
 

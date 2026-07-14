@@ -1,6 +1,7 @@
 import { glossary } from '../learn/glossary';
 import { Ch1Reference } from '../learn/Ch1Reference';
 import { Ch2Reference } from '../learn/Ch2Reference';
+import { Ch3Reference } from '../learn/Ch3Reference';
 
 export function LearnView() {
   return (
@@ -18,6 +19,7 @@ export function LearnView() {
       </details>
       <Ch1Reference />
       <Ch2Reference />
+      <Ch3Reference />
     </div>
   );
 }
