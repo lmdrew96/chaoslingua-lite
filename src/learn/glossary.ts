@@ -56,4 +56,9 @@ export const glossary: GlossaryTerm[] = [
     definition:
       'A noun or adjective linked to the subject by sum ("to be") instead of describing an action. It agrees with the subject in the nominative case — not the accusative, even though most other verbs take an accusative object. "Puella est bona" (the girl is good): bona is nominative, agreeing with puella, not a direct object.',
   },
+  {
+    term: 'Apposition',
+    definition:
+      'A noun placed beside another noun to rename or describe it — it must match in case, but not necessarily gender or number. "Cicerō, cōnsul" (Cicero, the consul): both nominative, even though cōnsul is a different declension than Cicerō.',
+  },
 ];

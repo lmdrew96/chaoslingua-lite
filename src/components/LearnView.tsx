@@ -3,6 +3,7 @@ import { Ch1Reference } from '../learn/Ch1Reference';
 import { Ch2Reference } from '../learn/Ch2Reference';
 import { Ch3Reference } from '../learn/Ch3Reference';
 import { Ch4Reference } from '../learn/Ch4Reference';
+import { Ch5Reference } from '../learn/Ch5Reference';
 
 export function LearnView() {
   return (
@@ -22,6 +23,7 @@ export function LearnView() {
       <Ch2Reference />
       <Ch3Reference />
       <Ch4Reference />
+      <Ch5Reference />
     </div>
   );
 }

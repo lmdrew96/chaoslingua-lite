@@ -3,6 +3,7 @@ import { ch1Generators } from './ch1';
 import { ch2Generators } from './ch2';
 import { ch3Generators } from './ch3';
 import { ch4Generators } from './ch4';
+import { ch5Generators } from './ch5';
 import type { Drill, DrillGenerator } from './types';
 
 // Chapter registry — future chapters get appended here without touching
@@ -12,6 +13,7 @@ const ALL_GENERATORS: DrillGenerator[] = [
   ...ch2Generators,
   ...ch3Generators,
   ...ch4Generators,
+  ...ch5Generators,
 ];
 
 export function makeDrill(): Drill {

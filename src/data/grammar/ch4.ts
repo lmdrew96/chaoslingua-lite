@@ -22,7 +22,9 @@ import { adjectives as priorAdjectives, agreementNouns, secondDeclensionEndings,
 
 export type Gender = 'm' | 'f' | 'n';
 
-const neuterEndings: Record<GNumber, Record<Case, string>> = {
+// Exported so Ch.5's -er adjectives (which also need masc/fem/neut forms) can reuse
+// this instead of re-typing it.
+export const neuterEndings: Record<GNumber, Record<Case, string>> = {
   sg: { ...secondDeclensionEndings.sg, nom: 'um', acc: 'um' },
   pl: { ...secondDeclensionEndings.pl, nom: 'a', acc: 'a' },
 };
