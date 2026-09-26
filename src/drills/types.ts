@@ -1,4 +1,4 @@
-import type { Case, Declension, ModelNoun, Parse } from '../data/nouns';
+import type { Case, Declension, Parse, ParseNoun } from '../data/nouns';
 
 // What gets written to `attempts` alongside the drill type — each drill fills in
 // whatever it can meaningfully attribute an answer to.
@@ -26,7 +26,7 @@ export interface ParseDrill {
   kind: 'parse';
   type: string;
   label: string;
-  noun: ModelNoun;
+  noun: ParseNoun;
   form: string;
   parses: Parse[];
   meta: AttemptMeta;

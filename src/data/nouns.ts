@@ -105,6 +105,9 @@ export const tableGloss: Record<string, string> = { manus: 'hand; group' };
 
 export const modelNounsFor = (d: Declension): ModelNoun[] => MODEL_NOUNS.filter((n) => n.declension === d);
 
+// What the parse drill needs from a noun — model nouns and imported vocab nouns both fit.
+export type ParseNoun = Pick<ModelNoun, 'id' | 'declension' | 'gloss' | 'glossPl' | 'forms'> & { chapter?: number };
+
 export interface Parse {
   case: Case;
   number: GNumber;
@@ -113,5 +116,5 @@ export interface Parse {
 // Every case+number slot a form could be. Syncretism is the norm, not the edge case
 // (puellae = gen sg / dat sg / nom pl; cornū = four singular cases), so drills grade
 // against this whole set instead of the one slot they happened to sample.
-export const parsesOf = (noun: ModelNoun, form: string): Parse[] =>
+export const parsesOf = (noun: Pick<ModelNoun, 'forms'>, form: string): Parse[] =>
   NUMBERS.flatMap((number) => CASES.filter((c) => noun.forms[number][c] === form).map((c) => ({ case: c, number })));

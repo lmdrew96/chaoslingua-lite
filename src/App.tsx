@@ -112,6 +112,13 @@ function App() {
           )}
         </>
       )}
+
+      <footer className="credits">
+        Grammar and vocabulary follow <em>Suburani</em> (Hands Up Education). Tables for vocabulary nouns come from{' '}
+        <a href="https://en.wiktionary.org" target="_blank" rel="noreferrer">Wiktionary</a> via{' '}
+        <a href="https://kaikki.org" target="_blank" rel="noreferrer">kaikki.org</a>, licensed{' '}
+        <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noreferrer">CC BY-SA 4.0</a>.
+      </footer>
     </div>
   );
 }

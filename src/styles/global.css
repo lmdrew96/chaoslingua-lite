@@ -534,3 +534,12 @@ input[type="text"]:focus {
 }
 
 .chip-note { font-size: 0.75rem; opacity: 0.75; }
+
+.credits {
+  margin-top: 32px;
+  font-size: 0.8rem;
+  color: var(--color-teal-deep);
+  opacity: 0.85;
+}
+
+.credits a { color: inherit; }
