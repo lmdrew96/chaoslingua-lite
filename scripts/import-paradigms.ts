@@ -52,8 +52,9 @@ const NUMBER_TAGS: Record<string, GNumber> = { singular: 'sg', plural: 'pl' };
 
 const strip = (s: string): string => s.normalize('NFD').replace(/\p{M}/gu, '').toLowerCase();
 
+// Kaikki paths are macron-stripped but keep a proper noun's capital (R/Ro/Roma).
 const urlFor = (lemma: string): string => {
-  const w = strip(lemma);
+  const w = lemma.normalize('NFD').replace(/\p{M}/gu, '');
   return `https://kaikki.org/dictionary/Latin/meaning/${encodeURIComponent(w[0])}/${encodeURIComponent(w.slice(0, 2))}/${encodeURIComponent(w)}.jsonl`;
 };
 
@@ -114,7 +115,10 @@ const extractForms = (e: KaikkiEntry): { forms: Partial<Record<GNumber, Partial<
 const withOverrides = (lemma: string, forms: Forms): Forms => {
   const o = FORM_OVERRIDES[lemma];
   if (!o) return forms;
-  return { sg: { ...forms.sg, ...o.sg }, pl: { ...forms.pl, ...o.pl } };
+  const fix = (f: string) => (o.replace ?? []).reduce((acc, [from, to]) => acc.split(from).join(to), f);
+  const row = (n: GNumber) =>
+    Object.fromEntries(CASES.map((c) => [c, o[n]?.[c] ?? fix(forms[n][c])])) as Record<Case, string>;
+  return { sg: row('sg'), pl: row('pl') };
 };
 
 type Resolved =
@@ -123,14 +127,22 @@ type Resolved =
 
 const resolveTarget = async (t: Target): Promise<Resolved> => {
   const url = urlFor(t.lemma);
-  const entries = (await fetchEntries(t.lemma)).filter((e) => e.pos === 'noun' && strip(e.word) === strip(t.lemma));
+  const entries = (await fetchEntries(t.lemma)).filter(
+    (e) => (e.pos === 'noun' || e.pos === 'name') && strip(e.word) === strip(t.lemma),
+  );
   if (!entries.length) return { ok: false, reason: `no Latin noun entry at ${url}` };
 
   // Declension must match. Gender breaks ties between homographs; if no entry agrees
   // on gender, a lone declension match is still used and the disagreement reported.
   const byDecl = entries.filter((e) => describe(e).declension === t.declension);
   const byGender = byDecl.filter((e) => genderMatches(t.gender, describe(e).genders));
-  const matches = byGender.length ? byGender : byDecl;
+  // Among homographs, an exact gender match (caelum "n") beats a looser one ("n or m").
+  const wanted = t.gender === 'mf' ? ['m', 'f'] : t.gender ? [t.gender] : [];
+  const exact = byGender.filter((e) => {
+    const g = describe(e).genders;
+    return g.size === wanted.length && wanted.every((w) => g.has(w));
+  });
+  const matches = exact.length === 1 ? exact : byGender.length ? byGender : byDecl;
   const genderMismatch = !byGender.length;
   if (matches.length !== 1) {
     const seen = entries.map((e) => `"${describe(e).expansion}"`).join('; ');
@@ -206,6 +218,7 @@ for (const v of vocab.filter((e) => e.pos === 'Noun' && e.declension && !e.uncon
 
   const reasons: string[] = [];
   if (r.genderMismatch) reasons.push(`gender: Suburani lists ${v.gender}, Wiktionary "${r.expansion}"`);
+  if (v.irregular) reasons.push('marked irregular in the vocab data');
   if (r.irregular) reasons.push(`Wiktionary marks it irregular ("${r.expansion}")`);
   if (r.forms.sg.nom !== v.la) reasons.push(`nom sg "${r.forms.sg.nom}" ≠ Suburani "${v.la}"`);
   if (v.principal && v.principalCase && r.forms.sg[v.principalCase] !== v.principal)

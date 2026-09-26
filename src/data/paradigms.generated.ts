@@ -681,5 +681,1070 @@ export const IMPORTED_PARADIGMS: Record<string, ImportedParadigm> = {
       }
     },
     "source": "https://kaikki.org/dictionary/Latin/meaning/u/ux/uxor.jsonl"
+  },
+  "ch7-epistula": {
+    "forms": {
+      "sg": {
+        "nom": "epistula",
+        "gen": "epistulae",
+        "dat": "epistulae",
+        "acc": "epistulam",
+        "abl": "epistulā"
+      },
+      "pl": {
+        "nom": "epistulae",
+        "gen": "epistulārum",
+        "dat": "epistulīs",
+        "acc": "epistulās",
+        "abl": "epistulīs"
+      }
+    },
+    "source": "https://kaikki.org/dictionary/Latin/meaning/e/ep/epistula.jsonl"
+  },
+  "ch7-homō": {
+    "forms": {
+      "sg": {
+        "nom": "homō",
+        "gen": "hominis",
+        "dat": "hominī",
+        "acc": "hominem",
+        "abl": "homine"
+      },
+      "pl": {
+        "nom": "hominēs",
+        "gen": "hominum",
+        "dat": "hominibus",
+        "acc": "hominēs",
+        "abl": "hominibus"
+      }
+    },
+    "source": "https://kaikki.org/dictionary/Latin/meaning/h/ho/homo.jsonl"
+  },
+  "ch7-īnsula": {
+    "forms": {
+      "sg": {
+        "nom": "īnsula",
+        "gen": "īnsulae",
+        "dat": "īnsulae",
+        "acc": "īnsulam",
+        "abl": "īnsulā"
+      },
+      "pl": {
+        "nom": "īnsulae",
+        "gen": "īnsulārum",
+        "dat": "īnsulīs",
+        "acc": "īnsulās",
+        "abl": "īnsulīs"
+      }
+    },
+    "source": "https://kaikki.org/dictionary/Latin/meaning/i/in/insula.jsonl"
+  },
+  "ch7-mīles": {
+    "forms": {
+      "sg": {
+        "nom": "mīles",
+        "gen": "mīlitis",
+        "dat": "mīlitī",
+        "acc": "mīlitem",
+        "abl": "mīlite"
+      },
+      "pl": {
+        "nom": "mīlitēs",
+        "gen": "mīlitum",
+        "dat": "mīlitibus",
+        "acc": "mīlitēs",
+        "abl": "mīlitibus"
+      }
+    },
+    "source": "https://kaikki.org/dictionary/Latin/meaning/m/mi/miles.jsonl"
+  },
+  "ch7-nauta": {
+    "forms": {
+      "sg": {
+        "nom": "nauta",
+        "gen": "nautae",
+        "dat": "nautae",
+        "acc": "nautam",
+        "abl": "nautā"
+      },
+      "pl": {
+        "nom": "nautae",
+        "gen": "nautārum",
+        "dat": "nautīs",
+        "acc": "nautās",
+        "abl": "nautīs"
+      }
+    },
+    "source": "https://kaikki.org/dictionary/Latin/meaning/n/na/nauta.jsonl"
+  },
+  "ch7-pars": {
+    "forms": {
+      "sg": {
+        "nom": "pars",
+        "gen": "partis",
+        "dat": "partī",
+        "acc": "partem",
+        "abl": "parte"
+      },
+      "pl": {
+        "nom": "partēs",
+        "gen": "partium",
+        "dat": "partibus",
+        "acc": "partēs",
+        "abl": "partibus"
+      }
+    },
+    "source": "https://kaikki.org/dictionary/Latin/meaning/p/pa/pars.jsonl"
+  },
+  "ch7-puer": {
+    "forms": {
+      "sg": {
+        "nom": "puer",
+        "gen": "puerī",
+        "dat": "puerō",
+        "acc": "puerum",
+        "abl": "puerō"
+      },
+      "pl": {
+        "nom": "puerī",
+        "gen": "puerōrum",
+        "dat": "puerīs",
+        "acc": "puerōs",
+        "abl": "puerīs"
+      }
+    },
+    "source": "https://kaikki.org/dictionary/Latin/meaning/p/pu/puer.jsonl"
+  },
+  "ch7-rēs": {
+    "forms": {
+      "sg": {
+        "nom": "rēs",
+        "gen": "reī",
+        "dat": "reī",
+        "acc": "rem",
+        "abl": "rē"
+      },
+      "pl": {
+        "nom": "rēs",
+        "gen": "rērum",
+        "dat": "rēbus",
+        "acc": "rēs",
+        "abl": "rēbus"
+      }
+    },
+    "source": "https://kaikki.org/dictionary/Latin/meaning/r/re/res.jsonl"
+  },
+  "ch7-silva": {
+    "forms": {
+      "sg": {
+        "nom": "silva",
+        "gen": "silvae",
+        "dat": "silvae",
+        "acc": "silvam",
+        "abl": "silvā"
+      },
+      "pl": {
+        "nom": "silvae",
+        "gen": "silvārum",
+        "dat": "silvīs",
+        "acc": "silvās",
+        "abl": "silvīs"
+      }
+    },
+    "source": "https://kaikki.org/dictionary/Latin/meaning/s/si/silva.jsonl"
+  },
+  "ch8-domus": {
+    "forms": {
+      "sg": {
+        "nom": "domus",
+        "gen": "domūs",
+        "dat": "domuī",
+        "acc": "domum",
+        "abl": "domū"
+      },
+      "pl": {
+        "nom": "domūs",
+        "gen": "domuum",
+        "dat": "domibus",
+        "acc": "domūs",
+        "abl": "domibus"
+      }
+    },
+    "source": "https://kaikki.org/dictionary/Latin/meaning/d/do/domus.jsonl",
+    "review": "marked irregular in the vocab data; Wiktionary marks it irregular (\"domus f (genitive domūs or domī); irregular, variously declined, fourth declension, second declension\")"
+  },
+  "ch8-porta": {
+    "forms": {
+      "sg": {
+        "nom": "porta",
+        "gen": "portae",
+        "dat": "portae",
+        "acc": "portam",
+        "abl": "portā"
+      },
+      "pl": {
+        "nom": "portae",
+        "gen": "portārum",
+        "dat": "portīs",
+        "acc": "portās",
+        "abl": "portīs"
+      }
+    },
+    "source": "https://kaikki.org/dictionary/Latin/meaning/p/po/porta.jsonl"
+  },
+  "ch8-senex": {
+    "forms": {
+      "sg": {
+        "nom": "senex",
+        "gen": "senis",
+        "dat": "senī",
+        "acc": "senem",
+        "abl": "sene"
+      },
+      "pl": {
+        "nom": "senēs",
+        "gen": "senum",
+        "dat": "senibus",
+        "acc": "senēs",
+        "abl": "senibus"
+      }
+    },
+    "source": "https://kaikki.org/dictionary/Latin/meaning/s/se/senex.jsonl"
+  },
+  "ch9-cīvis": {
+    "forms": {
+      "sg": {
+        "nom": "cīvis",
+        "gen": "cīvis",
+        "dat": "cīvī",
+        "acc": "cīvem",
+        "abl": "cīve"
+      },
+      "pl": {
+        "nom": "cīvēs",
+        "gen": "cīvium",
+        "dat": "cīvibus",
+        "acc": "cīvēs",
+        "abl": "cīvibus"
+      }
+    },
+    "source": "https://kaikki.org/dictionary/Latin/meaning/c/ci/civis.jsonl"
+  },
+  "ch9-domina": {
+    "forms": {
+      "sg": {
+        "nom": "domina",
+        "gen": "dominae",
+        "dat": "dominae",
+        "acc": "dominam",
+        "abl": "dominā"
+      },
+      "pl": {
+        "nom": "dominae",
+        "gen": "dominārum",
+        "dat": "dominīs",
+        "acc": "dominās",
+        "abl": "dominīs"
+      }
+    },
+    "source": "https://kaikki.org/dictionary/Latin/meaning/d/do/domina.jsonl"
+  },
+  "ch9-hostis": {
+    "forms": {
+      "sg": {
+        "nom": "hostis",
+        "gen": "hostis",
+        "dat": "hostī",
+        "acc": "hostem",
+        "abl": "hoste"
+      },
+      "pl": {
+        "nom": "hostēs",
+        "gen": "hostium",
+        "dat": "hostibus",
+        "acc": "hostēs",
+        "abl": "hostibus"
+      }
+    },
+    "source": "https://kaikki.org/dictionary/Latin/meaning/h/ho/hostis.jsonl"
+  },
+  "ch9-imperātor": {
+    "forms": {
+      "sg": {
+        "nom": "imperātor",
+        "gen": "imperātōris",
+        "dat": "imperātōrī",
+        "acc": "imperātōrem",
+        "abl": "imperātōre"
+      },
+      "pl": {
+        "nom": "imperātōrēs",
+        "gen": "imperātōrum",
+        "dat": "imperātōribus",
+        "acc": "imperātōrēs",
+        "abl": "imperātōribus"
+      }
+    },
+    "source": "https://kaikki.org/dictionary/Latin/meaning/i/im/imperator.jsonl"
+  },
+  "ch9-iter": {
+    "forms": {
+      "sg": {
+        "nom": "iter",
+        "gen": "itineris",
+        "dat": "itinerī",
+        "acc": "iter",
+        "abl": "itinere"
+      },
+      "pl": {
+        "nom": "itinera",
+        "gen": "itinerum",
+        "dat": "itineribus",
+        "acc": "itinera",
+        "abl": "itineribus"
+      }
+    },
+    "source": "https://kaikki.org/dictionary/Latin/meaning/i/it/iter.jsonl"
+  },
+  "ch9-sanguis": {
+    "forms": {
+      "sg": {
+        "nom": "sanguis",
+        "gen": "sanguinis",
+        "dat": "sanguinī",
+        "acc": "sanguinem",
+        "abl": "sanguine"
+      },
+      "pl": {
+        "nom": "sanguinēs",
+        "gen": "sanguinum",
+        "dat": "sanguinibus",
+        "acc": "sanguinēs",
+        "abl": "sanguinibus"
+      }
+    },
+    "source": "https://kaikki.org/dictionary/Latin/meaning/s/sa/sanguis.jsonl"
+  },
+  "ch9-vir": {
+    "forms": {
+      "sg": {
+        "nom": "vir",
+        "gen": "virī",
+        "dat": "virō",
+        "acc": "virum",
+        "abl": "virō"
+      },
+      "pl": {
+        "nom": "virī",
+        "gen": "virōrum",
+        "dat": "virīs",
+        "acc": "virōs",
+        "abl": "virīs"
+      }
+    },
+    "source": "https://kaikki.org/dictionary/Latin/meaning/v/vi/vir.jsonl"
+  },
+  "ch9-vīta": {
+    "forms": {
+      "sg": {
+        "nom": "vīta",
+        "gen": "vītae",
+        "dat": "vītae",
+        "acc": "vītam",
+        "abl": "vītā"
+      },
+      "pl": {
+        "nom": "vītae",
+        "gen": "vītārum",
+        "dat": "vītīs",
+        "acc": "vītās",
+        "abl": "vītīs"
+      }
+    },
+    "source": "https://kaikki.org/dictionary/Latin/meaning/v/vi/vita.jsonl"
+  },
+  "ch10-annus": {
+    "forms": {
+      "sg": {
+        "nom": "annus",
+        "gen": "annī",
+        "dat": "annō",
+        "acc": "annum",
+        "abl": "annō"
+      },
+      "pl": {
+        "nom": "annī",
+        "gen": "annōrum",
+        "dat": "annīs",
+        "acc": "annōs",
+        "abl": "annīs"
+      }
+    },
+    "source": "https://kaikki.org/dictionary/Latin/meaning/a/an/annus.jsonl"
+  },
+  "ch10-dea": {
+    "forms": {
+      "sg": {
+        "nom": "dea",
+        "gen": "deae",
+        "dat": "deae",
+        "acc": "deam",
+        "abl": "deā"
+      },
+      "pl": {
+        "nom": "deae",
+        "gen": "deārum",
+        "dat": "deābus",
+        "acc": "deās",
+        "abl": "deābus"
+      }
+    },
+    "source": "https://kaikki.org/dictionary/Latin/meaning/d/de/dea.jsonl"
+  },
+  "ch10-locus": {
+    "forms": {
+      "sg": {
+        "nom": "locus",
+        "gen": "locī",
+        "dat": "locō",
+        "acc": "locum",
+        "abl": "locō"
+      },
+      "pl": {
+        "nom": "locī",
+        "gen": "locōrum",
+        "dat": "locīs",
+        "acc": "locōs",
+        "abl": "locīs"
+      }
+    },
+    "source": "https://kaikki.org/dictionary/Latin/meaning/l/lo/locus.jsonl"
+  },
+  "ch10-pāx": {
+    "forms": {
+      "sg": {
+        "nom": "pāx",
+        "gen": "pācis",
+        "dat": "pācī",
+        "acc": "pācem",
+        "abl": "pāce"
+      },
+      "pl": {
+        "nom": "pācēs",
+        "gen": "pācum",
+        "dat": "pācibus",
+        "acc": "pācēs",
+        "abl": "pācibus"
+      }
+    },
+    "source": "https://kaikki.org/dictionary/Latin/meaning/p/pa/pax.jsonl"
+  },
+  "ch11-dux": {
+    "forms": {
+      "sg": {
+        "nom": "dux",
+        "gen": "ducis",
+        "dat": "ducī",
+        "acc": "ducem",
+        "abl": "duce"
+      },
+      "pl": {
+        "nom": "ducēs",
+        "gen": "ducum",
+        "dat": "ducibus",
+        "acc": "ducēs",
+        "abl": "ducibus"
+      }
+    },
+    "source": "https://kaikki.org/dictionary/Latin/meaning/d/du/dux.jsonl"
+  },
+  "ch11-flūmen": {
+    "forms": {
+      "sg": {
+        "nom": "flūmen",
+        "gen": "flūminis",
+        "dat": "flūminī",
+        "acc": "flūmen",
+        "abl": "flūmine"
+      },
+      "pl": {
+        "nom": "flūmina",
+        "gen": "flūminum",
+        "dat": "flūminibus",
+        "acc": "flūmina",
+        "abl": "flūminibus"
+      }
+    },
+    "source": "https://kaikki.org/dictionary/Latin/meaning/f/fl/flumen.jsonl"
+  },
+  "ch11-mare": {
+    "forms": {
+      "sg": {
+        "nom": "mare",
+        "gen": "maris",
+        "dat": "marī",
+        "acc": "mare",
+        "abl": "marī"
+      },
+      "pl": {
+        "nom": "maria",
+        "gen": "marium",
+        "dat": "maribus",
+        "acc": "maria",
+        "abl": "maribus"
+      }
+    },
+    "source": "https://kaikki.org/dictionary/Latin/meaning/m/ma/mare.jsonl"
+  },
+  "ch11-nāvis": {
+    "forms": {
+      "sg": {
+        "nom": "nāvis",
+        "gen": "nāvis",
+        "dat": "nāvī",
+        "acc": "nāvem",
+        "abl": "nāve"
+      },
+      "pl": {
+        "nom": "nāvēs",
+        "gen": "nāvium",
+        "dat": "nāvibus",
+        "acc": "nāvēs",
+        "abl": "nāvibus"
+      }
+    },
+    "source": "https://kaikki.org/dictionary/Latin/meaning/n/na/navis.jsonl"
+  },
+  "ch12-caelum": {
+    "forms": {
+      "sg": {
+        "nom": "caelum",
+        "gen": "caelī",
+        "dat": "caelō",
+        "acc": "caelum",
+        "abl": "caelō"
+      },
+      "pl": {
+        "nom": "caela",
+        "gen": "caelōrum",
+        "dat": "caelīs",
+        "acc": "caela",
+        "abl": "caelīs"
+      }
+    },
+    "source": "https://kaikki.org/dictionary/Latin/meaning/c/ca/caelum.jsonl"
+  },
+  "ch12-caput": {
+    "forms": {
+      "sg": {
+        "nom": "caput",
+        "gen": "capitis",
+        "dat": "capitī",
+        "acc": "caput",
+        "abl": "capite"
+      },
+      "pl": {
+        "nom": "capita",
+        "gen": "capitum",
+        "dat": "capitibus",
+        "acc": "capita",
+        "abl": "capitibus"
+      }
+    },
+    "source": "https://kaikki.org/dictionary/Latin/meaning/c/ca/caput.jsonl"
+  },
+  "ch12-corpus": {
+    "forms": {
+      "sg": {
+        "nom": "corpus",
+        "gen": "corporis",
+        "dat": "corporī",
+        "acc": "corpus",
+        "abl": "corpore"
+      },
+      "pl": {
+        "nom": "corpora",
+        "gen": "corporum",
+        "dat": "corporibus",
+        "acc": "corpora",
+        "abl": "corporibus"
+      }
+    },
+    "source": "https://kaikki.org/dictionary/Latin/meaning/c/co/corpus.jsonl"
+  },
+  "ch12-iānua": {
+    "forms": {
+      "sg": {
+        "nom": "iānua",
+        "gen": "iānuae",
+        "dat": "iānuae",
+        "acc": "iānuam",
+        "abl": "iānuā"
+      },
+      "pl": {
+        "nom": "iānuae",
+        "gen": "iānuārum",
+        "dat": "iānuīs",
+        "acc": "iānuās",
+        "abl": "iānuīs"
+      }
+    },
+    "source": "https://kaikki.org/dictionary/Latin/meaning/i/ia/ianua.jsonl"
+  },
+  "ch12-taberna": {
+    "forms": {
+      "sg": {
+        "nom": "taberna",
+        "gen": "tabernae",
+        "dat": "tabernae",
+        "acc": "tabernam",
+        "abl": "tabernā"
+      },
+      "pl": {
+        "nom": "tabernae",
+        "gen": "tabernārum",
+        "dat": "tabernīs",
+        "acc": "tabernās",
+        "abl": "tabernīs"
+      }
+    },
+    "source": "https://kaikki.org/dictionary/Latin/meaning/t/ta/taberna.jsonl"
+  },
+  "ch12-terra": {
+    "forms": {
+      "sg": {
+        "nom": "terra",
+        "gen": "terrae",
+        "dat": "terrae",
+        "acc": "terram",
+        "abl": "terrā"
+      },
+      "pl": {
+        "nom": "terrae",
+        "gen": "terrārum",
+        "dat": "terrīs",
+        "acc": "terrās",
+        "abl": "terrīs"
+      }
+    },
+    "source": "https://kaikki.org/dictionary/Latin/meaning/t/te/terra.jsonl"
+  },
+  "ch12-vōx": {
+    "forms": {
+      "sg": {
+        "nom": "vōx",
+        "gen": "vōcis",
+        "dat": "vōcī",
+        "acc": "vōcem",
+        "abl": "vōce"
+      },
+      "pl": {
+        "nom": "vōcēs",
+        "gen": "vōcum",
+        "dat": "vōcibus",
+        "acc": "vōcēs",
+        "abl": "vōcibus"
+      }
+    },
+    "source": "https://kaikki.org/dictionary/Latin/meaning/v/vo/vox.jsonl"
+  },
+  "ch13-labor": {
+    "forms": {
+      "sg": {
+        "nom": "labor",
+        "gen": "labōris",
+        "dat": "labōrī",
+        "acc": "labōrem",
+        "abl": "labōre"
+      },
+      "pl": {
+        "nom": "labōrēs",
+        "gen": "labōrum",
+        "dat": "labōribus",
+        "acc": "labōrēs",
+        "abl": "labōribus"
+      }
+    },
+    "source": "https://kaikki.org/dictionary/Latin/meaning/l/la/labor.jsonl"
+  },
+  "ch13-mūrus": {
+    "forms": {
+      "sg": {
+        "nom": "mūrus",
+        "gen": "mūrī",
+        "dat": "mūrō",
+        "acc": "mūrum",
+        "abl": "mūrō"
+      },
+      "pl": {
+        "nom": "mūrī",
+        "gen": "mūrōrum",
+        "dat": "mūrīs",
+        "acc": "mūrōs",
+        "abl": "mūrīs"
+      }
+    },
+    "source": "https://kaikki.org/dictionary/Latin/meaning/m/mu/murus.jsonl"
+  },
+  "ch13-nōmen": {
+    "forms": {
+      "sg": {
+        "nom": "nōmen",
+        "gen": "nōminis",
+        "dat": "nōminī",
+        "acc": "nōmen",
+        "abl": "nōmine"
+      },
+      "pl": {
+        "nom": "nōmina",
+        "gen": "nōminum",
+        "dat": "nōminibus",
+        "acc": "nōmina",
+        "abl": "nōminibus"
+      }
+    },
+    "source": "https://kaikki.org/dictionary/Latin/meaning/n/no/nomen.jsonl"
+  },
+  "ch13-praemium": {
+    "forms": {
+      "sg": {
+        "nom": "praemium",
+        "gen": "praemiī",
+        "dat": "praemiō",
+        "acc": "praemium",
+        "abl": "praemiō"
+      },
+      "pl": {
+        "nom": "praemia",
+        "gen": "praemiōrum",
+        "dat": "praemiīs",
+        "acc": "praemia",
+        "abl": "praemiīs"
+      }
+    },
+    "source": "https://kaikki.org/dictionary/Latin/meaning/p/pr/praemium.jsonl"
+  },
+  "ch14-amor": {
+    "forms": {
+      "sg": {
+        "nom": "amor",
+        "gen": "amōris",
+        "dat": "amōrī",
+        "acc": "amōrem",
+        "abl": "amōre"
+      },
+      "pl": {
+        "nom": "amōrēs",
+        "gen": "amōrum",
+        "dat": "amōribus",
+        "acc": "amōrēs",
+        "abl": "amōribus"
+      }
+    },
+    "source": "https://kaikki.org/dictionary/Latin/meaning/a/am/amor.jsonl"
+  },
+  "ch14-cōnsilium": {
+    "forms": {
+      "sg": {
+        "nom": "cōnsilium",
+        "gen": "cōnsiliī",
+        "dat": "cōnsiliō",
+        "acc": "cōnsilium",
+        "abl": "cōnsiliō"
+      },
+      "pl": {
+        "nom": "cōnsilia",
+        "gen": "cōnsiliōrum",
+        "dat": "cōnsiliīs",
+        "acc": "cōnsilia",
+        "abl": "cōnsiliīs"
+      }
+    },
+    "source": "https://kaikki.org/dictionary/Latin/meaning/c/co/consilium.jsonl"
+  },
+  "ch14-fēmina": {
+    "forms": {
+      "sg": {
+        "nom": "fēmina",
+        "gen": "fēminae",
+        "dat": "fēminae",
+        "acc": "fēminam",
+        "abl": "fēminā"
+      },
+      "pl": {
+        "nom": "fēminae",
+        "gen": "fēminārum",
+        "dat": "fēminīs",
+        "acc": "fēminās",
+        "abl": "fēminīs"
+      }
+    },
+    "source": "https://kaikki.org/dictionary/Latin/meaning/f/fe/femina.jsonl"
+  },
+  "ch14-mōns": {
+    "forms": {
+      "sg": {
+        "nom": "mōns",
+        "gen": "montis",
+        "dat": "montī",
+        "acc": "montem",
+        "abl": "monte"
+      },
+      "pl": {
+        "nom": "montēs",
+        "gen": "montium",
+        "dat": "montibus",
+        "acc": "montēs",
+        "abl": "montibus"
+      }
+    },
+    "source": "https://kaikki.org/dictionary/Latin/meaning/m/mo/mons.jsonl"
+  },
+  "ch14-mors": {
+    "forms": {
+      "sg": {
+        "nom": "mors",
+        "gen": "mortis",
+        "dat": "mortī",
+        "acc": "mortem",
+        "abl": "morte"
+      },
+      "pl": {
+        "nom": "mortēs",
+        "gen": "mortium",
+        "dat": "mortibus",
+        "acc": "mortēs",
+        "abl": "mortibus"
+      }
+    },
+    "source": "https://kaikki.org/dictionary/Latin/meaning/m/mo/mors.jsonl"
+  },
+  "ch14-tempus": {
+    "forms": {
+      "sg": {
+        "nom": "tempus",
+        "gen": "temporis",
+        "dat": "temporī",
+        "acc": "tempus",
+        "abl": "tempore"
+      },
+      "pl": {
+        "nom": "tempora",
+        "gen": "temporum",
+        "dat": "temporibus",
+        "acc": "tempora",
+        "abl": "temporibus"
+      }
+    },
+    "source": "https://kaikki.org/dictionary/Latin/meaning/t/te/tempus.jsonl"
+  },
+  "ch14-verbum": {
+    "forms": {
+      "sg": {
+        "nom": "verbum",
+        "gen": "verbī",
+        "dat": "verbō",
+        "acc": "verbum",
+        "abl": "verbō"
+      },
+      "pl": {
+        "nom": "verba",
+        "gen": "verbōrum",
+        "dat": "verbīs",
+        "acc": "verba",
+        "abl": "verbīs"
+      }
+    },
+    "source": "https://kaikki.org/dictionary/Latin/meaning/v/ve/verbum.jsonl"
+  },
+  "ch15-bellum": {
+    "forms": {
+      "sg": {
+        "nom": "bellum",
+        "gen": "bellī",
+        "dat": "bellō",
+        "acc": "bellum",
+        "abl": "bellō"
+      },
+      "pl": {
+        "nom": "bella",
+        "gen": "bellōrum",
+        "dat": "bellīs",
+        "acc": "bella",
+        "abl": "bellīs"
+      }
+    },
+    "source": "https://kaikki.org/dictionary/Latin/meaning/b/be/bellum.jsonl"
+  },
+  "ch15-cēna": {
+    "forms": {
+      "sg": {
+        "nom": "cēna",
+        "gen": "cēnae",
+        "dat": "cēnae",
+        "acc": "cēnam",
+        "abl": "cēnā"
+      },
+      "pl": {
+        "nom": "cēnae",
+        "gen": "cēnārum",
+        "dat": "cēnīs",
+        "acc": "cēnās",
+        "abl": "cēnīs"
+      }
+    },
+    "source": "https://kaikki.org/dictionary/Latin/meaning/c/ce/cena.jsonl"
+  },
+  "ch15-comes": {
+    "forms": {
+      "sg": {
+        "nom": "comes",
+        "gen": "comitis",
+        "dat": "comitī",
+        "acc": "comitem",
+        "abl": "comite"
+      },
+      "pl": {
+        "nom": "comitēs",
+        "gen": "comitum",
+        "dat": "comitibus",
+        "acc": "comitēs",
+        "abl": "comitibus"
+      }
+    },
+    "source": "https://kaikki.org/dictionary/Latin/meaning/c/co/comes.jsonl"
+  },
+  "ch15-hortus": {
+    "forms": {
+      "sg": {
+        "nom": "hortus",
+        "gen": "hortī",
+        "dat": "hortō",
+        "acc": "hortum",
+        "abl": "hortō"
+      },
+      "pl": {
+        "nom": "hortī",
+        "gen": "hortōrum",
+        "dat": "hortīs",
+        "acc": "hortōs",
+        "abl": "hortīs"
+      }
+    },
+    "source": "https://kaikki.org/dictionary/Latin/meaning/h/ho/hortus.jsonl"
+  },
+  "ch15-lībertus": {
+    "forms": {
+      "sg": {
+        "nom": "lībertus",
+        "gen": "lībertī",
+        "dat": "lībertō",
+        "acc": "lībertum",
+        "abl": "lībertō"
+      },
+      "pl": {
+        "nom": "lībertī",
+        "gen": "lībertōrum",
+        "dat": "lībertīs",
+        "acc": "lībertōs",
+        "abl": "lībertīs"
+      }
+    },
+    "source": "https://kaikki.org/dictionary/Latin/meaning/l/li/libertus.jsonl"
+  },
+  "ch15-vīlla": {
+    "forms": {
+      "sg": {
+        "nom": "vīlla",
+        "gen": "vīllae",
+        "dat": "vīllae",
+        "acc": "vīllam",
+        "abl": "vīllā"
+      },
+      "pl": {
+        "nom": "vīllae",
+        "gen": "vīllārum",
+        "dat": "vīllīs",
+        "acc": "vīllās",
+        "abl": "vīllīs"
+      }
+    },
+    "source": "https://kaikki.org/dictionary/Latin/meaning/v/vi/villa.jsonl"
+  },
+  "ch16-imperium": {
+    "forms": {
+      "sg": {
+        "nom": "imperium",
+        "gen": "imperiī",
+        "dat": "imperiō",
+        "acc": "imperium",
+        "abl": "imperiō"
+      },
+      "pl": {
+        "nom": "imperia",
+        "gen": "imperiōrum",
+        "dat": "imperiīs",
+        "acc": "imperia",
+        "abl": "imperiīs"
+      }
+    },
+    "source": "https://kaikki.org/dictionary/Latin/meaning/i/im/imperium.jsonl"
+  },
+  "ch16-lūx": {
+    "forms": {
+      "sg": {
+        "nom": "lūx",
+        "gen": "lūcis",
+        "dat": "lūcī",
+        "acc": "lūcem",
+        "abl": "lūce"
+      },
+      "pl": {
+        "nom": "lūcēs",
+        "gen": "lūcum",
+        "dat": "lūcibus",
+        "acc": "lūcēs",
+        "abl": "lūcibus"
+      }
+    },
+    "source": "https://kaikki.org/dictionary/Latin/meaning/l/lu/lux.jsonl"
+  },
+  "ch16-prīnceps": {
+    "forms": {
+      "sg": {
+        "nom": "prīnceps",
+        "gen": "prīncipis",
+        "dat": "prīncipī",
+        "acc": "prīncipem",
+        "abl": "prīncipe"
+      },
+      "pl": {
+        "nom": "prīncipēs",
+        "gen": "prīncipum",
+        "dat": "prīncipibus",
+        "acc": "prīncipēs",
+        "abl": "prīncipibus"
+      }
+    },
+    "source": "https://kaikki.org/dictionary/Latin/meaning/p/pr/princeps.jsonl"
+  },
+  "ch16-rēgīna": {
+    "forms": {
+      "sg": {
+        "nom": "rēgīna",
+        "gen": "rēgīnae",
+        "dat": "rēgīnae",
+        "acc": "rēgīnam",
+        "abl": "rēgīnā"
+      },
+      "pl": {
+        "nom": "rēgīnae",
+        "gen": "rēgīnārum",
+        "dat": "rēgīnīs",
+        "acc": "rēgīnās",
+        "abl": "rēgīnīs"
+      }
+    },
+    "source": "https://kaikki.org/dictionary/Latin/meaning/r/re/regina.jsonl"
   }
 };

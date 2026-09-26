@@ -6,8 +6,9 @@ import type { Declension } from './nouns';
 
 export interface Unlock<T> {
   id: T;
-  // Local calendar date (YYYY-MM-DD) the unit becomes available by default.
-  opens: string;
+  // Local calendar date (YYYY-MM-DD) the unit becomes available by default; null when
+  // the class date isn't known yet, so it stays closed until toggled on.
+  opens: string | null;
 }
 
 export const CHAPTER_UNLOCKS: Unlock<number>[] = [
@@ -18,6 +19,8 @@ export const CHAPTER_UNLOCKS: Unlock<number>[] = [
   // Ch.5 homework is due 10/9 and ch.6 on 10/21; each opens a week ahead.
   { id: 5, opens: '2026-10-02' },
   { id: 6, opens: '2026-10-14' },
+  // Ch.7–16 dates aren't on the schedule yet.
+  ...[7, 8, 9, 10, 11, 12, 13, 14, 15, 16].map((id) => ({ id, opens: null })),
 ];
 
 export const DECLENSION_UNLOCKS: Unlock<Declension>[] = [
@@ -36,4 +39,4 @@ export const todayKey = (now: Date = new Date()): string => {
 };
 
 export const openByDate = <T>(unlocks: Unlock<T>[], today: string = todayKey()): Set<T> =>
-  new Set(unlocks.filter((u) => u.opens <= today).map((u) => u.id));
+  new Set(unlocks.filter((u) => u.opens !== null && u.opens <= today).map((u) => u.id));

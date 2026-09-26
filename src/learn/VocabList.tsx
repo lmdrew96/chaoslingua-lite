@@ -36,7 +36,10 @@ export function VocabList({ openChapters }: VocabListProps) {
                       <td>
                         {v.en}
                         {v.declension && <span className="vocab-decl"> · {ordinal(v.declension)} decl.</span>}
-                        {v.principalCase === 'gen' && <span className="vocab-decl"> · gen. from LATN 101 list</span>}
+                        {v.principalCase === 'gen' && v.chapter === 1 && (
+                          <span className="vocab-decl"> · gen. from LATN 101 list</span>
+                        )}
+                        {v.irregular && <span className="vocab-decl"> · irregular</span>}
                         {v.unconfirmed && <div className="vocab-flag">⚠ Needs confirming: {v.unconfirmed}</div>}
                       </td>
                     </tr>

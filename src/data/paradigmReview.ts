@@ -1,14 +1,23 @@
 // Hand-maintained inputs to scripts/import-paradigms.ts — the only place a human
 // decision changes what the Wiktionary import produces.
 
-import type { Case, GNumber } from './nouns';
+import type { Case } from './nouns';
 
-// Slots where Wiktionary lists a variant first that Suburani doesn't use. Keyed by
-// the vocab entry's nominative. The import's rule stays "first listed form wins";
-// these are explicit exceptions, not a second rule.
-export const FORM_OVERRIDES: Record<string, Partial<Record<GNumber, Partial<Record<Case, string>>>>> = {
-  // Wiktionary writes cornū̆ (breve = vowel length uncertain); Suburani writes cornū.
+// Exceptions to the import's "first listed form wins" rule, keyed by the vocab entry's
+// nominative. `sg`/`pl` replace single slots; `replace` rewrites a substring in every
+// form of that noun. Mostly for Wiktionary's macron+breve marks (ō̆ = "length
+// uncertain"): Suburani commits to one length, and that spelling is what goes here.
+export interface FormOverride {
+  sg?: Partial<Record<Case, string>>;
+  pl?: Partial<Record<Case, string>>;
+  replace?: Array<[from: string, to: string]>;
+}
+
+export const FORM_OVERRIDES: Record<string, FormOverride> = {
   cornū: { sg: { nom: 'cornū', acc: 'cornū' } },
+  homō: { replace: [['ō̆', 'ō']] },
+  sanguis: { replace: [['ī̆', 'i']] },
+  prīnceps: { replace: [['ī̆', 'ī']] },
 };
 
 // Nouns the import flagged for review (irregular, or disagreeing with the Suburani

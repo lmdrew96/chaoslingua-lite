@@ -29,7 +29,7 @@ export const jobPhrase = (c: Case, n: GNumber, noun: ParseNoun): string => {
 const pool = (ctx: DrillContext): Map<Declension, ParseNoun[]> => {
   const byDecl = new Map<Declension, ParseNoun[]>();
   const add = (n: ParseNoun) => byDecl.set(n.declension, [...(byDecl.get(n.declension) ?? []), n]);
-  const modelNoms = new Set<string>();
+  const modelNoms = new Set<string>(); // nominatives already in the pool
   for (const n of MODEL_NOUNS) {
     if (!ctx.declensions.has(n.declension)) continue;
     add(n);
@@ -37,7 +37,9 @@ const pool = (ctx: DrillContext): Map<Declension, ParseNoun[]> => {
   }
   for (const v of drillableNouns(ctx.chapters, ctx.declensions)) {
     const imported = IMPORTED_PARADIGMS[v.id];
+    // Skip repeats too: a noun can be relisted in a later chapter (īnsula in ch.1 and 7).
     if (!imported || imported.review || modelNoms.has(v.la)) continue;
+    modelNoms.add(v.la);
     const gloss = v.en.split(',')[0].trim();
     add({
       id: v.id,

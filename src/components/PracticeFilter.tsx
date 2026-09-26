@@ -25,7 +25,8 @@ const rangeLabel = (ids: number[]): string => {
   return contiguous && sorted.length > 1 ? `${sorted[0]}–${sorted[sorted.length - 1]}` : sorted.join(', ');
 };
 
-const shortDate = (iso: string): string => {
+const shortDate = (iso: string | null): string => {
+  if (!iso) return 'date TBD';
   const [, m, d] = iso.split('-');
   return `${Number(m)}/${Number(d)}`;
 };
