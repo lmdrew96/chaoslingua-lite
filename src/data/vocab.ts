@@ -10,9 +10,10 @@
 //   -ēs / -em, stem kept      → 5th (diēs, diem — also listed as 5th in the grammar)
 //   -us / -um                 → 2nd OR 4th — not decidable from the forms alone, so
 //                               these are confirmed against Prof. Hartman's LATN 101
-//                               2nd-declension list, or flagged `unconfirmed`.
+//                               2nd-declension list or by Nae, else flagged
+//                               `unconfirmed`.
 // Ch.1 lists bare nominatives (frāter, hōra, …). Where the LATN 101 declension lists
-// give the genitive, that's used as the principal form instead; the rest are flagged.
+// give the genitive, that's used as the principal form instead; the rest have none.
 
 import type { Declension } from './nouns';
 
@@ -82,13 +83,13 @@ const noun = (
 // "Nouns: 1st/2nd Declension" lists, which Prof. Hartman builds from Suburani.
 const fromClassList = (gen: string): Partial<VocabEntry> => ({ principal: gen, principalCase: 'gen' });
 
-const NO_FORMS = 'Suburani ch.1 lists only the nominative, and it isn’t on the LATN 101 1st/2nd declension lists.';
-
 export const vocab: VocabEntry[] = [
   // Chapter 1
   word(1, 'Verb', 'dormiō', 'I sleep'),
   word(1, 'Pronoun', 'ego', 'I'),
-  noun(1, 'frāter', null, 'm', 3, 'brother', { unconfirmed: NO_FORMS }),
+  // frāter, pater: no second form in any source; 3rd declension confirmed by Nae (9/25).
+  // With no listed accusative, the decode drill skips them.
+  noun(1, 'frāter', null, 'm', 3, 'brother'),
   noun(1, 'hōra', null, 'f', 1, 'hour', fromClassList('hōrae')),
   word(1, 'Preposition', 'in', 'in, on'),
   noun(1, 'īnsula', null, 'f', 1, 'apartment building', fromClassList('īnsulae')),
@@ -96,7 +97,7 @@ export const vocab: VocabEntry[] = [
   word(1, 'Verb', 'legō', 'I read'),
   word(1, 'Adjective', 'meus', 'my'),
   word(1, 'Adverb', 'nōn', 'not'),
-  noun(1, 'pater', null, 'm', 3, 'father', { unconfirmed: NO_FORMS }),
+  noun(1, 'pater', null, 'm', 3, 'father'),
   word(1, 'Verb', 'rīdeō', 'I laugh, smile'),
   noun(1, 'servus', null, 'm', 2, 'slave, enslaved person (male)', fromClassList('servī')),
   word(1, 'Pronoun', 'tū', 'you (singular)'),
@@ -113,9 +114,8 @@ export const vocab: VocabEntry[] = [
   word(2, 'Verb', 'dūcō', 'I lead, take'),
   word(2, 'Conjunction', 'et', 'and'),
   noun(2, 'fīlia', 'fīliam', 'f', 1, 'daughter', { animate: true }),
-  noun(2, 'fīlius', 'fīlium', 'm', 2, 'son', {
-    unconfirmed: '-us / -um fits both 2nd and 4th declension, and fīlius isn’t on the LATN 101 2nd-declension list.',
-  }),
+  // -us / -um fits 2nd or 4th; 2nd confirmed by Nae (9/25) — not on the LATN 101 list.
+  noun(2, 'fīlius', 'fīlium', 'm', 2, 'son', { animate: true }),
   noun(2, 'forum', 'forum', 'n', 2, 'forum, marketplace'),
   word(2, 'Verb', 'habeō', 'I have, hold'),
   word(2, 'Verb', 'habitō', 'I live'),
