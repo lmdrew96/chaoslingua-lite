@@ -3,7 +3,7 @@ import { useMutation, useQuery } from 'convex/react';
 import { api } from '../../convex/_generated/api';
 import type { Id } from '../../convex/_generated/dataModel';
 import { makeDrill } from '../drills';
-import type { GeneratedDrill } from '../drills/types';
+import type { Drill, DrillContext } from '../drills/types';
 
 export interface SessionStats {
   attempted: number;
@@ -14,22 +14,22 @@ export interface SessionStats {
 const SESSION_GOAL = 12;
 const ZERO_STATS: SessionStats = { attempted: 0, correct: 0, streak: 0 };
 
-export function useDrillSession(chapters: Set<number>, types: Set<string>, userId: Id<'users'> | null) {
+export function useDrillSession(types: Set<string>, ctx: DrillContext, userId: Id<'users'> | null) {
   const progress = useQuery(api.progress.getProgress);
   const saveProgress = useMutation(api.progress.saveProgress);
   const logAttempt = useMutation(api.attempts.logTutoringAttempt);
 
   const [stats, setStats] = useState<SessionStats>(ZERO_STATS);
-  const [current, setCurrent] = useState<GeneratedDrill | null>(null);
+  const [current, setCurrent] = useState<Drill | null>(null);
   const hydrated = useRef(false);
 
   useEffect(() => {
     if (progress && !hydrated.current) {
       hydrated.current = true;
       setStats({ attempted: progress.attempted, correct: progress.correct, streak: progress.streak });
-      setCurrent(makeDrill({ chapters, types }));
+      setCurrent(makeDrill(types, ctx));
     }
-  }, [progress, chapters, types]);
+  }, [progress, types, ctx]);
 
   const handleAnswer = (isCorrect: boolean) => {
     const next: SessionStats = {
@@ -40,16 +40,16 @@ export function useDrillSession(chapters: Set<number>, types: Set<string>, userI
     setStats(next);
     void saveProgress(next);
     if (userId && current) {
-      void logAttempt({ userId, drillType: current.type, chapter: current.chapter, correct: isCorrect });
+      void logAttempt({ userId, drillType: current.type, ...current.meta, correct: isCorrect });
     }
   };
 
-  const nextDrill = () => setCurrent(makeDrill({ chapters, types }));
+  const nextDrill = () => setCurrent(makeDrill(types, ctx));
 
   const reset = () => {
     setStats(ZERO_STATS);
     void saveProgress(ZERO_STATS);
-    setCurrent(makeDrill({ chapters, types }));
+    setCurrent(makeDrill(types, ctx));
   };
 
   return {

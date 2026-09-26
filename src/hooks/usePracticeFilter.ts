@@ -1,78 +1,53 @@
 import { useState } from 'react';
-import { ALL_LABELS, CHAPTERS } from '../drills';
+import { ALL_TYPES } from '../drills';
 
-const STORAGE_KEY = 'chaoslingua-lite:practiceFilter';
+const STORAGE_KEY = 'chaoslingua-lite:practiceTypes';
 
-interface StoredFilter {
-  chapters: number[];
-  types: string[];
-}
-
-function loadStored(): StoredFilter {
+function loadStored(): string[] {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) throw new Error('no stored filter');
-    const parsed = JSON.parse(raw) as Partial<StoredFilter>;
-    const chapters = Array.isArray(parsed.chapters) ? parsed.chapters.filter((c) => CHAPTERS.includes(c)) : [];
-    const types = Array.isArray(parsed.types) ? parsed.types.filter((t) => ALL_LABELS.includes(t)) : [];
-    return {
-      chapters: chapters.length ? chapters : [...CHAPTERS],
-      types: types.length ? types : [...ALL_LABELS],
-    };
-  } catch {
-    return { chapters: [...CHAPTERS], types: [...ALL_LABELS] };
+    if (!raw) return [...ALL_TYPES];
+    const parsed: unknown = JSON.parse(raw);
+    const types = Array.isArray(parsed) ? parsed.filter((t): t is string => ALL_TYPES.includes(t)) : [];
+    return types.length ? types : [...ALL_TYPES];
+  } catch (err) {
+    console.warn('Ignoring unreadable practice filter', err);
+    return [...ALL_TYPES];
   }
 }
 
-function persist(chapters: Set<number>, types: Set<string>) {
-  const value: StoredFilter = { chapters: [...chapters], types: [...types] };
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(value));
+function persist(types: Set<string>) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify([...types]));
 }
 
 export function usePracticeFilter() {
-  const [stored] = useState(loadStored);
-  const [chapters, setChapters] = useState<Set<number>>(() => new Set(stored.chapters));
-  const [types, setTypes] = useState<Set<string>>(() => new Set(stored.types));
+  const [types, setTypes] = useState<Set<string>>(() => new Set(loadStored()));
 
-  const toggleChapter = (chapter: number) => {
-    setChapters((prev) => {
-      if (prev.has(chapter) && prev.size === 1) return prev;
-      const next = new Set(prev);
-      if (next.has(chapter)) next.delete(chapter);
-      else next.add(chapter);
-      persist(next, types);
-      return next;
-    });
-  };
-
-  const toggleType = (label: string) => {
+  const toggleType = (type: string) => {
     setTypes((prev) => {
-      if (prev.has(label) && prev.size === 1) return prev;
+      if (prev.has(type) && prev.size === 1) return prev;
       const next = new Set(prev);
-      if (next.has(label)) next.delete(label);
-      else next.add(label);
-      persist(chapters, next);
+      if (next.has(type)) next.delete(type);
+      else next.add(type);
+      persist(next);
       return next;
     });
   };
 
   const resetFilter = () => {
-    const allChapters = new Set(CHAPTERS);
-    const allTypes = new Set(ALL_LABELS);
-    setChapters(allChapters);
-    setTypes(allTypes);
-    persist(allChapters, allTypes);
+    const all = new Set(ALL_TYPES);
+    setTypes(all);
+    persist(all);
   };
 
-  // Bulk-replace the whole selection at once — used by "focus on weak spots" rather
-  // than toggle-by-toggle, since that always has an exact target combination in mind.
-  const applyFilter = (nextChapters: number[], nextTypes: string[]) => {
-    const chaptersSet = new Set(nextChapters.length ? nextChapters : CHAPTERS);
-    const typesSet = new Set(nextTypes.length ? nextTypes : ALL_LABELS);
-    setChapters(chaptersSet);
-    setTypes(typesSet);
-    persist(chaptersSet, typesSet);
+  // Bulk-replace the selection — used by "focus on weak spots", which always has an
+  // exact target set in mind.
+  const applyFilter = (nextTypes: string[]) => {
+    const next = new Set(nextTypes.filter((t) => ALL_TYPES.includes(t)));
+    const final = next.size ? next : new Set(ALL_TYPES);
+    setTypes(final);
+    persist(final);
   };
 
-  return { chapters, types, toggleChapter, toggleType, resetFilter, applyFilter };
+  return { types, toggleType, resetFilter, applyFilter };
 }

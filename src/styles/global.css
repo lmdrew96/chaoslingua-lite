@@ -337,7 +337,7 @@ h2 { font-size: 1.4rem; font-weight: 500; margin-bottom: 4px; }
 /* Fraunces mis-measures the advance width of precomposed macron vowels (e.g. ō, ē)
    at word end, so a trailing macron glues into the next word ("amōrefer"). Georgia
    doesn't have this bug, so inline Latin terms fall back to it instead of Fraunces. */
-.prompt .latin { color: var(--color-teal-deep); font-family: Georgia, serif; }
+.latin, .prompt .latin { color: var(--color-teal-deep); font-family: Georgia, serif; }
 
 .options {
   display: grid;
@@ -466,3 +466,37 @@ input[type="text"]:focus {
 }
 
 .loading { color: var(--color-teal-deep); font-size: 0.9rem; }
+
+/* Suburani Learn sections */
+.th-sub {
+  display: block;
+  font-weight: 400;
+  font-size: 0.75rem;
+  opacity: 0.75;
+}
+
+.learn-note {
+  font-size: 0.9rem;
+  margin: 12px 0 0;
+}
+
+.case-use-group + .case-use-group { margin-top: 14px; }
+
+.case-use-heading {
+  font-size: 1rem;
+  text-transform: capitalize;
+  margin-bottom: 4px;
+}
+
+.case-use-list {
+  margin: 0;
+  padding-left: 20px;
+  font-size: 0.92rem;
+}
+
+.case-use-list li + li { margin-top: 6px; }
+
+.feedback-detail {
+  margin-top: 6px;
+  font-size: 0.92rem;
+}

@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import type { Drill } from '../drills/types';
 import { OptionButton } from './OptionButton';
-import { TextAnswerInput } from './TextAnswerInput';
 import { ProgressBar } from './ProgressBar';
 
 interface DrillCardProps {
@@ -32,36 +31,27 @@ export function DrillCard({ drill, attempted, sessionGoal, onAnswer, onNext, onR
     onAnswer(isCorrect);
   };
 
-  const isTextDrill = drill.type === 'translate_english_type';
-
   return (
     <div className="card">
       <div className="drill-type-label">{drill.label}</div>
       <div className="prompt" dangerouslySetInnerHTML={{ __html: drill.prompt }} />
 
-      {isTextDrill ? (
-        <TextAnswerInput
-          drill={drill}
-          answered={answered}
-          onSubmit={(isCorrect, value) => submit(isCorrect, value)}
-        />
-      ) : (
-        <div className="options">
-          {drill.options?.map((opt) => (
-            <OptionButton
-              key={opt}
-              option={opt}
-              answer={drill.answer}
-              answered={answered}
-              chosen={chosen}
-              onClick={() => submit(opt === drill.answer, opt)}
-            />
-          ))}
-        </div>
-      )}
+      <div className="options">
+        {drill.options.map((opt) => (
+          <OptionButton
+            key={opt}
+            option={opt}
+            answer={drill.answer}
+            answered={answered}
+            chosen={chosen}
+            onClick={() => submit(opt === drill.answer, opt)}
+          />
+        ))}
+      </div>
 
       <div className={`feedback ${answered ? `show ${wasCorrect ? 'good' : 'bad'}` : ''}`}>
         {answered && (wasCorrect ? 'Recte! Correct.' : `Not quite — correct answer: ${drill.answer}`)}
+        {answered && drill.explanation && <div className="feedback-detail">{drill.explanation}</div>}
       </div>
 
       <ProgressBar attempted={attempted} goal={sessionGoal} />

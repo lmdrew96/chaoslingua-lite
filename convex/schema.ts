@@ -24,7 +24,11 @@ export default defineSchema({
   attempts: defineTable({
     userId: v.id("users"),
     drillType: v.string(),
-    chapter: v.number(),
+    // Suburani chapter, when the drill draws from one chapter's vocab.
+    chapter: v.optional(v.number()),
+    // Parse drills attribute each answer to the declension + case they tested.
+    declension: v.optional(v.number()),
+    case: v.optional(v.string()),
     correct: v.boolean(),
     timestamp: v.number(),
   })

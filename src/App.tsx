@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { useQuery } from 'convex/react';
 import { api } from '../convex/_generated/api';
-import { drillGroupsForTypes } from './drills';
+import { DECLENSIONS } from './data/nouns';
+import type { DrillContext } from './drills';
 import { useAccount } from './hooks/useAccount';
 import { useDrillSession } from './hooks/useDrillSession';
 import { usePracticeFilter } from './hooks/usePracticeFilter';
@@ -14,16 +15,18 @@ import { AccountPanel } from './components/AccountPanel';
 
 type View = 'drill' | 'learn';
 
+const DRILL_CONTEXT: DrillContext = { declensions: new Set(DECLENSIONS), chapters: new Set() };
+
 const MIN_WEAK_SPOT_ATTEMPTS = 3;
 const MAX_WEAK_SPOT_TYPES = 3;
 
 function App() {
   const [view, setView] = useState<View>('drill');
   const { account, token, loading: accountLoading, busy, error, createAccount, joinAccount, signOut } = useAccount();
-  const { chapters, types, toggleChapter, toggleType, resetFilter, applyFilter } = usePracticeFilter();
+  const { types, toggleType, resetFilter, applyFilter } = usePracticeFilter();
   const { loading, stats, current, sessionGoal, handleAnswer, nextDrill, reset } = useDrillSession(
-    chapters,
     types,
+    DRILL_CONTEXT,
     account?.userId ?? null,
   );
 
@@ -33,8 +36,7 @@ function App() {
     .slice(0, MAX_WEAK_SPOT_TYPES);
 
   const focusWeakSpots = () => {
-    const groups = drillGroupsForTypes(qualifyingWeakAreas.map((w) => w.drillType));
-    applyFilter([...new Set(groups.map((g) => g.chapter))], [...new Set(groups.map((g) => g.label))]);
+    applyFilter([...new Set(qualifyingWeakAreas.map((w) => w.drillType))]);
   };
 
   return (
@@ -42,7 +44,7 @@ function App() {
       <div className="top-row">
         <div>
           <h1>ChaosLingua Lite</h1>
-          <div className="subtitle">Wheelock's Ch. 1-5 — verbs &amp; sum; 1st/2nd declension nouns, adjectives, apposition &amp; word order</div>
+          <div className="subtitle">Suburani — the five noun declensions &amp; what each case does</div>
         </div>
         <StreakPill streak={stats.streak} />
       </div>
@@ -78,9 +80,7 @@ function App() {
       ) : (
         <>
           <PracticeFilter
-            chapters={chapters}
             types={types}
-            onToggleChapter={toggleChapter}
             onToggleType={toggleType}
             onReset={resetFilter}
             weakSpotsAvailable={qualifyingWeakAreas.length > 0}
@@ -88,9 +88,13 @@ function App() {
           />
           <StatsRow attempted={stats.attempted} correct={stats.correct} />
 
-          {loading || !current ? (
+          {loading ? (
             <div className="card">
               <div className="loading">Setting up your drill session…</div>
+            </div>
+          ) : !current ? (
+            <div className="card">
+              <div className="loading">No drills available yet — the Learn tab has the declension tables in the meantime.</div>
             </div>
           ) : (
             <DrillCard
