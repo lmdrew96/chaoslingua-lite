@@ -1,5 +1,5 @@
 import { CASES, DECLENSIONS, caseNames, genderNames, modelNounsFor, ordinal, tableGloss } from '../data/nouns';
-import type { GNumber, ModelNoun } from '../data/nouns';
+import type { Declension, GNumber, ModelNoun } from '../data/nouns';
 
 function ParadigmTable({ nouns, number }: { nouns: ModelNoun[]; number: GNumber }) {
   return (
@@ -34,7 +34,8 @@ function ParadigmTable({ nouns, number }: { nouns: ModelNoun[]; number: GNumber 
   );
 }
 
-export function DeclensionTables() {
+// Disabled declensions stay readable here — only drills skip them.
+export function DeclensionTables({ openDeclensions }: { openDeclensions: Set<Declension> }) {
   return (
     <>
       {DECLENSIONS.map((d) => {
@@ -42,7 +43,10 @@ export function DeclensionTables() {
         const notes = nouns.flatMap((n) => (n.note ? [n.note] : []));
         return (
           <details className="learn-section" key={d}>
-            <summary>{ordinal(d)} declension</summary>
+            <summary>
+              {ordinal(d)} declension
+              {!openDeclensions.has(d) && <span className="locked-tag">🔒 not in drills yet</span>}
+            </summary>
             <ParadigmTable nouns={nouns} number="sg" />
             <ParadigmTable nouns={nouns} number="pl" />
             {notes.map((note) => (

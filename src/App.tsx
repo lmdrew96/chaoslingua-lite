@@ -20,7 +20,7 @@ const MAX_WEAK_SPOT_TYPES = 3;
 function App() {
   const [view, setView] = useState<View>('drill');
   const { account, token, loading: accountLoading, busy, error, createAccount, joinAccount, signOut } = useAccount();
-  const { ctx } = useCourse();
+  const { ctx, toggleChapter, toggleDeclension, followSchedule, customized } = useCourse();
   const { types, toggleType, resetFilter, applyFilter } = usePracticeFilter();
   const { loading, stats, current, drillSeq, sessionGoal, handleAnswer, nextDrill, reset } = useDrillSession(
     types,
@@ -74,10 +74,15 @@ function App() {
       </div>
 
       {view === 'learn' ? (
-        <LearnView openChapters={ctx.chapters} />
+        <LearnView openChapters={ctx.chapters} openDeclensions={ctx.declensions} />
       ) : (
         <>
           <PracticeFilter
+            ctx={ctx}
+            onToggleChapter={toggleChapter}
+            onToggleDeclension={toggleDeclension}
+            onFollowSchedule={followSchedule}
+            customized={customized}
             types={types}
             onToggleType={toggleType}
             onReset={resetFilter}
@@ -92,7 +97,7 @@ function App() {
             </div>
           ) : !current ? (
             <div className="card">
-              <div className="loading">No drills available yet — the Learn tab has the declension tables in the meantime.</div>
+              <div className="loading">Nothing to drill with these settings — turn on another declension or chapter in the practice settings above.</div>
             </div>
           ) : (
             <DrillCard
