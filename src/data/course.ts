@@ -11,16 +11,25 @@ export interface Unlock<T> {
   opens: string | null;
 }
 
+// Each chapter opens on the day Canvas assigns it as textbook reading (Modules 1–6).
 export const CHAPTER_UNLOCKS: Unlock<number>[] = [
   { id: 1, opens: '2026-09-02' },
   { id: 2, opens: '2026-09-16' },
   { id: 3, opens: '2026-09-16' },
   { id: 4, opens: '2026-09-21' },
-  // Ch.5 homework is due 10/9 and ch.6 on 10/21; each opens a week ahead.
-  { id: 5, opens: '2026-10-02' },
-  { id: 6, opens: '2026-10-14' },
-  // Ch.7–16 dates aren't on the schedule yet.
-  ...[7, 8, 9, 10, 11, 12, 13, 14, 15, 16].map((id) => ({ id, opens: null })),
+  { id: 5, opens: '2026-10-07' },
+  { id: 6, opens: '2026-10-21' },
+  { id: 7, opens: '2026-10-07' },
+  { id: 8, opens: '2026-10-12' },
+  { id: 9, opens: '2026-10-12' },
+  { id: 10, opens: '2026-11-18' },
+  { id: 11, opens: '2026-11-18' },
+  // Ch.12 isn't assigned anywhere in the Module 1–6 schedules.
+  { id: 12, opens: null },
+  { id: 13, opens: '2026-12-02' },
+  { id: 14, opens: '2026-12-04' },
+  { id: 15, opens: '2026-12-04' },
+  { id: 16, opens: '2026-12-02' },
 ];
 
 export const DECLENSION_UNLOCKS: Unlock<Declension>[] = [
