@@ -1,12 +1,14 @@
 // Suburani model nouns — one paradigm table per declension pattern, copied from the
-// Suburani Reference Grammar (Book 2 "Nouns" tables; Book 1 has the 1st–3rd subset).
+// Suburani reference grammars (Book 2 "Nouns" tables, plus cīvis and metus from Book 3;
+// Book 1 has the 1st–3rd subset).
 // Every form below was checked against the textbook HTML, not generated from endings:
 // stems shift (nox → noct-, caput → capit-), 3rd-decl genitive plurals split -um/-ium,
 // and neuters have their own nom/acc, so a rule would get several of these wrong.
 
 export type Case = 'nom' | 'gen' | 'dat' | 'acc' | 'abl';
 export type GNumber = 'sg' | 'pl';
-export type Gender = 'm' | 'f' | 'n';
+// mf = either, depending on who's meant (cīvis).
+export type Gender = 'm' | 'f' | 'n' | 'mf';
 export type Declension = 1 | 2 | 3 | 4 | 5;
 
 // Suburani's (and LATN 101's) case order.
@@ -24,7 +26,7 @@ export const caseNames: Record<Case, string> = {
 
 export const numberNames: Record<GNumber, string> = { sg: 'singular', pl: 'plural' };
 
-export const genderNames: Record<Gender, string> = { m: 'masculine', f: 'feminine', n: 'neuter' };
+export const genderNames: Record<Gender, string> = { m: 'masculine', f: 'feminine', n: 'neuter', mf: 'masc./fem.' };
 
 export const ordinal = (d: Declension): string => ['1st', '2nd', '3rd', '4th', '5th'][d - 1];
 
@@ -69,6 +71,11 @@ export const MODEL_NOUNS: ModelNoun[] = [
     id: 'fur', declension: 3, gender: 'm', gloss: 'thief', glossPl: 'thieves',
     forms: paradigm('fūr fūris fūrī fūrem fūre', 'fūrēs fūrum fūribus fūrēs fūribus'),
   },
+  // cīvis and metus come from the Book 3 reference charts (B3_reference.pdf, p.242).
+  {
+    id: 'civis', declension: 3, gender: 'mf', gloss: 'citizen', glossPl: 'citizens',
+    forms: paradigm('cīvis cīvis cīvī cīvem cīve', 'cīvēs cīvium cīvibus cīvēs cīvibus'),
+  },
   {
     id: 'nox', declension: 3, gender: 'f', gloss: 'night', glossPl: 'nights',
     forms: paradigm('nox noctis noctī noctem nocte', 'noctēs noctium noctibus noctēs noctibus'),
@@ -82,8 +89,12 @@ export const MODEL_NOUNS: ModelNoun[] = [
     forms: paradigm('caput capitis capitī caput capite', 'capita capitum capitibus capita capitibus'),
     note: 'The ablative singular of mare ("sea") is marī.',
   },
-  // Feminine (confirmed by Nae 9/25) even though Suburani's 4th-declension table sets
-  // it in a "masculine" column; don't confuse with the adjective mānus.
+  {
+    id: 'metus', declension: 4, gender: 'm', gloss: 'fear', glossPl: 'fears',
+    forms: paradigm('metus metūs metuī metum metū', 'metūs metuum metibus metūs metibus'),
+  },
+  // Feminine: Book 2's 4th-declension chart sets it under "masculine", but the vocab
+  // lists and Book 3's chart say f. (Not the adjective mānus.)
   {
     id: 'manus', declension: 4, gender: 'f', gloss: 'hand', glossPl: 'hands',
     forms: paradigm('manus manūs manuī manum manū', 'manūs manuum manibus manūs manibus'),
