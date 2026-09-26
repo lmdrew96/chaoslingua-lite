@@ -41,6 +41,9 @@ export interface VocabEntry {
   gender?: VocabGender | null;
   declension?: Declension;
   pluralOnly?: boolean;
+  // A person or animal — either could plausibly do the action, which the decode drill
+  // needs so word-world knowledge can't give away who's the subject.
+  animate?: boolean;
   // Set when the sources don't settle the declension or forms — kept out of drills
   // until Nae confirms.
   unconfirmed?: string;
@@ -109,7 +112,7 @@ export const vocab: VocabEntry[] = [
   noun(2, 'cibus', 'cibum', 'm', 2, 'food'),
   word(2, 'Verb', 'dūcō', 'I lead, take'),
   word(2, 'Conjunction', 'et', 'and'),
-  noun(2, 'fīlia', 'fīliam', 'f', 1, 'daughter'),
+  noun(2, 'fīlia', 'fīliam', 'f', 1, 'daughter', { animate: true }),
   noun(2, 'fīlius', 'fīlium', 'm', 2, 'son', {
     unconfirmed: '-us / -um fits both 2nd and 4th declension, and fīlius isn’t on the LATN 101 2nd-declension list.',
   }),
@@ -130,14 +133,14 @@ export const vocab: VocabEntry[] = [
 
   // Chapter 3
   word(3, 'Verb', 'ambulō', 'I walk'),
-  noun(3, 'amīcus', 'amīcum', 'm', 2, 'friend'),
-  noun(3, 'ancilla', 'ancillam', 'f', 1, 'slave, enslaved person (female)'),
+  noun(3, 'amīcus', 'amīcum', 'm', 2, 'friend', { animate: true }),
+  noun(3, 'ancilla', 'ancillam', 'f', 1, 'slave, enslaved person (female)', { animate: true }),
   word(3, 'Verb', 'clāmō', 'I shout'),
   noun(3, 'clāmor', 'clāmōrem', 'm', 3, 'shout, shouting, noise'),
   word(3, 'Preposition', 'cum', 'with'),
   word(3, 'Verb', 'currō', 'I run'),
   word(3, 'Verb', 'dīcō', 'I say, speak, tell'),
-  noun(3, 'equus', 'equum', 'm', 2, 'horse'),
+  noun(3, 'equus', 'equum', 'm', 2, 'horse', { animate: true }),
   word(3, 'Verb', 'festīnō', 'I hurry'),
   noun(3, 'gladius', 'gladium', 'm', 2, 'sword'),
   word(3, 'Adjective', 'īnfēlīx', 'unlucky, unhappy'),
@@ -146,24 +149,24 @@ export const vocab: VocabEntry[] = [
   word(3, 'Adjective', 'omnis', 'all, every'),
   word(3, 'Preposition', 'per', 'through, along'),
   word(3, 'Adjective', 'prīmus', 'first'),
-  noun(3, 'senātor', 'senātōrem', 'm', 3, 'senator'),
+  noun(3, 'senātor', 'senātōrem', 'm', 3, 'senator', { animate: true }),
   noun(3, 'urbs', 'urbem', 'f', 3, 'city'),
   word(3, 'Verb', 'vincō', 'I conquer, win, am victorious'),
 
   // Chapter 4
   word(4, 'Preposition', 'ad', 'to, towards; at'),
   word(4, 'Verb', 'adsum', 'I am here, I am present'),
-  noun(4, 'deus', 'deum', 'm', 2, 'god'),
-  noun(4, 'dominus', 'dominum', 'm', 2, 'master'),
+  noun(4, 'deus', 'deum', 'm', 2, 'god', { animate: true }),
+  noun(4, 'dominus', 'dominum', 'm', 2, 'master', { animate: true }),
   noun(4, 'dōnum', 'dōnum', 'n', 2, 'gift, present'),
   word(4, 'Verb', 'laudō', 'I praise'),
   word(4, 'Pronoun', 'nōs', 'we, us'),
   word(4, 'Adjective', 'parvus', 'small'),
   noun(4, 'perīculum', 'perīculum', 'n', 2, 'danger'),
   word(4, 'Adjective', 'perterritus', 'terrified'),
-  noun(4, 'puella', 'puellam', 'f', 1, 'girl'),
+  noun(4, 'puella', 'puellam', 'f', 1, 'girl', { animate: true }),
   word(4, 'Conjunction', 'quod', 'because'),
-  noun(4, 'rēx', 'rēgem', 'm', 3, 'king'),
+  noun(4, 'rēx', 'rēgem', 'm', 3, 'king', { animate: true }),
   word(4, 'Adjective', 'Rōmānus', 'Roman'),
   word(4, 'Adverb', 'subitō', 'suddenly'),
   noun(4, 'templum', 'templum', 'n', 2, 'temple'),
@@ -176,11 +179,11 @@ export const vocab: VocabEntry[] = [
   noun(5, 'aqua', 'aquam', 'f', 1, 'water'),
   word(5, 'Verb', 'audiō, audīre', 'hear, listen to'),
   word(5, 'Verb', 'cupiō, cupere', 'want, desire'),
-  noun(5, 'custōs', 'custōdem', 'mf', 3, 'guard'),
+  noun(5, 'custōs', 'custōdem', 'mf', 3, 'guard', { animate: true }),
   word(5, 'Verb', 'dēbeō, dēbēre', 'owe'),
   word(5, 'Verb', 'dō, dare', 'give'),
   word(5, 'Verb', 'effugiō, effugere', 'escape'),
-  noun(5, 'iuvenis', 'iuvenem', 'mf', 3, 'young person'),
+  noun(5, 'iuvenis', 'iuvenem', 'mf', 3, 'young person', { animate: true }),
   word(5, 'Verb', 'maneō, manēre', 'remain, stay'),
   word(5, 'Pronoun', 'nēmō, nēminem', 'no one, nobody'),
   word(5, 'Verb', 'nōlō, nōlle', "don't want, refuse"),
@@ -205,8 +208,8 @@ export const vocab: VocabEntry[] = [
   word(6, 'Adverb', 'iam', 'now, already'),
   word(6, 'Preposition', 'in + acc.', 'into, onto'),
   word(6, 'Verb', 'inquit', 'says'),
-  noun(6, 'marītus', 'marītum', 'm', 2, 'husband'),
-  noun(6, 'māter', 'mātrem', 'f', 3, 'mother'),
+  noun(6, 'marītus', 'marītum', 'm', 2, 'husband', { animate: true }),
+  noun(6, 'māter', 'mātrem', 'f', 3, 'mother', { animate: true }),
   word(6, 'Preposition', 'prope + acc.', 'near'),
   word(6, 'Verb', 'rogō, rogāre', 'ask, ask for'),
   word(6, 'Verb', 'sedeō, sedēre', 'sit'),
@@ -214,7 +217,7 @@ export const vocab: VocabEntry[] = [
   word(6, 'Adjective', 'tōtus', 'whole'),
   word(6, 'Adjective', 'trīstis', 'sad'),
   word(6, 'Adjective', 'tuus', 'your (singular), yours'),
-  noun(6, 'uxor', 'uxōrem', 'f', 3, 'wife'),
+  noun(6, 'uxor', 'uxōrem', 'f', 3, 'wife', { animate: true }),
 ];
 
 export const VOCAB_CHAPTERS: number[] = [...new Set(vocab.map((v) => v.chapter))];

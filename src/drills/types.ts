@@ -45,4 +45,6 @@ export interface DrillType {
   label: string;
   // Null when the current gates leave nothing to draw from.
   make: (ctx: DrillContext) => Drill | null;
+  // A follow-up drill that must come next (e.g. a minimal-pair partner), if any.
+  takeQueued?: () => Drill | null;
 }

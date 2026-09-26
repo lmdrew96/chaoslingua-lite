@@ -526,3 +526,9 @@ input[type="text"]:focus {
 .parse-list { margin: 6px 0; padding-left: 20px; }
 .parse-list li + li { margin-top: 6px; }
 .parse-use { font-size: 0.85rem; opacity: 0.85; }
+
+.prompt-hint {
+  margin-top: 6px;
+  font-size: 0.85rem;
+  color: var(--color-teal-deep);
+}
