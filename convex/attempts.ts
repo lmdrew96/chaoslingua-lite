@@ -1,4 +1,4 @@
-import { mutation, query } from "./_generated/server";
+import { internalMutation, mutation, query } from "./_generated/server";
 import { v } from "convex/values";
 
 export const logTutoringAttempt = mutation({
@@ -51,5 +51,19 @@ export const getWeakAreas = query({
     return [...groups.values()]
       .map((stats) => ({ ...stats, accuracy: stats.correct / stats.attempted }))
       .sort((a, b) => a.accuracy - b.accuracy);
+  },
+});
+
+// One-off cleanup for the Wheelock-era tutoring log, which never reflected real study
+// (the content didn't match LATN 101). Deletes every attempt logged before `before`
+// (Unix ms) — pass the moment the Suburani version went live. Internal-only; run
+// from the CLI right after deploying, e.g.
+//   npx convex run attempts:wipeLegacyAttempts "{\"before\": $(date +%s000)}" --prod
+export const wipeLegacyAttempts = internalMutation({
+  args: { before: v.number() },
+  handler: async (ctx, args) => {
+    const legacy = (await ctx.db.query("attempts").collect()).filter((a) => a.timestamp < args.before);
+    for (const a of legacy) await ctx.db.delete(a._id);
+    return { deleted: legacy.length };
   },
 });
