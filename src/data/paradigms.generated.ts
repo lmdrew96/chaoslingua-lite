@@ -414,8 +414,7 @@ export const IMPORTED_PARADIGMS: Record<string, ImportedParadigm> = {
         "abl": "dīs"
       }
     },
-    "source": "https://kaikki.org/dictionary/Latin/meaning/d/de/deus.jsonl",
-    "review": "Wiktionary marks it irregular (\"deus m (genitive deī, feminine dea); irregular, second declension\")"
+    "source": "https://kaikki.org/dictionary/Latin/meaning/d/de/deus.jsonl"
   },
   "ch4-dominus": {
     "forms": {

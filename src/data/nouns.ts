@@ -82,8 +82,10 @@ export const MODEL_NOUNS: ModelNoun[] = [
     forms: paradigm('caput capitis capitī caput capite', 'capita capitum capitibus capita capitibus'),
     note: 'The ablative singular of mare ("sea") is marī.',
   },
+  // Feminine (confirmed by Nae 9/25) even though Suburani's 4th-declension table sets
+  // it in a "masculine" column; don't confuse with the adjective mānus.
   {
-    id: 'manus', declension: 4, gender: 'm', gloss: 'hand', glossPl: 'hands',
+    id: 'manus', declension: 4, gender: 'f', gloss: 'hand', glossPl: 'hands',
     forms: paradigm('manus manūs manuī manum manū', 'manūs manuum manibus manūs manibus'),
   },
   {

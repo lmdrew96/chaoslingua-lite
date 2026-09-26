@@ -13,4 +13,7 @@ export const FORM_OVERRIDES: Record<string, Partial<Record<GNumber, Partial<Reco
 
 // Nouns the import flagged for review (irregular, or disagreeing with the Suburani
 // list) that Nae has checked and approved for drills. Keyed by vocab id.
-export const APPROVED_FOR_DRILLS: string[] = [];
+export const APPROVED_FOR_DRILLS: string[] = [
+  // Irregular plural (dī, deōrum, dīs) — approved by Nae 9/25.
+  'ch4-deus',
+];
