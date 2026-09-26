@@ -1,8 +1,13 @@
 import { glossary } from '../learn/glossary';
 import { CaseUses } from '../learn/CaseUses';
 import { DeclensionTables } from '../learn/DeclensionTables';
+import { VocabList } from '../learn/VocabList';
 
-export function LearnView() {
+interface LearnViewProps {
+  openChapters: Set<number>;
+}
+
+export function LearnView({ openChapters }: LearnViewProps) {
   return (
     <div className="card">
       <details className="learn-section" open>
@@ -18,6 +23,7 @@ export function LearnView() {
       </details>
       <CaseUses />
       <DeclensionTables />
+      <VocabList openChapters={openChapters} />
     </div>
   );
 }

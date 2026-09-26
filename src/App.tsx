@@ -1,9 +1,8 @@
 import { useState } from 'react';
 import { useQuery } from 'convex/react';
 import { api } from '../convex/_generated/api';
-import { DECLENSIONS } from './data/nouns';
-import type { DrillContext } from './drills';
 import { useAccount } from './hooks/useAccount';
+import { useCourse } from './hooks/useCourse';
 import { useDrillSession } from './hooks/useDrillSession';
 import { usePracticeFilter } from './hooks/usePracticeFilter';
 import { StatsRow } from './components/StatsRow';
@@ -15,18 +14,17 @@ import { AccountPanel } from './components/AccountPanel';
 
 type View = 'drill' | 'learn';
 
-const DRILL_CONTEXT: DrillContext = { declensions: new Set(DECLENSIONS), chapters: new Set() };
-
 const MIN_WEAK_SPOT_ATTEMPTS = 3;
 const MAX_WEAK_SPOT_TYPES = 3;
 
 function App() {
   const [view, setView] = useState<View>('drill');
   const { account, token, loading: accountLoading, busy, error, createAccount, joinAccount, signOut } = useAccount();
+  const { ctx } = useCourse();
   const { types, toggleType, resetFilter, applyFilter } = usePracticeFilter();
   const { loading, stats, current, sessionGoal, handleAnswer, nextDrill, reset } = useDrillSession(
     types,
-    DRILL_CONTEXT,
+    ctx,
     account?.userId ?? null,
   );
 
@@ -76,7 +74,7 @@ function App() {
       </div>
 
       {view === 'learn' ? (
-        <LearnView />
+        <LearnView openChapters={ctx.chapters} />
       ) : (
         <>
           <PracticeFilter

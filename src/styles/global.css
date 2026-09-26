@@ -500,3 +500,22 @@ input[type="text"]:focus {
   margin-top: 6px;
   font-size: 0.92rem;
 }
+
+.vocab-chapter { margin-top: 10px; }
+.vocab-chapter summary { cursor: pointer; font-weight: 500; }
+
+.locked-tag {
+  margin-left: 8px;
+  font-size: 0.8rem;
+  font-weight: 400;
+  opacity: 0.7;
+}
+
+.vocab-table td { vertical-align: top; }
+.vocab-decl { font-size: 0.8rem; opacity: 0.7; }
+
+.vocab-flag {
+  margin-top: 4px;
+  font-size: 0.8rem;
+  color: var(--color-mauve-deep);
+}
