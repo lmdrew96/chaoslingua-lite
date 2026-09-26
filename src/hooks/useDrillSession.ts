@@ -3,7 +3,7 @@ import { useMutation, useQuery } from 'convex/react';
 import { api } from '../../convex/_generated/api';
 import type { Id } from '../../convex/_generated/dataModel';
 import { makeDrill } from '../drills';
-import type { Drill, DrillContext } from '../drills/types';
+import type { AttemptMeta, Drill, DrillContext } from '../drills/types';
 
 export interface SessionStats {
   attempted: number;
@@ -21,6 +21,8 @@ export function useDrillSession(types: Set<string>, ctx: DrillContext, userId: I
 
   const [stats, setStats] = useState<SessionStats>(ZERO_STATS);
   const [current, setCurrent] = useState<Drill | null>(null);
+  // Bumped on every new drill so the card can remount even when two drills look alike.
+  const [drillSeq, setDrillSeq] = useState(0);
   const hydrated = useRef(false);
 
   useEffect(() => {
@@ -28,10 +30,11 @@ export function useDrillSession(types: Set<string>, ctx: DrillContext, userId: I
       hydrated.current = true;
       setStats({ attempted: progress.attempted, correct: progress.correct, streak: progress.streak });
       setCurrent(makeDrill(types, ctx));
+      setDrillSeq((n) => n + 1);
     }
   }, [progress, types, ctx]);
 
-  const handleAnswer = (isCorrect: boolean) => {
+  const handleAnswer = (isCorrect: boolean, meta?: AttemptMeta) => {
     const next: SessionStats = {
       attempted: stats.attempted + 1,
       correct: stats.correct + (isCorrect ? 1 : 0),
@@ -40,22 +43,26 @@ export function useDrillSession(types: Set<string>, ctx: DrillContext, userId: I
     setStats(next);
     void saveProgress(next);
     if (userId && current) {
-      void logAttempt({ userId, drillType: current.type, ...current.meta, correct: isCorrect });
+      void logAttempt({ userId, drillType: current.type, ...(meta ?? current.meta), correct: isCorrect });
     }
   };
 
-  const nextDrill = () => setCurrent(makeDrill(types, ctx));
+  const nextDrill = () => {
+    setCurrent(makeDrill(types, ctx));
+    setDrillSeq((n) => n + 1);
+  };
 
   const reset = () => {
     setStats(ZERO_STATS);
     void saveProgress(ZERO_STATS);
-    setCurrent(makeDrill(types, ctx));
+    nextDrill();
   };
 
   return {
     loading: !hydrated.current,
     stats,
     current,
+    drillSeq,
     sessionGoal: SESSION_GOAL,
     handleAnswer,
     nextDrill,

@@ -519,3 +519,10 @@ input[type="text"]:focus {
   font-size: 0.8rem;
   color: var(--color-mauve-deep);
 }
+
+/* Parse drill */
+.parse-grid { display: grid; gap: 14px; margin-top: 8px; }
+.parse-row .chip-row { flex-wrap: wrap; }
+.parse-list { margin: 6px 0; padding-left: 20px; }
+.parse-list li + li { margin-top: 6px; }
+.parse-use { font-size: 0.85rem; opacity: 0.85; }

@@ -1,0 +1,40 @@
+import { useState } from 'react';
+import type { McDrill } from '../drills/types';
+import { OptionButton } from './OptionButton';
+
+interface McAnswerProps {
+  drill: McDrill;
+  answered: boolean;
+  onSubmit: (isCorrect: boolean) => void;
+}
+
+export function McAnswer({ drill, answered, onSubmit }: McAnswerProps) {
+  const [chosen, setChosen] = useState<string | null>(null);
+  const correct = chosen === drill.answer;
+
+  return (
+    <>
+      <div className="options">
+        {drill.options.map((opt) => (
+          <OptionButton
+            key={opt}
+            option={opt}
+            answer={drill.answer}
+            answered={answered}
+            chosen={chosen}
+            onClick={() => {
+              if (answered) return;
+              setChosen(opt);
+              onSubmit(opt === drill.answer);
+            }}
+          />
+        ))}
+      </div>
+
+      <div className={`feedback ${answered ? `show ${correct ? 'good' : 'bad'}` : ''}`}>
+        {answered && (correct ? 'Recte! Correct.' : `Not quite — correct answer: ${drill.answer}`)}
+        {answered && drill.explanation && <div className="feedback-detail">{drill.explanation}</div>}
+      </div>
+    </>
+  );
+}

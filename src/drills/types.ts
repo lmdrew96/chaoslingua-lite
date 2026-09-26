@@ -1,4 +1,4 @@
-import type { Case, Declension } from '../data/nouns';
+import type { Case, Declension, ModelNoun, Parse } from '../data/nouns';
 
 // What gets written to `attempts` alongside the drill type — each drill fills in
 // whatever it can meaningfully attribute an answer to.
@@ -20,7 +20,19 @@ export interface McDrill {
   meta: AttemptMeta;
 }
 
-export type Drill = McDrill;
+// Form → case + number + declension + job. Graded against every valid parse, since
+// many forms fit more than one slot.
+export interface ParseDrill {
+  kind: 'parse';
+  type: string;
+  label: string;
+  noun: ModelNoun;
+  form: string;
+  parses: Parse[];
+  meta: AttemptMeta;
+}
+
+export type Drill = McDrill | ParseDrill;
 
 // The pool a generator may draw from — set by the course gates, not the drill.
 export interface DrillContext {

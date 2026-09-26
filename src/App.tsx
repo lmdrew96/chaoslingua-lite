@@ -22,7 +22,7 @@ function App() {
   const { account, token, loading: accountLoading, busy, error, createAccount, joinAccount, signOut } = useAccount();
   const { ctx } = useCourse();
   const { types, toggleType, resetFilter, applyFilter } = usePracticeFilter();
-  const { loading, stats, current, sessionGoal, handleAnswer, nextDrill, reset } = useDrillSession(
+  const { loading, stats, current, drillSeq, sessionGoal, handleAnswer, nextDrill, reset } = useDrillSession(
     types,
     ctx,
     account?.userId ?? null,
@@ -96,6 +96,7 @@ function App() {
             </div>
           ) : (
             <DrillCard
+              key={drillSeq}
               drill={current}
               attempted={stats.attempted}
               sessionGoal={sessionGoal}
