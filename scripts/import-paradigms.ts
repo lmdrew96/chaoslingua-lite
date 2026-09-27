@@ -142,7 +142,16 @@ const resolveTarget = async (t: Target): Promise<Resolved> => {
     const g = describe(e).genders;
     return g.size === wanted.length && wanted.every((w) => g.has(w));
   });
-  const matches = exact.length === 1 ? exact : byGender.length ? byGender : byDecl;
+  const loose = exact.length === 1 ? exact : byGender.length ? byGender : byDecl;
+  // Homographs apart from macrons (liber "book" / līber "free man", ōs / os): the
+  // entry whose headword is spelled exactly as Suburani spells it wins. Kaikki's
+  // \`word\` drops macrons, so the headword comes from the expansion.
+  const spelled = loose.filter((e) => describe(e).expansion.split(/\s/)[0].normalize('NFC') === t.lemma.normalize('NFC'));
+  let matches = loose.length > 1 && spelled.length === 1 ? spelled : loose;
+  // Homographs that decline identically (carmen "song" / carmen "wool card") give the
+  // same paradigm whichever is taken.
+  if (matches.length > 1 && new Set(matches.map((e) => JSON.stringify(extractForms(e).forms))).size === 1)
+    matches = [matches[0]];
   const genderMismatch = !byGender.length;
   if (matches.length !== 1) {
     const seen = entries.map((e) => `"${describe(e).expansion}"`).join('; ');

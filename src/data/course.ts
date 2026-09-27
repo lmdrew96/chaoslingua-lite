@@ -30,6 +30,23 @@ export const CHAPTER_UNLOCKS: Unlock<number>[] = [
   { id: 14, opens: '2026-12-04' },
   { id: 15, opens: '2026-12-04' },
   { id: 16, opens: '2026-12-02' },
+  // Book 2 isn't on the Module 1–6 schedules; these stay closed until toggled on.
+  { id: 17, opens: null },
+  { id: 18, opens: null },
+  { id: 19, opens: null },
+  { id: 20, opens: null },
+  { id: 21, opens: null },
+  { id: 22, opens: null },
+  { id: 23, opens: null },
+  { id: 24, opens: null },
+  { id: 25, opens: null },
+  { id: 26, opens: null },
+  { id: 27, opens: null },
+  { id: 28, opens: null },
+  { id: 29, opens: null },
+  { id: 30, opens: null },
+  { id: 31, opens: null },
+  { id: 32, opens: null },
 ];
 
 export const DECLENSION_UNLOCKS: Unlock<Declension>[] = [

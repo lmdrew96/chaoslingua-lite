@@ -3,6 +3,7 @@ import { CASES, MODEL_NOUNS, NUMBERS, parsesOf, type Case, type Declension, type
 import { IMPORTED_PARADIGMS } from '../data/paradigms.generated';
 import { drillableNouns } from '../data/vocab';
 import { pick } from '../lib/random';
+import { english } from './forms';
 import type { DrillContext, DrillType, ParseDrill } from './types';
 
 // The English a case's job gives a noun — "of the nights" — so the parse ends in
@@ -40,7 +41,7 @@ const pool = (ctx: DrillContext): Map<Declension, ParseNoun[]> => {
     // Skip repeats too: a noun can be relisted in a later chapter (īnsula in ch.1 and 7).
     if (!imported || imported.review || modelNoms.has(v.la)) continue;
     modelNoms.add(v.la);
-    const gloss = v.en.split(',')[0].trim();
+    const gloss = english(v);
     add({
       id: v.id,
       declension: v.declension!,
