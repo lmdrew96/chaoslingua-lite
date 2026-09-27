@@ -2,11 +2,15 @@
 // Learners default to "first noun = doer"; these sentences put the nouns in orders
 // where that strategy fails, so only the endings reveal who does what.
 //
-// Three tiers, each served as a minimal pair (same words, same positions, endings
+// Four tiers, each served as a minimal pair (same words, same positions, endings
 // swapped):
 //   - nom/acc: who does it to whom.
 //   - dative: who gives the thing to whom.
 //   - ablative with a preposition: who does it with / away from whom.
+//   - route: where someone goes, out of one place (ē/ex + abl) into another
+//     (in + acc). ē/ex always takes the ablative, so here the lesson is reading
+//     preposition + case as a unit, in + acc = into, and not assuming the first
+//     place named is where the motion starts.
 //
 // Every word is a verified form. The nom/acc tier uses the nominatives and
 // accusatives straight from the Suburani vocab lists (Book 1 lists nom + acc); the
@@ -16,10 +20,10 @@
 // be the doer.
 
 import { ordinal, type Declension } from '../data/nouns';
-import { DATIVE_VERBS, DECODE_VERBS, PREP_VERBS, type DecodeVerb, type PrepVerb } from '../data/verbs';
+import { DATIVE_VERBS, DECODE_VERBS, PREP_VERBS, ROUTE_VERBS, type DecodeVerb, type PrepVerb } from '../data/verbs';
 import { drillableNouns, type VocabEntry } from '../data/vocab';
 import { pick, shuffle } from '../lib/random';
-import { capitalize, english, giveables, people, type Sourced } from './forms';
+import { capitalize, english, giveables, people, places, type Sourced } from './forms';
 import type { DrillContext, DrillType, McDrill } from './types';
 
 // Accusative singular endings by declension — every eligible noun's listed
@@ -223,6 +227,71 @@ const makeAblative = (ctx: DrillContext): [McDrill, McDrill] | null => {
   return [buildAblative(layout, one, two, false, verb), buildAblative(layout, one, two, true, verb)];
 };
 
+// --- Tier 4: route (ē/ex + ablative → in + accusative) --------------------------
+
+// Both ē/ex + abl. and in + acc. are ch.6 vocab.
+const ROUTE_CHAPTER = 6;
+
+// ex before a vowel or h, ē before a consonant — the same rule as ā/ab.
+const exWord = (abl: string): string => (/^[aeiouh]/i.test(abl.normalize('NFD')) ? 'ex' : 'ē');
+
+// 1 and 2 are the two places, M the mover, V the verb. The places keep their positions
+// and the prepositions move with the cases. The pair leads with place 1 as the
+// destination, so "the first place named is where they start" fails.
+const ROUTE_LAYOUTS = [
+  ['1', '2', 'M', 'V'],
+  ['M', '1', '2', 'V'],
+  ['1', 'M', '2', 'V'],
+] as const;
+
+const buildRoute = (
+  layout: (typeof ROUTE_LAYOUTS)[number],
+  one: Sourced,
+  two: Sourced,
+  oneIsSource: boolean,
+  mover: Sourced,
+  verb: DecodeVerb,
+): McDrill => {
+  const source = oneIsSource ? one : two;
+  const destination = oneIsSource ? two : one;
+  const ex = exWord(source.forms.sg.abl);
+  const words = layout.map((slot) => {
+    if (slot === 'V') return verb.la;
+    if (slot === 'M') return mover.forms.sg.nom;
+    const place = slot === '1' ? one : two;
+    return place === source ? `${ex} ${place.forms.sg.abl}` : `in ${place.forms.sg.acc}`;
+  });
+
+  const route = (from: Sourced, to: Sourced) =>
+    `The ${english(mover)} ${verb.en} out of the ${english(from)} into the ${english(to)}.`;
+  const answer = route(source, destination);
+
+  return {
+    kind: 'mc',
+    type: 'decode',
+    label: 'Decode',
+    prompt: prompt(words, `Where is the ${english(mover)} going? Go by the endings, not the order.`),
+    options: shuffle([answer, route(destination, source)]),
+    answer,
+    explanation: `${ex} takes the ablative: ${ex} ${source.forms.sg.abl} = “out of the ${english(source)}.” in + accusative means into: in ${destination.forms.sg.acc} = “into the ${english(destination)}” (in ${destination.forms.sg.abl}, ablative, would mean in the ${english(destination)}). Latin doesn’t have to name the starting point first.`,
+    meta: { chapter: Math.max(mover.chapter, source.chapter, destination.chapter, verb.chapter, ROUTE_CHAPTER), case: 'abl' },
+  };
+};
+
+const makeRoute = (ctx: DrillContext): [McDrill, McDrill] | null => {
+  if (!ctx.chapters.has(ROUTE_CHAPTER)) return null;
+  const verbs = ROUTE_VERBS.filter((v) => ctx.chapters.has(v.chapter));
+  const pair = pickPair(places(ctx));
+  const movers = people(ctx, 'acc');
+  if (!verbs.length || !pair || !movers.length) return null;
+
+  const [one, two] = pair;
+  const layout = pick([...ROUTE_LAYOUTS]);
+  const mover = pick(movers);
+  const verb = pick(verbs);
+  return [buildRoute(layout, one, two, false, mover, verb), buildRoute(layout, one, two, true, mover, verb)];
+};
+
 // --- Drill type -----------------------------------------------------------------
 
 // The minimal-pair partner of the last sentence, served as the very next decode drill.
@@ -230,7 +299,7 @@ let queued: McDrill | null = null;
 
 // A random tier each time, falling through to any other tier the gates allow.
 const makeDecode = (ctx: DrillContext): McDrill | null => {
-  for (const tier of shuffle([makeNomAcc, makeDative, makeAblative])) {
+  for (const tier of shuffle([makeNomAcc, makeDative, makeAblative, makeRoute])) {
     const pair = tier(ctx);
     if (!pair) continue;
     queued = pair[1];

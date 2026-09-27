@@ -55,3 +55,13 @@ export const PREP_VERBS: PrepVerb[] = [
   { chapter: 6, la: 'discēdit', en: 'goes', prep: 'ab' },
   { chapter: 11, la: 'fugit', en: 'runs', prep: 'ab' },
 ];
+
+// Motion verbs for the decode drill's route tier (ē/ex + abl → in + acc). `en` reads
+// before the route ("runs" + "out of the city into the forest"). festīnat follows
+// vocō → vocat; the rest are verified above.
+export const ROUTE_VERBS: DecodeVerb[] = [
+  { chapter: 3, la: 'ambulat', en: 'walks' },
+  { chapter: 3, la: 'currit', en: 'runs' },
+  { chapter: 3, la: 'festīnat', en: 'hurries' },
+  { chapter: 11, la: 'fugit', en: 'flees' },
+];

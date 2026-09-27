@@ -49,3 +49,13 @@ export const giveables = (ctx: DrillContext): Sourced[] =>
     const forms = GIVEABLE.includes(v.id) ? sourcedForms(v) : null;
     return forms ? [{ ...v, forms }] : [];
   });
+
+// Places you can go out of and into. Keyed by vocab id; ch.1 īnsula rather than ch.7,
+// whose first gloss is "island".
+const PLACES = ['ch1-īnsula', 'ch2-forum', 'ch3-urbs', 'ch4-templum', 'ch7-silva', 'ch12-taberna', 'ch15-hortus', 'ch15-vīlla'];
+
+export const places = (ctx: DrillContext): Sourced[] =>
+  drillableNouns(ctx.chapters, ctx.declensions).flatMap((v) => {
+    const forms = PLACES.includes(v.id) ? sourcedForms(v) : null;
+    return forms && forms.sg.abl !== forms.sg.acc ? [{ ...v, forms }] : [];
+  });
