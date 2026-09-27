@@ -94,7 +94,7 @@ export const vocab: VocabEntry[] = [
   word(1, 'Pronoun', 'ego', 'I'),
   // frāter, pater: no second form in any source; 3rd declension confirmed by Nae (9/25).
   // With no listed accusative, the decode drill skips them.
-  noun(1, 'frāter', null, 'm', 3, 'brother'),
+  noun(1, 'frāter', null, 'm', 3, 'brother', { animate: true }),
   noun(1, 'hōra', null, 'f', 1, 'hour', fromClassList('hōrae')),
   word(1, 'Preposition', 'in', 'in, on'),
   noun(1, 'īnsula', null, 'f', 1, 'apartment building', fromClassList('īnsulae')),
@@ -102,9 +102,9 @@ export const vocab: VocabEntry[] = [
   word(1, 'Verb', 'legō', 'I read'),
   word(1, 'Adjective', 'meus', 'my'),
   word(1, 'Adverb', 'nōn', 'not'),
-  noun(1, 'pater', null, 'm', 3, 'father'),
+  noun(1, 'pater', null, 'm', 3, 'father', { animate: true }),
   word(1, 'Verb', 'rīdeō', 'I laugh, smile'),
-  noun(1, 'servus', null, 'm', 2, 'slave, enslaved person (male)', fromClassList('servī')),
+  noun(1, 'servus', null, 'm', 2, 'slave, enslaved person (male)', { ...fromClassList('servī'), animate: true }),
   word(1, 'Pronoun', 'tū', 'you (singular)'),
   noun(1, 'turba', null, 'f', 1, 'crowd', fromClassList('turbae')),
   word(1, 'Adverb', 'ubi?', 'where?'),
