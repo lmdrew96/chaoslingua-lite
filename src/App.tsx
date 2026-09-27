@@ -5,6 +5,7 @@ import { useAccount } from './hooks/useAccount';
 import { useCourse } from './hooks/useCourse';
 import { useDrillSession } from './hooks/useDrillSession';
 import { usePracticeFilter } from './hooks/usePracticeFilter';
+import { useSpeedMode } from './hooks/useSpeedMode';
 import { StatsRow } from './components/StatsRow';
 import { StreakPill } from './components/StreakPill';
 import { DrillCard } from './components/DrillCard';
@@ -27,6 +28,8 @@ function App() {
     ctx,
     account?.userId ?? null,
   );
+
+  const speed = useSpeedMode();
 
   const weakAreas = useQuery(api.attempts.getWeakAreas, account ? { userId: account.userId } : 'skip');
   const qualifyingWeakAreas = (weakAreas ?? [])
@@ -88,6 +91,8 @@ function App() {
             onReset={resetFilter}
             weakSpotsAvailable={qualifyingWeakAreas.length > 0}
             onFocusWeakSpots={account ? focusWeakSpots : null}
+            speedMode={speed.enabled}
+            onToggleSpeedMode={speed.toggle}
           />
           <StatsRow attempted={stats.attempted} correct={stats.correct} />
 
@@ -108,6 +113,7 @@ function App() {
               onAnswer={handleAnswer}
               onNext={nextDrill}
               onReset={reset}
+              speed={speed.enabled ? { stats: speed.stats, onResult: speed.record } : null}
             />
           )}
         </>

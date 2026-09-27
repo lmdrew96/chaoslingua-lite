@@ -543,3 +543,12 @@ input[type="text"]:focus {
 }
 
 .credits a { color: inherit; }
+
+/* Parse speed mode */
+.speed-bar {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: -8px 0 16px;
+  font-size: 0.85rem;
+}

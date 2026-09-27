@@ -15,6 +15,8 @@ interface PracticeFilterProps {
   onReset: () => void;
   weakSpotsAvailable: boolean;
   onFocusWeakSpots: (() => void) | null;
+  speedMode: boolean;
+  onToggleSpeedMode: () => void;
 }
 
 // "1–3" for a contiguous run, "1, 2, 5" otherwise.
@@ -42,6 +44,8 @@ export function PracticeFilter({
   onReset,
   weakSpotsAvailable,
   onFocusWeakSpots,
+  speedMode,
+  onToggleSpeedMode,
 }: PracticeFilterProps) {
   const [open, setOpen] = useState(false);
 
@@ -76,6 +80,23 @@ export function PracticeFilter({
               ))}
             </div>
           </div>
+
+          {types.has('parse') && (
+            <div className="filter-group">
+              <div className="filter-group-label">Parse speed</div>
+              <div className="chip-row">
+                <button
+                  type="button"
+                  className={`chip-btn${speedMode ? ' active' : ''}`}
+                  aria-pressed={speedMode}
+                  onClick={onToggleSpeedMode}
+                >
+                  ⏱ Speed mode
+                </button>
+              </div>
+              <p className="filter-hint">Times each parse and tracks a streak of correct ones. Grading stays the same.</p>
+            </div>
+          )}
 
           <div className="filter-group">
             <div className="filter-group-label">Declensions</div>
