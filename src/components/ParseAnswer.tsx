@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { caseJobs, caseUses } from '../data/cases';
 import { CASES, DECLENSIONS, NUMBERS, caseNames, numberNames, ordinal, type Case, type Declension, type GNumber } from '../data/nouns';
 import { jobPhrase } from '../drills/parse';
 import type { AttemptMeta, ParseDrill } from '../drills/types';
 import { shuffle } from '../lib/random';
+import { shouldIgnoreHotkey } from '../lib/hotkeys';
 
 interface ParseAnswerProps {
   drill: ParseDrill;
@@ -66,6 +67,18 @@ export function ParseAnswer({ drill, answered, onSubmit }: ParseAnswerProps) {
   };
 
   const correct = caseNumberOk && declOk && jobOk;
+
+  // Enter checks once all four rows are picked.
+  useEffect(() => {
+    if (answered || !ready) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== 'Enter' || shouldIgnoreHotkey(e)) return;
+      e.preventDefault();
+      check();
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  });
 
   return (
     <>

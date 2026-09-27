@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { McDrill } from '../drills/types';
 import { OptionButton } from './OptionButton';
+import { shouldIgnoreHotkey } from '../lib/hotkeys';
 
 interface McAnswerProps {
   drill: McDrill;
@@ -12,21 +13,38 @@ export function McAnswer({ drill, answered, onSubmit }: McAnswerProps) {
   const [chosen, setChosen] = useState<string | null>(null);
   const correct = chosen === drill.answer;
 
+  const choose = (opt: string) => {
+    if (answered) return;
+    setChosen(opt);
+    onSubmit(opt === drill.answer);
+  };
+
+  // Number keys pick the matching option (1 = first).
+  useEffect(() => {
+    if (answered) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (shouldIgnoreHotkey(e)) return;
+      const opt = drill.options[Number(e.key) - 1];
+      if (opt === undefined) return;
+      e.preventDefault();
+      choose(opt);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  });
+
   return (
     <>
       <div className="options">
-        {drill.options.map((opt) => (
+        {drill.options.map((opt, i) => (
           <OptionButton
             key={opt}
             option={opt}
             answer={drill.answer}
             answered={answered}
             chosen={chosen}
-            onClick={() => {
-              if (answered) return;
-              setChosen(opt);
-              onSubmit(opt === drill.answer);
-            }}
+            hotkey={i + 1}
+            onClick={() => choose(opt)}
           />
         ))}
       </div>

@@ -3,10 +3,11 @@ interface OptionButtonProps {
   answer: string;
   answered: boolean;
   chosen: string | null;
+  hotkey: number;
   onClick: () => void;
 }
 
-export function OptionButton({ option, answer, answered, chosen, onClick }: OptionButtonProps) {
+export function OptionButton({ option, answer, answered, chosen, hotkey, onClick }: OptionButtonProps) {
   const classes = ['option-btn'];
   if (answered) {
     if (option === answer) classes.push('correct');
@@ -14,7 +15,8 @@ export function OptionButton({ option, answer, answered, chosen, onClick }: Opti
   }
   return (
     <button className={classes.join(' ')} disabled={answered} onClick={onClick}>
-      {option}
+      <kbd className="opt-key" aria-hidden="true">{hotkey}</kbd>
+      <span>{option}</span>
     </button>
   );
 }

@@ -21,6 +21,11 @@
   --color-mauve-tint:  #F3E4EE;
   --color-beryl-deep:  #3E5230;
 
+  --color-mark:        rgba(106, 106, 153, 0.07);
+  --color-inscribe:    rgba(106, 106, 153, 0.22);
+  --color-glow-good:   rgba(119, 163, 154, 0.45);
+  --shadow-stage:      0 1px 2px rgba(43, 34, 51, 0.08), 0 8px 24px rgba(43, 34, 51, 0.08), 0 32px 64px -24px rgba(43, 34, 51, 0.18);
+
   --font-display:  'Fraunces', Georgia, serif;
   --font-body:     'Space Grotesk', system-ui, sans-serif;
   --font-mono:     'Geist Mono', 'Fira Code', monospace;
@@ -32,15 +37,69 @@ body {
   margin: 0;
   font-family: var(--font-body);
   background-color: var(--color-surface);
+  /* Stone grain: fractal noise at low opacity, tiled. No image files. */
+  background-image:
+    radial-gradient(ellipse at 70% 0%, rgba(255, 255, 255, 0.55), transparent 60%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.17 0 0 0 0 0.13 0 0 0 0 0.2 0 0 0 0.09 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-attachment: fixed;
   color: var(--color-ink);
   font-size: 18px;
   line-height: 1.56;
 }
 
-.wrap {
-  max-width: 620px;
+/* Rail + stage: controls in a sticky left rail, the drill fills the rest. */
+.layout {
+  max-width: 1160px;
   margin: 0 auto;
-  padding: 32px 20px 64px;
+  padding: 32px 24px 48px;
+  display: grid;
+  grid-template-columns: 300px minmax(0, 1fr);
+  gap: 40px;
+  align-items: start;
+}
+
+.rail {
+  position: sticky;
+  top: 32px;
+  max-height: calc(100vh - 64px);
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.stage {
+  position: relative;
+  min-width: 0;
+}
+
+/* Giant faint Roman capital behind the card, keyed to the current drill type. */
+.stage::before {
+  content: attr(data-mark);
+  position: absolute;
+  top: -48px;
+  right: -12px;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 30rem;
+  line-height: 1;
+  color: var(--color-mark);
+  pointer-events: none;
+  user-select: none;
+  z-index: 0;
+}
+
+.stage > * { position: relative; z-index: 1; }
+.stage > .card:first-child { margin-top: 0; }
+
+@media (max-width: 900px) {
+  .layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+    padding: 24px 16px 48px;
+    overflow-x: clip;
+  }
+  .rail { position: static; max-height: none; overflow: visible; padding-right: 0; }
+  .stage { margin-top: 24px; }
+  .stage::before { font-size: 16rem; top: -24px; right: 0; }
 }
 
 h1, h2, h3 {
@@ -83,9 +142,45 @@ h2 { font-size: 1.4rem; font-weight: 500; margin-bottom: 4px; }
 .top-row {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   flex-wrap: wrap;
+  gap: 12px;
+}
+
+.rail .top-row { flex-direction: column; align-items: flex-start; }
+
+/* Scoreboard: big mono numbers, small labels. */
+.scoreboard {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
   gap: 8px;
+  margin-top: 20px;
+}
+
+.score {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 12px 14px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.55);
+  box-shadow: inset 0 0 0 1px var(--color-inscribe);
+}
+
+.score b {
+  font-family: var(--font-mono);
+  font-weight: 400;
+  font-size: 1.6rem;
+  line-height: 1.1;
+  color: var(--color-ink);
+}
+
+.score span {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 600;
+  color: var(--color-purple);
 }
 
 .stats {
@@ -227,6 +322,11 @@ h2 { font-size: 1.4rem; font-weight: 500; margin-bottom: 4px; }
 
 .account-panel {
   margin-top: 16px;
+}
+
+.rail .filter-panel {
+  background: rgba(255, 255, 255, 0.55);
+  box-shadow: inset 0 0 0 1px var(--color-inscribe);
 }
 
 .filter-hint {
@@ -436,19 +536,34 @@ input[type="text"]:focus {
   flex-wrap: wrap;
 }
 
+.progress {
+  flex: 1;
+  max-width: 320px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+}
+
+.progress-label {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--color-teal-deep);
+}
+
 .progress-track {
-  height: 6px;
+  width: 100%;
+  height: 10px;
   border-radius: 9999px;
   background: var(--color-lavender);
   overflow: hidden;
-  margin-top: 20px;
 }
 
 .progress-fill {
   height: 100%;
   background: var(--color-gold);
   border-radius: 9999px;
-  transition: width 0.2s ease;
+  transition: width 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .reset-link {
@@ -551,4 +666,136 @@ input[type="text"]:focus {
   flex-wrap: wrap;
   margin: -8px 0 16px;
   font-size: 0.85rem;
+}
+
+/* ── Stage: the drill as the main event ─────────────────────────────── */
+
+.stage > .card {
+  box-shadow: var(--shadow-stage), inset 0 0 0 1px var(--color-inscribe);
+  padding: 36px 40px;
+}
+
+/* Inscribed hairline just inside the card edge. */
+.stage > .card::after {
+  content: '';
+  position: absolute;
+  inset: 8px;
+  border-radius: 16px;
+  border: 1px solid var(--color-inscribe);
+  pointer-events: none;
+}
+
+.stage > .card { position: relative; }
+
+.stage-card {
+  min-height: min(640px, calc(100vh - 64px));
+  display: flex;
+  flex-direction: column;
+  animation: card-enter 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+  transition: box-shadow 0.3s ease;
+}
+
+.stage-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 24px;
+}
+
+.stage-head .drill-type-label { margin-bottom: 0; padding-top: 2px; }
+
+.stage-card .prompt {
+  font-size: clamp(1.8rem, 3.2vw, 2.6rem);
+  line-height: 1.2;
+  margin: 40px 0 32px;
+}
+
+.stage-card .options {
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 12px;
+}
+
+.stage-card .option-btn {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 18px 20px;
+  font-size: 1.05rem;
+}
+
+.stage-foot { margin-top: auto; padding-top: 28px; }
+
+.stage > .result-good {
+  box-shadow: var(--shadow-stage), inset 0 0 0 1px var(--color-inscribe), 0 0 0 6px var(--color-glow-good);
+}
+
+.result-bad .option-btn.incorrect,
+.result-bad .feedback.bad { animation: shake 0.4s ease; }
+
+/* Keyboard hints — hidden on touch devices where there's no keyboard. */
+.opt-key, .btn-key {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  line-height: 1;
+  padding: 5px 7px;
+  border-radius: 6px;
+  background: var(--color-surface);
+  color: var(--color-purple);
+  box-shadow: inset 0 -1px 0 var(--color-inscribe);
+  flex-shrink: 0;
+}
+
+.btn-key {
+  margin-left: 8px;
+  background: rgba(255, 255, 255, 0.18);
+  color: inherit;
+  box-shadow: none;
+}
+
+.option-btn.correct .opt-key, .option-btn.incorrect .opt-key { background: rgba(255, 255, 255, 0.6); }
+
+.key-hint {
+  font-size: 0.78rem;
+  color: var(--color-purple);
+  opacity: 0.8;
+}
+
+@media (hover: none) {
+  .opt-key, .btn-key, .key-hint { display: none; }
+}
+
+.streak-pop { animation: pop 0.45s cubic-bezier(0.3, 1.6, 0.5, 1); }
+
+@keyframes card-enter {
+  from { opacity: 0; transform: translateY(14px) scale(0.99); }
+  to   { opacity: 1; transform: none; }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-6px); }
+  40% { transform: translateX(6px); }
+  60% { transform: translateX(-4px); }
+  80% { transform: translateX(4px); }
+}
+
+@keyframes pop {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(1.18); }
+  100% { transform: scale(1); }
+}
+
+@media (max-width: 900px) {
+  .stage > .card { padding: 24px 20px; }
+  .stage-card { min-height: 0; }
+  .stage-card .prompt { margin: 24px 0 20px; }
+  .stage-head { flex-direction: column; gap: 10px; }
+  .progress { max-width: none; width: 100%; align-items: flex-start; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation: none !important;
+    transition: none !important;
+  }
 }

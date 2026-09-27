@@ -6,10 +6,19 @@ interface StatsRowProps {
 export function StatsRow({ attempted, correct }: StatsRowProps) {
   const accuracy = attempted ? `${Math.round((100 * correct) / attempted)}%` : '—';
   return (
-    <div className="stats">
-      <div className="stat">Attempted: <b>{attempted}</b></div>
-      <div className="stat">Correct: <b>{correct}</b></div>
-      <div className="stat">Accuracy: <b>{accuracy}</b></div>
+    <div className="scoreboard">
+      <div className="score">
+        <b>{attempted}</b>
+        <span>Attempted</span>
+      </div>
+      <div className="score">
+        <b>{correct}</b>
+        <span>Correct</span>
+      </div>
+      <div className="score">
+        <b>{accuracy}</b>
+        <span>Accuracy</span>
+      </div>
     </div>
   );
 }
