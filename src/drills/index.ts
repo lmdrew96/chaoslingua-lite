@@ -1,10 +1,11 @@
 import { shuffle } from '../lib/random';
 import { decodeDrill } from './decode';
 import { parseDrill } from './parse';
+import { wordOrderDrill } from './wordOrder';
 import type { Drill, DrillContext, DrillType } from './types';
 
 // Drill registry — new drill types get appended here.
-export const DRILL_TYPES: DrillType[] = [parseDrill, decodeDrill];
+export const DRILL_TYPES: DrillType[] = [parseDrill, decodeDrill, wordOrderDrill];
 
 export const ALL_TYPES: string[] = DRILL_TYPES.map((d) => d.type);
 

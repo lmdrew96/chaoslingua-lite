@@ -19,7 +19,7 @@ import { ordinal, type Declension } from '../data/nouns';
 import { DATIVE_VERBS, DECODE_VERBS, PREP_VERBS, type DecodeVerb, type PrepVerb } from '../data/verbs';
 import { drillableNouns, type VocabEntry } from '../data/vocab';
 import { pick, shuffle } from '../lib/random';
-import { capitalize, english, sourcedForms, type Forms } from './forms';
+import { capitalize, english, giveables, people, type Sourced } from './forms';
 import type { DrillContext, DrillType, McDrill } from './types';
 
 // Accusative singular endings by declension — every eligible noun's listed
@@ -104,28 +104,7 @@ const makeNomAcc = (ctx: DrillContext): [McDrill, McDrill] | null => {
   return [buildNomAcc(layout, first, second, false, verb), buildNomAcc(layout, first, second, true, verb)];
 };
 
-// --- Shared by the dative and ablative tiers ------------------------------------
-
-type Sourced = VocabEntry & { forms: Forms };
-
-// Animate, singular-capable nouns with a sourced paradigm, where the case in question
-// is spelled differently from the nominative (otherwise the ending can't decide).
-// Datives must also differ from the genitive: puellae / diēī could just as well be
-// "the girl's" / "the day's" hanging off the next noun (servus puellae = the girl's
-// slave), so 1st- and 5th-declension people sit this tier out.
-const people = (ctx: DrillContext, c: 'dat' | 'abl'): Sourced[] =>
-  drillableNouns(ctx.chapters, ctx.declensions).flatMap((v) => {
-    if (!v.animate || v.pluralOnly) return [];
-    const forms = sourcedForms(v);
-    if (!forms || forms.sg.nom === forms.sg[c]) return [];
-    if (c === 'dat' && forms.sg.dat === forms.sg.gen) return [];
-    return [{ ...v, forms }];
-  });
-
 // --- Tier 2: dative -------------------------------------------------------------
-
-// Things it makes sense to give, hand over, offer, or show. Keyed by vocab id.
-const GIVEABLE = ['ch2-cibus', 'ch2-pecūnia', 'ch2-vīnum', 'ch3-gladius', 'ch4-dōnum', 'ch5-aqua', 'ch7-epistula', 'ch13-praemium'];
 
 // Where each word goes: 1 and 2 are the two people (one nominative, one dative), A the
 // thing, V the verb. Each puts person 1 first among the people, and the pair leads
@@ -173,10 +152,7 @@ const buildDative = (
 const makeDative = (ctx: DrillContext): [McDrill, McDrill] | null => {
   const verbs = DATIVE_VERBS.filter((v) => ctx.chapters.has(v.chapter));
   const pair = pickPair(people(ctx, 'dat'));
-  const things = drillableNouns(ctx.chapters, ctx.declensions).flatMap((v) => {
-    const forms = GIVEABLE.includes(v.id) ? sourcedForms(v) : null;
-    return forms ? [{ ...v, forms }] : [];
-  });
+  const things = giveables(ctx);
   if (!verbs.length || !pair || !things.length) return null;
 
   const [one, two] = pair;
