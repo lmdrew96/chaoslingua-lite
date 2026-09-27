@@ -18,6 +18,9 @@ export const FORM_OVERRIDES: Record<string, FormOverride> = {
   homō: { replace: [['ō̆', 'ō']] },
   sanguis: { replace: [['ī̆', 'i']] },
   prīnceps: { replace: [['ī̆', 'ī']] },
+  // Suburani lists spēs, spēī; Wiktionary has speī. Dative follows, as in the 5th-
+  // declension tables (diēī diēī, reī reī). Chosen by Nae 9/26.
+  spēs: { sg: { gen: 'spēī', dat: 'spēī' } },
 };
 
 // Nouns the import flagged for review (irregular, or disagreeing with the Suburani

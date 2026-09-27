@@ -2416,8 +2416,8 @@ export const IMPORTED_PARADIGMS: Record<string, ImportedParadigm> = {
     "forms": {
       "sg": {
         "nom": "spēs",
-        "gen": "speī",
-        "dat": "speī",
+        "gen": "spēī",
+        "dat": "spēī",
         "acc": "spem",
         "abl": "spē"
       },
@@ -2429,8 +2429,7 @@ export const IMPORTED_PARADIGMS: Record<string, ImportedParadigm> = {
         "abl": "spēbus"
       }
     },
-    "source": "https://kaikki.org/dictionary/Latin/meaning/s/sp/spes.jsonl",
-    "review": "gen sg \"speī\" ≠ listed \"spēī\""
+    "source": "https://kaikki.org/dictionary/Latin/meaning/s/sp/spes.jsonl"
   },
   "ch25-victōria": {
     "forms": {
