@@ -13,6 +13,7 @@ import {
   type ModelVerb,
   type Tense,
 } from '../data/verbs';
+import { VerbParts } from '../components/VerbParts';
 
 // Column headings for the irregulars, as in Suburani's table.
 const IRREGULAR_HEADINGS: Record<string, string> = {
@@ -104,20 +105,6 @@ function OtherParts({ verbs }: { verbs: ModelVerb[] }) {
   );
 }
 
-// A form split into its parts: stem · tense sign · personal ending. Each one joins
-// back to a form in the model tables above.
-function Parts({ parts }: { parts: string[] }) {
-  return (
-    <span className="latin verb-parts">
-      {parts.map((part, i) => (
-        <span key={i} className={i === 0 ? 'vp-stem' : i === parts.length - 1 && parts.length > 2 ? 'vp-ending' : 'vp-sign'}>
-          {part}
-        </span>
-      ))}
-    </span>
-  );
-}
-
 const ENDINGS: Array<[label: string, ending: string]> = [
   ['I', '-ō / -m'],
   ['you (sing.)', '-s'],
@@ -170,23 +157,23 @@ export function ConjugationTables({ openTenses, openConjugations }: ConjugationT
           {openTenses.has('impf') && (
             <li>
               <strong>Imperfect: -ba-</strong> before the ending, in every conjugation:{' '}
-              <Parts parts={['vocā', 'ba', 'm']} />, <Parts parts={['tenē', 'bā', 's']} />,{' '}
-              <Parts parts={['mittē', 'ba', 't']} />, <Parts parts={['audiē', 'bā', 'mus']} />,{' '}
-              <Parts parts={['capiē', 'ba', 'nt']} />.
+              <VerbParts stem="vocā" sign="ba" ending="m" />, <VerbParts stem="tenē" sign="bā" ending="s" />,{' '}
+              <VerbParts stem="mittē" sign="ba" ending="t" />, <VerbParts stem="audiē" sign="bā" ending="mus" />,{' '}
+              <VerbParts stem="capiē" sign="ba" ending="nt" />.
             </li>
           )}
           {openTenses.has('fut') && (
             <>
               <li>
-                <strong>Future, 1st and 2nd conjugations: -bō, -bi-, -bu-</strong> — <Parts parts={['vocā', 'bō']} />,{' '}
-                <Parts parts={['vocā', 'bi', 't']} />, <Parts parts={['tenē', 'bi', 'mus']} />,{' '}
-                <Parts parts={['tenē', 'bu', 'nt']} />.
+                <strong>Future, 1st and 2nd conjugations: -bō, -bi-, -bu-</strong> — <VerbParts stem="vocā" sign="bō" />,{' '}
+                <VerbParts stem="vocā" sign="bi" ending="t" />, <VerbParts stem="tenē" sign="bi" ending="mus" />,{' '}
+                <VerbParts stem="tenē" sign="bu" ending="nt" />.
               </li>
               <li>
                 <strong>Future, 3rd, 4th and 3rd/4th: -a- for “I”, -ē- after that</strong> (short -e- before -t and
-                -nt) — <Parts parts={['mitt', 'a', 'm']} />, <Parts parts={['mitt', 'ē', 's']} />,{' '}
-                <Parts parts={['audi', 'e', 't']} />, <Parts parts={['capi', 'ē', 'mus']} />,{' '}
-                <Parts parts={['audi', 'e', 'nt']} />.
+                -nt) — <VerbParts stem="mitt" sign="a" ending="m" />, <VerbParts stem="mitt" sign="ē" ending="s" />,{' '}
+                <VerbParts stem="audi" sign="e" ending="t" />, <VerbParts stem="capi" sign="ē" ending="mus" />,{' '}
+                <VerbParts stem="audi" sign="e" ending="nt" />.
               </li>
               <li>
                 <strong>So the conjugation decides the tense.</strong> <span className="latin">tenet</span> (2nd) is

@@ -21,7 +21,7 @@ interface ChipRowProps<T extends string | number> {
   onSelect: (v: T) => void;
 }
 
-function ChipRow<T extends string | number>({ label, values, selected, disabled, render, onSelect }: ChipRowProps<T>) {
+export function ChipRow<T extends string | number>({ label, values, selected, disabled, render, onSelect }: ChipRowProps<T>) {
   return (
     <div className="parse-row">
       <div className="filter-group-label">{label}</div>

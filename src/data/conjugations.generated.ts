@@ -60,8 +60,7 @@ export const IMPORTED_CONJUGATIONS: Record<string, ImportedConjugation> = {
         }
       }
     },
-    "source": "https://kaikki.org/dictionary/Latin/meaning/d/do/dormio.jsonl",
-    "review": "listed without an infinitive; Wiktionary has dormīre, 4th conjugation"
+    "source": "https://kaikki.org/dictionary/Latin/meaning/d/do/dormio.jsonl"
   },
   "ch1-labōrō": {
     "conjugation": 1,
@@ -104,8 +103,7 @@ export const IMPORTED_CONJUGATIONS: Record<string, ImportedConjugation> = {
         }
       }
     },
-    "source": "https://kaikki.org/dictionary/Latin/meaning/l/la/laboro.jsonl",
-    "review": "listed without an infinitive; Wiktionary has labōrāre, 1st conjugation"
+    "source": "https://kaikki.org/dictionary/Latin/meaning/l/la/laboro.jsonl"
   },
   "ch1-legō": {
     "conjugation": 3,
@@ -148,8 +146,7 @@ export const IMPORTED_CONJUGATIONS: Record<string, ImportedConjugation> = {
         }
       }
     },
-    "source": "https://kaikki.org/dictionary/Latin/meaning/l/le/lego.jsonl",
-    "review": "listed without an infinitive; Wiktionary has legere, 3rd conjugation"
+    "source": "https://kaikki.org/dictionary/Latin/meaning/l/le/lego.jsonl"
   },
   "ch1-rīdeō": {
     "conjugation": 2,
@@ -192,8 +189,7 @@ export const IMPORTED_CONJUGATIONS: Record<string, ImportedConjugation> = {
         }
       }
     },
-    "source": "https://kaikki.org/dictionary/Latin/meaning/r/ri/rideo.jsonl",
-    "review": "listed without an infinitive; Wiktionary has rīdēre, 2nd conjugation"
+    "source": "https://kaikki.org/dictionary/Latin/meaning/r/ri/rideo.jsonl"
   },
   "ch1-sum": {
     "conjugation": "irr",
@@ -279,8 +275,7 @@ export const IMPORTED_CONJUGATIONS: Record<string, ImportedConjugation> = {
         }
       }
     },
-    "source": "https://kaikki.org/dictionary/Latin/meaning/c/ca/cado.jsonl",
-    "review": "listed without an infinitive; Wiktionary has cadere, 3rd conjugation"
+    "source": "https://kaikki.org/dictionary/Latin/meaning/c/ca/cado.jsonl"
   },
   "ch2-dūcō": {
     "conjugation": 3,
@@ -323,8 +318,7 @@ export const IMPORTED_CONJUGATIONS: Record<string, ImportedConjugation> = {
         }
       }
     },
-    "source": "https://kaikki.org/dictionary/Latin/meaning/d/du/duco.jsonl",
-    "review": "listed without an infinitive; Wiktionary has dūcere, 3rd conjugation"
+    "source": "https://kaikki.org/dictionary/Latin/meaning/d/du/duco.jsonl"
   },
   "ch2-habeō": {
     "conjugation": 2,
@@ -367,8 +361,7 @@ export const IMPORTED_CONJUGATIONS: Record<string, ImportedConjugation> = {
         }
       }
     },
-    "source": "https://kaikki.org/dictionary/Latin/meaning/h/ha/habeo.jsonl",
-    "review": "listed without an infinitive; Wiktionary has habēre, 2nd conjugation"
+    "source": "https://kaikki.org/dictionary/Latin/meaning/h/ha/habeo.jsonl"
   },
   "ch2-habitō": {
     "conjugation": 1,
@@ -411,8 +404,7 @@ export const IMPORTED_CONJUGATIONS: Record<string, ImportedConjugation> = {
         }
       }
     },
-    "source": "https://kaikki.org/dictionary/Latin/meaning/h/ha/habito.jsonl",
-    "review": "listed without an infinitive; Wiktionary has habitāre, 1st conjugation"
+    "source": "https://kaikki.org/dictionary/Latin/meaning/h/ha/habito.jsonl"
   },
   "ch2-intrō": {
     "conjugation": 1,
@@ -455,8 +447,7 @@ export const IMPORTED_CONJUGATIONS: Record<string, ImportedConjugation> = {
         }
       }
     },
-    "source": "https://kaikki.org/dictionary/Latin/meaning/i/in/intro.jsonl",
-    "review": "listed without an infinitive; Wiktionary has intrāre, 1st conjugation"
+    "source": "https://kaikki.org/dictionary/Latin/meaning/i/in/intro.jsonl"
   },
   "ch2-quaerō": {
     "conjugation": 3,
@@ -499,8 +490,7 @@ export const IMPORTED_CONJUGATIONS: Record<string, ImportedConjugation> = {
         }
       }
     },
-    "source": "https://kaikki.org/dictionary/Latin/meaning/q/qu/quaero.jsonl",
-    "review": "listed without an infinitive; Wiktionary has quaerere, 3rd conjugation"
+    "source": "https://kaikki.org/dictionary/Latin/meaning/q/qu/quaero.jsonl"
   },
   "ch2-salūtō": {
     "conjugation": 1,
@@ -543,8 +533,7 @@ export const IMPORTED_CONJUGATIONS: Record<string, ImportedConjugation> = {
         }
       }
     },
-    "source": "https://kaikki.org/dictionary/Latin/meaning/s/sa/saluto.jsonl",
-    "review": "listed without an infinitive; Wiktionary has salūtāre, 1st conjugation"
+    "source": "https://kaikki.org/dictionary/Latin/meaning/s/sa/saluto.jsonl"
   },
   "ch2-spectō": {
     "conjugation": 1,
@@ -587,8 +576,7 @@ export const IMPORTED_CONJUGATIONS: Record<string, ImportedConjugation> = {
         }
       }
     },
-    "source": "https://kaikki.org/dictionary/Latin/meaning/s/sp/specto.jsonl",
-    "review": "listed without an infinitive; Wiktionary has spectāre, 1st conjugation"
+    "source": "https://kaikki.org/dictionary/Latin/meaning/s/sp/specto.jsonl"
   },
   "ch2-videō": {
     "conjugation": 2,
@@ -631,8 +619,7 @@ export const IMPORTED_CONJUGATIONS: Record<string, ImportedConjugation> = {
         }
       }
     },
-    "source": "https://kaikki.org/dictionary/Latin/meaning/v/vi/video.jsonl",
-    "review": "listed without an infinitive; Wiktionary has vidēre, 2nd conjugation"
+    "source": "https://kaikki.org/dictionary/Latin/meaning/v/vi/video.jsonl"
   },
   "ch2-vocō": {
     "conjugation": 1,
@@ -718,8 +705,7 @@ export const IMPORTED_CONJUGATIONS: Record<string, ImportedConjugation> = {
         }
       }
     },
-    "source": "https://kaikki.org/dictionary/Latin/meaning/a/am/ambulo.jsonl",
-    "review": "listed without an infinitive; Wiktionary has ambulāre, 1st conjugation"
+    "source": "https://kaikki.org/dictionary/Latin/meaning/a/am/ambulo.jsonl"
   },
   "ch3-clāmō": {
     "conjugation": 1,
@@ -762,8 +748,7 @@ export const IMPORTED_CONJUGATIONS: Record<string, ImportedConjugation> = {
         }
       }
     },
-    "source": "https://kaikki.org/dictionary/Latin/meaning/c/cl/clamo.jsonl",
-    "review": "listed without an infinitive; Wiktionary has clāmāre, 1st conjugation"
+    "source": "https://kaikki.org/dictionary/Latin/meaning/c/cl/clamo.jsonl"
   },
   "ch3-currō": {
     "conjugation": 3,
@@ -806,8 +791,7 @@ export const IMPORTED_CONJUGATIONS: Record<string, ImportedConjugation> = {
         }
       }
     },
-    "source": "https://kaikki.org/dictionary/Latin/meaning/c/cu/curro.jsonl",
-    "review": "listed without an infinitive; Wiktionary has currere, 3rd conjugation"
+    "source": "https://kaikki.org/dictionary/Latin/meaning/c/cu/curro.jsonl"
   },
   "ch3-dīcō": {
     "conjugation": 3,
@@ -850,8 +834,7 @@ export const IMPORTED_CONJUGATIONS: Record<string, ImportedConjugation> = {
         }
       }
     },
-    "source": "https://kaikki.org/dictionary/Latin/meaning/d/di/dico.jsonl",
-    "review": "listed without an infinitive; Wiktionary has dīcere, 3rd conjugation"
+    "source": "https://kaikki.org/dictionary/Latin/meaning/d/di/dico.jsonl"
   },
   "ch3-festīnō": {
     "conjugation": 1,
@@ -894,8 +877,7 @@ export const IMPORTED_CONJUGATIONS: Record<string, ImportedConjugation> = {
         }
       }
     },
-    "source": "https://kaikki.org/dictionary/Latin/meaning/f/fe/festino.jsonl",
-    "review": "listed without an infinitive; Wiktionary has festīnāre, 1st conjugation"
+    "source": "https://kaikki.org/dictionary/Latin/meaning/f/fe/festino.jsonl"
   },
   "ch3-vincō": {
     "conjugation": 3,
@@ -938,8 +920,7 @@ export const IMPORTED_CONJUGATIONS: Record<string, ImportedConjugation> = {
         }
       }
     },
-    "source": "https://kaikki.org/dictionary/Latin/meaning/v/vi/vinco.jsonl",
-    "review": "listed without an infinitive; Wiktionary has vincere, 3rd conjugation"
+    "source": "https://kaikki.org/dictionary/Latin/meaning/v/vi/vinco.jsonl"
   },
   "ch4-laudō": {
     "conjugation": 1,
@@ -982,8 +963,7 @@ export const IMPORTED_CONJUGATIONS: Record<string, ImportedConjugation> = {
         }
       }
     },
-    "source": "https://kaikki.org/dictionary/Latin/meaning/l/la/laudo.jsonl",
-    "review": "listed without an infinitive; Wiktionary has laudāre, 1st conjugation"
+    "source": "https://kaikki.org/dictionary/Latin/meaning/l/la/laudo.jsonl"
   },
   "ch4-teneō": {
     "conjugation": 2,
@@ -1069,8 +1049,7 @@ export const IMPORTED_CONJUGATIONS: Record<string, ImportedConjugation> = {
         }
       }
     },
-    "source": "https://kaikki.org/dictionary/Latin/meaning/t/to/tollo.jsonl",
-    "review": "listed without an infinitive; Wiktionary has tollere, 3rd conjugation"
+    "source": "https://kaikki.org/dictionary/Latin/meaning/t/to/tollo.jsonl"
   },
   "ch4-veniō": {
     "conjugation": 4,
@@ -1113,8 +1092,7 @@ export const IMPORTED_CONJUGATIONS: Record<string, ImportedConjugation> = {
         }
       }
     },
-    "source": "https://kaikki.org/dictionary/Latin/meaning/v/ve/venio.jsonl",
-    "review": "listed without an infinitive; Wiktionary has venīre, 4th conjugation"
+    "source": "https://kaikki.org/dictionary/Latin/meaning/v/ve/venio.jsonl"
   },
   "ch5-audiō, audīre": {
     "conjugation": 4,

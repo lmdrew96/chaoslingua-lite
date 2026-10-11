@@ -4,10 +4,11 @@ import type { SpeedStats } from '../hooks/useSpeedMode';
 import { McAnswer } from './McAnswer';
 import { ParseAnswer } from './ParseAnswer';
 import { ProgressBar } from './ProgressBar';
+import { VerbParseAnswer } from './VerbParseAnswer';
 import { SpeedBar } from './SpeedBar';
 import { shouldIgnoreHotkey } from '../lib/hotkeys';
 
-// Present only while parse speed mode is on.
+// Present only while parse speed mode is on (noun and verb parses).
 export interface SpeedModeProps {
   stats: SpeedStats;
   onResult: (isCorrect: boolean, ms: number) => void;
@@ -21,15 +22,16 @@ interface DrillCardProps {
   onNext: () => void;
   onReset: () => void;
   speed: SpeedModeProps | null;
+  askConjugation: boolean;
 }
 
 // The parent remounts this card (via `key`) for every new drill, so answer state and
 // the answer components' selections start fresh without a reset effect.
-export function DrillCard({ drill, attempted, sessionGoal, onAnswer, onNext, onReset, speed }: DrillCardProps) {
+export function DrillCard({ drill, attempted, sessionGoal, onAnswer, onNext, onReset, speed, askConjugation }: DrillCardProps) {
   const [result, setResult] = useState<'good' | 'bad' | null>(null);
   const answered = result !== null;
   const [startedAt] = useState(() => Date.now());
-  const timed = speed !== null && drill.kind === 'parse';
+  const timed = speed !== null && drill.kind !== 'mc';
 
   const submit = (isCorrect: boolean, meta?: AttemptMeta) => {
     if (answered) return;
@@ -64,6 +66,14 @@ export function DrillCard({ drill, attempted, sessionGoal, onAnswer, onNext, onR
           </div>
           {timed && <SpeedBar startedAt={startedAt} answered={answered} stats={speed.stats} />}
           <ParseAnswer drill={drill} answered={answered} onSubmit={submit} />
+        </>
+      ) : drill.kind === 'verbParse' ? (
+        <>
+          <div className="prompt">
+            Parse <span className="latin">{drill.form}</span>
+          </div>
+          {timed && <SpeedBar startedAt={startedAt} answered={answered} stats={speed.stats} />}
+          <VerbParseAnswer drill={drill} askConjugation={askConjugation} answered={answered} onSubmit={submit} />
         </>
       ) : (
         <>

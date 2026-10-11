@@ -148,7 +148,7 @@ export const IRREGULAR_VERBS: ModelVerb[] = [
     },
   },
   {
-    id: 'nolo', conjugation: 'irr', gloss: 'not want', infinitive: 'nōlle', imperative: { sg: 'nōlī', pl: 'nōlīte' },
+    id: 'nolo', conjugation: 'irr', gloss: 'be unwilling', infinitive: 'nōlle', imperative: { sg: 'nōlī', pl: 'nōlīte' },
     forms: {
       pres: table(['nōlō', 'nōn vīs', 'nōn vult', 'nōlumus', 'nōn vultis', 'nōlunt']),
       fut: table('nōlam nōlēs nōlet nōlēmus nōlētis nōlent'),
@@ -283,3 +283,55 @@ export const ROUTE_VERBS: DecodeVerb[] = [
   { chapter: 3, la: 'festīnat', en: 'hurries' },
   { chapter: 11, la: 'fugit', en: 'flees' },
 ];
+
+// One cell of a verb's table.
+export interface VerbSlot {
+  tense: Tense;
+  number: GNumber;
+  person: Person;
+}
+
+export const sameSlot = (a: VerbSlot, b: VerbSlot): boolean =>
+  a.tense === b.tense && a.number === b.number && a.person === b.person;
+
+// Every slot a form could be, so drills grade against all of them (as parsesOf does
+// for nouns). Active-indicative forms rarely collide, but nothing assumes they don't.
+export const verbParsesOf = (verb: Pick<DrillVerb, 'forms'>, form: string): VerbSlot[] =>
+  TENSES.flatMap((tense) =>
+    (['sg', 'pl'] as GNumber[]).flatMap((number) =>
+      PERSONS.filter((person) => verb.forms[tense]?.[number][person] === form).map((person) => ({ tense, number, person })),
+    ),
+  );
+
+const ENDINGS: Record<GNumber, Record<Person, RegExp>> = {
+  sg: { 1: /(ō|m)$/, 2: /s$/, 3: /t$/ },
+  pl: { 1: /mus$/, 2: /tis$/, 3: /nt$/ },
+};
+
+// Splits a sourced form into stem · tense sign · personal ending, by checking it
+// against the known endings and tense signs. Null when it doesn't split cleanly —
+// irregulars, and anything unexpected — so feedback just shows the parse. Present
+// forms have no tense sign; their stem keeps the joining vowel (vocā·mus, mittu·nt).
+export const segmentsOf = (
+  verb: Pick<DrillVerb, 'conjugation'>,
+  slot: VerbSlot,
+  form: string,
+): { stem: string; sign?: string; ending: string } | null => {
+  if (verb.conjugation === 'irr') return null;
+  const ending = form.match(ENDINGS[slot.number][slot.person])?.[0];
+  if (!ending) return null;
+  const rest = form.slice(0, -ending.length);
+  const sign = (re: RegExp) => {
+    const m = rest.match(re);
+    return m && m[1] ? { stem: m[1], sign: m[2], ending } : null;
+  };
+  if (slot.tense === 'pres') return rest ? { stem: rest, ending } : null;
+  if (slot.tense === 'impf') return sign(/^(.+)(b[aā])$/);
+  if (slot.tense === 'fut') {
+    if (verb.conjugation === 1 || verb.conjugation === 2)
+      // vocābō: the -bō is sign and ending in one.
+      return slot.number === 'sg' && slot.person === 1 ? sign(/^(.+)(b)$/) : sign(/^(.+)(b[iu])$/);
+    return sign(/^(.+)([aēe])$/);
+  }
+  return null;
+};

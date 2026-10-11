@@ -23,7 +23,7 @@ function App() {
   const { account, token, loading: accountLoading, busy, error, createAccount, joinAccount, signOut } = useAccount();
   const { ctx, toggleChapter, toggleDeclension, toggleTense, toggleConjugation, followSchedule, customized } =
     useCourse();
-  const { types, toggleType, resetFilter, applyFilter } = usePracticeFilter();
+  const { types, toggleType, resetFilter, applyFilter, askConjugation, toggleAskConjugation } = usePracticeFilter();
   const { loading, stats, current, drillSeq, sessionGoal, handleAnswer, nextDrill, reset } = useDrillSession(
     types,
     ctx,
@@ -47,7 +47,7 @@ function App() {
         <div className="top-row">
           <div>
             <h1>ChaosLingua Lite</h1>
-            <div className="subtitle">Suburani — the five noun declensions &amp; what each case does</div>
+            <div className="subtitle">Suburani — noun declensions, verb conjugations &amp; what each form does</div>
           </div>
           <StreakPill streak={stats.streak} />
         </div>
@@ -95,6 +95,8 @@ function App() {
               onFocusWeakSpots={account ? focusWeakSpots : null}
               speedMode={speed.enabled}
               onToggleSpeedMode={speed.toggle}
+              askConjugation={askConjugation}
+              onToggleAskConjugation={toggleAskConjugation}
             />
             <StatsRow attempted={stats.attempted} correct={stats.correct} />
           </>
@@ -116,7 +118,7 @@ function App() {
           </div>
         ) : !current ? (
           <div className="card">
-            <div className="loading">Nothing to drill with these settings — turn on another declension or chapter in the practice settings.</div>
+            <div className="loading">Nothing to drill with these settings — turn on another declension, tense, conjugation, or chapter in the practice settings.</div>
           </div>
         ) : (
           <DrillCard
@@ -128,11 +130,12 @@ function App() {
             onNext={nextDrill}
             onReset={reset}
             speed={speed.enabled ? { stats: speed.stats, onResult: speed.record } : null}
+            askConjugation={askConjugation}
           />
         )}
 
         <footer className="credits">
-          Grammar and vocabulary follow <em>Suburani</em> (Hands Up Education). Tables for vocabulary nouns come from{' '}
+          Grammar and vocabulary follow <em>Suburani</em> (Hands Up Education). Tables for vocabulary nouns and verbs come from{' '}
           <a href="https://en.wiktionary.org" target="_blank" rel="noreferrer">Wiktionary</a> via{' '}
           <a href="https://kaikki.org" target="_blank" rel="noreferrer">kaikki.org</a>, licensed{' '}
           <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noreferrer">CC BY-SA 4.0</a>.

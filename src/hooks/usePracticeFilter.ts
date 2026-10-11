@@ -2,6 +2,17 @@ import { useState } from 'react';
 import { ALL_TYPES } from '../drills';
 
 const STORAGE_KEY = 'chaoslingua-lite:practiceTypes';
+const ASK_CONJ_KEY = 'chaoslingua-lite:askConjugation';
+
+// On unless turned off.
+function loadAskConjugation(): boolean {
+  try {
+    return localStorage.getItem(ASK_CONJ_KEY) !== 'off';
+  } catch (err) {
+    console.warn('Ignoring unreadable conjugation setting', err);
+    return true;
+  }
+}
 
 function loadStored(): string[] {
   try {
@@ -22,6 +33,19 @@ function persist(types: Set<string>) {
 
 export function usePracticeFilter() {
   const [types, setTypes] = useState<Set<string>>(() => new Set(loadStored()));
+  // Whether the verb parse also asks for the conjugation.
+  const [askConjugation, setAskConjugation] = useState(loadAskConjugation);
+
+  const toggleAskConjugation = () => {
+    setAskConjugation((on) => {
+      try {
+        localStorage.setItem(ASK_CONJ_KEY, on ? 'off' : 'on');
+      } catch (err) {
+        console.warn('Could not save conjugation setting', err);
+      }
+      return !on;
+    });
+  };
 
   const toggleType = (type: string) => {
     setTypes((prev) => {
@@ -49,5 +73,5 @@ export function usePracticeFilter() {
     persist(final);
   };
 
-  return { types, toggleType, resetFilter, applyFilter };
+  return { types, toggleType, resetFilter, applyFilter, askConjugation, toggleAskConjugation };
 }

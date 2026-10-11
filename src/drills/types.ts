@@ -1,5 +1,5 @@
 import type { Case, Declension, Parse, ParseNoun } from '../data/nouns';
-import type { Conjugation, Tense } from '../data/verbs';
+import type { Conjugation, DrillVerb, Tense, VerbSlot } from '../data/verbs';
 
 // What gets written to `attempts` alongside the drill type — each drill fills in
 // whatever it can meaningfully attribute an answer to.
@@ -33,7 +33,23 @@ export interface ParseDrill {
   meta: AttemptMeta;
 }
 
-export type Drill = McDrill | ParseDrill;
+// Form → person + number + tense (+ conjugation) + meaning. Graded against every
+// valid parse.
+export interface VerbParseDrill {
+  kind: 'verbParse';
+  type: string;
+  label: string;
+  verb: DrillVerb;
+  form: string;
+  parses: VerbSlot[];
+  // The open tenses when the drill was made — the tense row's choices.
+  tenses: Tense[];
+  // English choices for the meaning row, as table slots.
+  meanings: VerbSlot[];
+  meta: AttemptMeta;
+}
+
+export type Drill = McDrill | ParseDrill | VerbParseDrill;
 
 // The pool a generator may draw from — set by the course gates, not the drill.
 export interface DrillContext {

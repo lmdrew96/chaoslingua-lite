@@ -50,4 +50,11 @@ export const VERB_FORM_OVERRIDES: Record<string, { replace: Array<[from: string,
 
 // Vocab verbs the import flagged for review that Nae has checked and approved for
 // drills. Keyed by vocab id.
-export const VERB_APPROVED_FOR_DRILLS: string[] = [];
+export const VERB_APPROVED_FOR_DRILLS: string[] = [
+  // Ch.1–4 verbs, listed without an infinitive: conjugation from Wiktionary, approved
+  // by Nae 10/11.
+  'ch1-dormiō', 'ch1-labōrō', 'ch1-legō', 'ch1-rīdeō',
+  'ch2-cadō', 'ch2-dūcō', 'ch2-habeō', 'ch2-habitō', 'ch2-intrō', 'ch2-quaerō', 'ch2-salūtō', 'ch2-spectō', 'ch2-videō',
+  'ch3-ambulō', 'ch3-clāmō', 'ch3-currō', 'ch3-dīcō', 'ch3-festīnō', 'ch3-vincō',
+  'ch4-laudō', 'ch4-tollō', 'ch4-veniō',
+];
