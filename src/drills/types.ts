@@ -1,4 +1,5 @@
 import type { Case, Declension, Parse, ParseNoun } from '../data/nouns';
+import type { Conjugation, Tense } from '../data/verbs';
 
 // What gets written to `attempts` alongside the drill type — each drill fills in
 // whatever it can meaningfully attribute an answer to.
@@ -38,6 +39,8 @@ export type Drill = McDrill | ParseDrill;
 export interface DrillContext {
   declensions: Set<Declension>;
   chapters: Set<number>;
+  tenses: Set<Tense>;
+  conjugations: Set<Conjugation>;
 }
 
 export interface DrillType {

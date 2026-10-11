@@ -1,6 +1,14 @@
 import { useMemo, useState } from 'react';
-import { CHAPTER_UNLOCKS, DECLENSION_UNLOCKS, openByDate, type Unlock } from '../data/course';
+import {
+  CHAPTER_UNLOCKS,
+  CONJUGATION_UNLOCKS,
+  DECLENSION_UNLOCKS,
+  TENSE_UNLOCKS,
+  openByDate,
+  type Unlock,
+} from '../data/course';
 import type { Declension } from '../data/nouns';
+import type { Conjugation, Tense } from '../data/verbs';
 import type { DrillContext } from '../drills/types';
 
 const STORAGE_KEY = 'chaoslingua-lite:courseOverrides';
@@ -10,25 +18,32 @@ const STORAGE_KEY = 'chaoslingua-lite:courseOverrides';
 interface Overrides {
   chapters: Record<string, boolean>;
   declensions: Record<string, boolean>;
+  tenses: Record<string, boolean>;
+  conjugations: Record<string, boolean>;
 }
 
-const EMPTY: Overrides = { chapters: {}, declensions: {} };
+const EMPTY: Overrides = { chapters: {}, declensions: {}, tenses: {}, conjugations: {} };
 
 function loadOverrides(): Overrides {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return EMPTY;
     const parsed = JSON.parse(raw) as Partial<Overrides>;
-    return { chapters: parsed.chapters ?? {}, declensions: parsed.declensions ?? {} };
+    return {
+      chapters: parsed.chapters ?? {},
+      declensions: parsed.declensions ?? {},
+      tenses: parsed.tenses ?? {},
+      conjugations: parsed.conjugations ?? {},
+    };
   } catch (err) {
     console.warn('Ignoring unreadable course settings', err);
     return EMPTY;
   }
 }
 
-const effective = <T extends number>(unlocks: Unlock<T>[], overrides: Record<string, boolean>): Set<T> => {
+const effective = <T extends number | string>(unlocks: Unlock<T>[], overrides: Record<string, boolean>): Set<T> => {
   const byDate = openByDate(unlocks);
-  return new Set(unlocks.filter((u) => overrides[u.id] ?? byDate.has(u.id)).map((u) => u.id));
+  return new Set(unlocks.filter((u) => overrides[String(u.id)] ?? byDate.has(u.id)).map((u) => u.id));
 };
 
 export function useCourse() {
@@ -38,6 +53,8 @@ export function useCourse() {
     () => ({
       chapters: effective(CHAPTER_UNLOCKS, overrides.chapters),
       declensions: effective(DECLENSION_UNLOCKS, overrides.declensions),
+      tenses: effective(TENSE_UNLOCKS, overrides.tenses),
+      conjugations: effective(CONJUGATION_UNLOCKS, overrides.conjugations),
     }),
     [overrides],
   );
@@ -48,18 +65,21 @@ export function useCourse() {
   };
 
   // Flipping a unit back to what the schedule says drops its override entirely.
-  const toggle = (kind: keyof Overrides, id: number, isOn: boolean, unlocks: Unlock<number>[]) => {
+  const toggle = <T extends number | string>(kind: keyof Overrides, id: T, isOn: boolean, unlocks: Unlock<T>[]) => {
     const scheduled = openByDate(unlocks).has(id);
     const next = { ...overrides[kind] };
-    if (!isOn === scheduled) delete next[id];
-    else next[id] = !isOn;
+    if (!isOn === scheduled) delete next[String(id)];
+    else next[String(id)] = !isOn;
     save({ ...overrides, [kind]: next });
   };
 
   const toggleChapter = (id: number) => toggle('chapters', id, ctx.chapters.has(id), CHAPTER_UNLOCKS);
   const toggleDeclension = (id: Declension) => toggle('declensions', id, ctx.declensions.has(id), DECLENSION_UNLOCKS);
+  const toggleTense = (id: Tense) => toggle('tenses', id, ctx.tenses.has(id), TENSE_UNLOCKS);
+  const toggleConjugation = (id: Conjugation) =>
+    toggle('conjugations', id, ctx.conjugations.has(id), CONJUGATION_UNLOCKS);
   const followSchedule = () => save(EMPTY);
-  const customized = Object.keys(overrides.chapters).length + Object.keys(overrides.declensions).length > 0;
+  const customized = Object.values(overrides).some((o) => Object.keys(o).length > 0);
 
-  return { ctx, toggleChapter, toggleDeclension, followSchedule, customized };
+  return { ctx, toggleChapter, toggleDeclension, toggleTense, toggleConjugation, followSchedule, customized };
 }

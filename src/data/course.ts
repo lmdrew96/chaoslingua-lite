@@ -3,6 +3,7 @@
 // Learn read these lists, they don't hardcode them.
 
 import type { Declension } from './nouns';
+import type { Conjugation, Tense } from './verbs';
 
 export interface Unlock<T> {
   id: T;
@@ -56,6 +57,29 @@ export const DECLENSION_UNLOCKS: Unlock<Declension>[] = [
   // Class covers the 4th and 5th declensions on Mon 9/28.
   { id: 4, opens: '2026-09-28' },
   { id: 5, opens: '2026-09-28' },
+];
+
+// Verb tenses follow the LATN 101 modules, not Suburani's chapter order: the textbook
+// gives the perfect from ch.7, but class reaches the perfect system in Module 5. So a
+// ch.8 verb is drillable now in present-system forms only.
+export const TENSE_UNLOCKS: Unlock<Tense>[] = [
+  // Module 3: present active system.
+  { id: 'pres', opens: '2026-10-07' },
+  { id: 'fut', opens: '2026-10-07' },
+  { id: 'impf', opens: '2026-10-07' },
+  // Module 5: perfect active system.
+  { id: 'perf', opens: '2026-11-02' },
+  { id: 'futperf', opens: '2026-11-02' },
+  { id: 'plup', opens: '2026-11-02' },
+];
+
+export const CONJUGATION_UNLOCKS: Unlock<Conjugation>[] = [
+  { id: 1, opens: '2026-10-07' },
+  { id: 2, opens: '2026-10-07' },
+  { id: 3, opens: '2026-10-07' },
+  { id: 4, opens: '2026-10-07' },
+  { id: '3io', opens: '2026-10-07' },
+  { id: 'irr', opens: '2026-10-07' },
 ];
 
 // Local date, not UTC — an evening study session shouldn't unlock tomorrow's chapter.

@@ -21,7 +21,8 @@ const MAX_WEAK_SPOT_TYPES = 3;
 function App() {
   const [view, setView] = useState<View>('drill');
   const { account, token, loading: accountLoading, busy, error, createAccount, joinAccount, signOut } = useAccount();
-  const { ctx, toggleChapter, toggleDeclension, followSchedule, customized } = useCourse();
+  const { ctx, toggleChapter, toggleDeclension, toggleTense, toggleConjugation, followSchedule, customized } =
+    useCourse();
   const { types, toggleType, resetFilter, applyFilter } = usePracticeFilter();
   const { loading, stats, current, drillSeq, sessionGoal, handleAnswer, nextDrill, reset } = useDrillSession(
     types,
@@ -83,6 +84,8 @@ function App() {
               ctx={ctx}
               onToggleChapter={toggleChapter}
               onToggleDeclension={toggleDeclension}
+              onToggleTense={toggleTense}
+              onToggleConjugation={toggleConjugation}
               onFollowSchedule={followSchedule}
               customized={customized}
               types={types}

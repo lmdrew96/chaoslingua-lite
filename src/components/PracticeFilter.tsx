@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { CHAPTER_UNLOCKS, DECLENSION_UNLOCKS, openByDate } from '../data/course';
+import { CHAPTER_UNLOCKS, CONJUGATION_UNLOCKS, DECLENSION_UNLOCKS, TENSE_UNLOCKS, openByDate } from '../data/course';
 import { ordinal, type Declension } from '../data/nouns';
+import { conjugationLabel, tenseNames, type Conjugation, type Tense } from '../data/verbs';
 import { ALL_TYPES, labelFor } from '../drills';
 import type { DrillContext } from '../drills/types';
 
@@ -8,6 +9,8 @@ interface PracticeFilterProps {
   ctx: DrillContext;
   onToggleChapter: (id: number) => void;
   onToggleDeclension: (id: Declension) => void;
+  onToggleTense: (id: Tense) => void;
+  onToggleConjugation: (id: Conjugation) => void;
   onFollowSchedule: () => void;
   customized: boolean;
   types: Set<string>;
@@ -37,6 +40,8 @@ export function PracticeFilter({
   ctx,
   onToggleChapter,
   onToggleDeclension,
+  onToggleTense,
+  onToggleConjugation,
   onFollowSchedule,
   customized,
   types,
@@ -53,6 +58,8 @@ export function PracticeFilter({
   const summary = isNarrowed ? [...types].map(labelFor).join(', ') : 'All drills';
   const scheduledChapters = openByDate(CHAPTER_UNLOCKS);
   const scheduledDeclensions = openByDate(DECLENSION_UNLOCKS);
+  const scheduledTenses = openByDate(TENSE_UNLOCKS);
+  const scheduledConjugations = openByDate(CONJUGATION_UNLOCKS);
 
   return (
     <div className="practice-filter">
@@ -112,6 +119,44 @@ export function PracticeFilter({
                 >
                   {ordinal(u.id)}
                   {!scheduledDeclensions.has(u.id) && <span className="chip-note"> · class {shortDate(u.opens)}</span>}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="filter-group">
+            <div className="filter-group-label">Verb tenses</div>
+            <div className="chip-row">
+              {TENSE_UNLOCKS.map((u) => (
+                <button
+                  key={u.id}
+                  type="button"
+                  className={`chip-btn${ctx.tenses.has(u.id) ? ' active' : ''}`}
+                  aria-pressed={ctx.tenses.has(u.id)}
+                  disabled={ctx.tenses.has(u.id) && ctx.tenses.size === 1}
+                  onClick={() => onToggleTense(u.id)}
+                >
+                  {tenseNames[u.id]}
+                  {!scheduledTenses.has(u.id) && <span className="chip-note"> · class {shortDate(u.opens)}</span>}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="filter-group">
+            <div className="filter-group-label">Conjugations</div>
+            <div className="chip-row">
+              {CONJUGATION_UNLOCKS.map((u) => (
+                <button
+                  key={u.id}
+                  type="button"
+                  className={`chip-btn${ctx.conjugations.has(u.id) ? ' active' : ''}`}
+                  aria-pressed={ctx.conjugations.has(u.id)}
+                  disabled={ctx.conjugations.has(u.id) && ctx.conjugations.size === 1}
+                  onClick={() => onToggleConjugation(u.id)}
+                >
+                  {conjugationLabel(u.id)}
+                  {!scheduledConjugations.has(u.id) && <span className="chip-note"> · class {shortDate(u.opens)}</span>}
                 </button>
               ))}
             </div>
