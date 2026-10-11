@@ -6,6 +6,7 @@ import { ParseAnswer } from './ParseAnswer';
 import { ProgressBar } from './ProgressBar';
 import { VerbParseAnswer } from './VerbParseAnswer';
 import { SpeedBar } from './SpeedBar';
+import { TypedAnswer } from './TypedAnswer';
 import { shouldIgnoreHotkey } from '../lib/hotkeys';
 
 // Present only while parse speed mode is on (noun and verb parses).
@@ -23,11 +24,12 @@ interface DrillCardProps {
   onReset: () => void;
   speed: SpeedModeProps | null;
   askConjugation: boolean;
+  typeAnswers: boolean;
 }
 
 // The parent remounts this card (via `key`) for every new drill, so answer state and
 // the answer components' selections start fresh without a reset effect.
-export function DrillCard({ drill, attempted, sessionGoal, onAnswer, onNext, onReset, speed, askConjugation }: DrillCardProps) {
+export function DrillCard({ drill, attempted, sessionGoal, onAnswer, onNext, onReset, speed, askConjugation, typeAnswers }: DrillCardProps) {
   const [result, setResult] = useState<'good' | 'bad' | null>(null);
   const answered = result !== null;
   const [startedAt] = useState(() => Date.now());
@@ -78,7 +80,11 @@ export function DrillCard({ drill, attempted, sessionGoal, onAnswer, onNext, onR
       ) : (
         <>
           <div className="prompt" dangerouslySetInnerHTML={{ __html: drill.prompt }} />
-          <McAnswer drill={drill} answered={answered} onSubmit={(ok) => submit(ok)} />
+          {drill.typeable && typeAnswers ? (
+            <TypedAnswer drill={drill} answered={answered} onSubmit={(ok) => submit(ok)} />
+          ) : (
+            <McAnswer drill={drill} answered={answered} onSubmit={(ok) => submit(ok)} />
+          )}
         </>
       )}
 
@@ -92,7 +98,11 @@ export function DrillCard({ drill, attempted, sessionGoal, onAnswer, onNext, onR
           </button>
         ) : (
           <span className="key-hint" aria-hidden="true">
-            {drill.kind === 'mc' ? 'Press a number to answer' : 'Enter checks when every row is picked'}
+            {drill.kind !== 'mc'
+              ? 'Enter checks when every row is picked'
+              : drill.typeable && typeAnswers
+                ? 'Enter checks your answer'
+                : 'Press a number to answer'}
           </span>
         )}
       </div>

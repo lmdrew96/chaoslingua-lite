@@ -23,7 +23,16 @@ function App() {
   const { account, token, loading: accountLoading, busy, error, createAccount, joinAccount, signOut } = useAccount();
   const { ctx, toggleChapter, toggleDeclension, toggleTense, toggleConjugation, followSchedule, customized } =
     useCourse();
-  const { types, toggleType, resetFilter, applyFilter, askConjugation, toggleAskConjugation } = usePracticeFilter();
+  const {
+    types,
+    toggleType,
+    resetFilter,
+    applyFilter,
+    askConjugation,
+    toggleAskConjugation,
+    typeAnswers,
+    toggleTypeAnswers,
+  } = usePracticeFilter();
   const { loading, stats, current, drillSeq, sessionGoal, handleAnswer, nextDrill, reset } = useDrillSession(
     types,
     ctx,
@@ -97,6 +106,8 @@ function App() {
               onToggleSpeedMode={speed.toggle}
               askConjugation={askConjugation}
               onToggleAskConjugation={toggleAskConjugation}
+              typeAnswers={typeAnswers}
+              onToggleTypeAnswers={toggleTypeAnswers}
             />
             <StatsRow attempted={stats.attempted} correct={stats.correct} />
           </>
@@ -131,6 +142,7 @@ function App() {
             onReset={reset}
             speed={speed.enabled ? { stats: speed.stats, onResult: speed.record } : null}
             askConjugation={askConjugation}
+            typeAnswers={typeAnswers}
           />
         )}
 

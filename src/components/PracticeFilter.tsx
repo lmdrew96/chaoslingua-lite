@@ -22,6 +22,8 @@ interface PracticeFilterProps {
   onToggleSpeedMode: () => void;
   askConjugation: boolean;
   onToggleAskConjugation: () => void;
+  typeAnswers: boolean;
+  onToggleTypeAnswers: () => void;
 }
 
 // "1–3" for a contiguous run, "1, 2, 5" otherwise.
@@ -55,6 +57,8 @@ export function PracticeFilter({
   onToggleSpeedMode,
   askConjugation,
   onToggleAskConjugation,
+  typeAnswers,
+  onToggleTypeAnswers,
 }: PracticeFilterProps) {
   const [open, setOpen] = useState(false);
 
@@ -116,6 +120,23 @@ export function PracticeFilter({
                 )}
               </div>
               <p className="filter-hint">Times each parse and tracks a streak of correct ones. Grading stays the same.</p>
+            </div>
+          )}
+
+          {types.has('conjugate') && (
+            <div className="filter-group">
+              <div className="filter-group-label">Conjugate</div>
+              <div className="chip-row">
+                <button
+                  type="button"
+                  className={`chip-btn${typeAnswers ? ' active' : ''}`}
+                  aria-pressed={typeAnswers}
+                  onClick={onToggleTypeAnswers}
+                >
+                  ⌨ Type the answer
+                </button>
+              </div>
+              <p className="filter-hint">Type the form instead of choosing it. Missing macrons are pointed out, not marked wrong.</p>
             </div>
           )}
 

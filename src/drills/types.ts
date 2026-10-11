@@ -18,6 +18,8 @@ export interface McDrill {
   answer: string;
   // Shown after answering — why the answer is what it is.
   explanation?: string;
+  // Can also be answered by typing the answer (the conjugate drill's typed mode).
+  typeable?: boolean;
   meta: AttemptMeta;
 }
 
