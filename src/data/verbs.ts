@@ -31,6 +31,22 @@ export const tenseNames: Record<Tense, string> = {
 
 export const personNames: Record<Person, string> = { 1: '1st person', 2: '2nd person', 3: '3rd person' };
 
+// Suburani's row labels.
+export const personLabels: Record<GNumber, Record<Person, string>> = {
+  sg: { 1: 'I', 2: 'you (sing.)', 3: 'he, she, it' },
+  pl: { 1: 'we', 2: 'you (pl.)', 3: 'they' },
+};
+
+// Suburani's English frame for each tense heading.
+export const tenseFrames: Record<Tense, string> = {
+  pres: 'I call, am calling',
+  fut: 'I shall call',
+  impf: 'I was calling, used to call',
+  perf: 'I called, have called',
+  futperf: 'I shall have called',
+  plup: 'I had called',
+};
+
 export const conjugationLabel = (c: Conjugation): string =>
   c === '3io' ? '3rd/4th' : c === 'irr' ? 'irregular' : ['1st', '2nd', '3rd', '4th'][c - 1];
 

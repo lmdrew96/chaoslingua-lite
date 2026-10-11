@@ -799,3 +799,10 @@ input[type="text"]:focus {
     transition: none !important;
   }
 }
+
+/* Conjugation tables */
+.verb-callouts { margin-top: 14px; }
+.verb-parts .vp-stem { color: var(--color-ink); }
+.verb-parts .vp-sign { color: var(--color-purple); font-weight: 600; }
+.verb-parts .vp-ending { color: var(--color-teal-deep); text-decoration: underline; text-underline-offset: 3px; }
+.verb-parts > span + span::before { content: '·'; color: var(--color-teal-deep); opacity: 0.5; font-weight: 400; }

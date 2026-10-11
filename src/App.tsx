@@ -104,7 +104,12 @@ function App() {
       {/* data-mark is the giant faint capital drawn behind the card (see .stage::before). */}
       <main className="stage" data-mark={view === 'learn' ? 'L' : (current?.label.charAt(0) ?? 'C')}>
         {view === 'learn' ? (
-          <LearnView openChapters={ctx.chapters} openDeclensions={ctx.declensions} />
+          <LearnView
+            openChapters={ctx.chapters}
+            openDeclensions={ctx.declensions}
+            openTenses={ctx.tenses}
+            openConjugations={ctx.conjugations}
+          />
         ) : loading ? (
           <div className="card">
             <div className="loading">Setting up your drill session…</div>
