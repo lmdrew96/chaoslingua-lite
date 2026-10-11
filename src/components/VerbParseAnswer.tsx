@@ -49,7 +49,8 @@ export function VerbParseAnswer({ drill, askConjugation, answered, onSubmit }: V
 
   const check = () => {
     if (!ready || answered) return;
-    onSubmit(correct, drill.meta);
+    // A correct answer on an ambiguous form is credited to the parse actually chosen.
+    onSubmit(correct, correct && chosen ? { ...drill.meta, ...chosen } : drill.meta);
   };
 
   // Enter checks once every row is picked.

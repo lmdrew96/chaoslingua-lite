@@ -50,6 +50,79 @@ export const tenseFrames: Record<Tense, string> = {
 export const conjugationLabel = (c: Conjugation): string =>
   c === '3io' ? '3rd/4th' : c === 'irr' ? 'irregular' : ['1st', '2nd', '3rd', '4th'][c - 1];
 
+// Personal endings, the same in every conjugation and tense of the present system.
+export const PERSONAL_ENDINGS: Array<{ label: string; ending: string }> = [
+  { label: 'I', ending: '-ō / -m' },
+  { label: 'you (sing.)', ending: '-s' },
+  { label: 'he, she, it', ending: '-t' },
+  { label: 'we', ending: '-mus' },
+  { label: 'you (pl.)', ending: '-tis' },
+  { label: 'they', ending: '-nt' },
+];
+
+// Tense signs, each with forms from the model tables split stem · sign · ending (the
+// Learn page checks that every example joins back to a real table form).
+export interface TenseSign {
+  tense: Tense;
+  heading: string;
+  note?: string;
+  examples: Array<{ stem: string; sign?: string; ending?: string }>;
+}
+
+export const TENSE_SIGNS: TenseSign[] = [
+  {
+    tense: 'impf',
+    heading: 'Imperfect: -ba- before the ending, in every conjugation',
+    examples: [
+      { stem: 'vocā', sign: 'ba', ending: 'm' },
+      { stem: 'tenē', sign: 'bā', ending: 's' },
+      { stem: 'mittē', sign: 'ba', ending: 't' },
+      { stem: 'audiē', sign: 'bā', ending: 'mus' },
+      { stem: 'capiē', sign: 'ba', ending: 'nt' },
+    ],
+  },
+  {
+    tense: 'fut',
+    heading: 'Future, 1st and 2nd conjugations: -bō, -bi-, -bu-',
+    examples: [
+      { stem: 'vocā', sign: 'bō' },
+      { stem: 'vocā', sign: 'bi', ending: 't' },
+      { stem: 'tenē', sign: 'bi', ending: 'mus' },
+      { stem: 'tenē', sign: 'bu', ending: 'nt' },
+    ],
+  },
+  {
+    tense: 'fut',
+    heading: 'Future, 3rd, 4th and 3rd/4th: -a- for “I”, -ē- after that',
+    note: 'short -e- before -t and -nt',
+    examples: [
+      { stem: 'mitt', sign: 'a', ending: 'm' },
+      { stem: 'mitt', sign: 'ē', ending: 's' },
+      { stem: 'audi', sign: 'e', ending: 't' },
+      { stem: 'capi', sign: 'ē', ending: 'mus' },
+      { stem: 'audi', sign: 'e', ending: 'nt' },
+    ],
+  },
+];
+
+// Why the conjugation matters for the future: its sign looks like another
+// conjugation's present.
+export const FUTURE_LOOKALIKE_NOTE =
+  'So the conjugation decides the tense. tenet (2nd) is present, “holds”, but mittet (3rd) is future, “will send”. In the 3rd conjugation only a vowel separates the two: mittit / mittet, mittis / mittēs.';
+
+export const CONJUGATION_FROM_INFINITIVE: Array<{ ending: string; conjugation: string; example: string }> = [
+  { ending: '-āre', conjugation: '1st', example: 'vocō, vocāre' },
+  { ending: '-ēre', conjugation: '2nd', example: 'teneō, tenēre' },
+  { ending: '-ere', conjugation: '3rd — or 3rd/4th if the first part ends in -iō', example: 'mittō, mittere · capiō, capere' },
+  { ending: '-īre', conjugation: '4th', example: 'audiō, audīre' },
+];
+
+export const INFINITIVE_TIEBREAK_NOTE =
+  '-ēre and -ere differ only by the macron. The first part breaks the tie: an -eō verb (teneō) is 2nd conjugation; mittō is 3rd.';
+
+export const PRINCIPAL_PARTS_NOTE =
+  'A verb is listed by its principal parts, the forms you need to build everything else. From ch.7 the vocab lists give three: nārrō, nārrāre, nārrāvī — “I tell, to tell, I told”. Ch.5–6 give the first two; Book 2 adds a fourth (līberātus, “freed”). The first two give the present, future and imperfect; the third gives the perfect, which class reaches in Module 5.';
+
 export type TenseTable = Record<GNumber, Record<Person, string>>;
 
 export interface ModelVerb {
@@ -325,3 +398,12 @@ export const segmentsOf = (
   }
   return null;
 };
+
+// What a verb drill logs to `attempts` for the slot it tested.
+export const verbMeta = (verb: Pick<DrillVerb, 'chapter' | 'conjugation'>, slot: VerbSlot) => ({
+  ...(verb.chapter ? { chapter: verb.chapter } : {}),
+  tense: slot.tense,
+  person: slot.person,
+  number: slot.number,
+  conjugation: String(verb.conjugation),
+});

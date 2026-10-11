@@ -1,5 +1,5 @@
 import { NUMBERS } from '../data/nouns';
-import { PERSONS, TENSES, drillableVerbs, sameSlot, verbParsesOf, type Conjugation, type DrillVerb, type VerbSlot } from '../data/verbs';
+import { PERSONS, TENSES, drillableVerbs, sameSlot, verbMeta, verbParsesOf, type Conjugation, type DrillVerb, type VerbSlot } from '../data/verbs';
 import { pick, shuffle } from '../lib/random';
 import type { DrillContext, DrillType, VerbParseDrill } from './types';
 
@@ -53,8 +53,7 @@ const makeVerbParse = (ctx: DrillContext): VerbParseDrill | null => {
       parses,
       tenses,
       meanings: meaningChoices(parses, tenses.filter((t) => verb.forms[t])),
-      // The attempts table can't hold tense/person/number yet (ChaosPatch 044cbcb3).
-      meta: verb.chapter ? { chapter: verb.chapter } : {},
+      meta: verbMeta(verb, parses[0]),
     };
   }
   return null;

@@ -16,6 +16,7 @@ import {
   type Conjugation,
   type DrillVerb,
   type VerbSlot,
+  verbMeta,
 } from '../data/verbs';
 import { pick, shuffle } from '../lib/random';
 import type { DrillContext, DrillType, McDrill } from './types';
@@ -71,8 +72,7 @@ const makeConjugate = (ctx: DrillContext): McDrill | null => {
         ? `${[parts.stem, parts.sign, parts.ending].filter(Boolean).join('·')} — ${english}.`
         : `${answer} — ${english}.`,
       typeable: true,
-      // The attempts table can't hold tense/person/number yet (ChaosPatch 044cbcb3).
-      meta: verb.chapter ? { chapter: verb.chapter } : {},
+      meta: verbMeta(verb, slot),
     };
   }
   return null;

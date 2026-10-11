@@ -8,6 +8,10 @@ export const logTutoringAttempt = mutation({
     chapter: v.optional(v.number()),
     declension: v.optional(v.number()),
     case: v.optional(v.string()),
+    tense: v.optional(v.string()),
+    person: v.optional(v.number()),
+    number: v.optional(v.string()),
+    conjugation: v.optional(v.string()),
     correct: v.boolean(),
   },
   handler: async (ctx, args) => {
@@ -19,12 +23,18 @@ interface WeakAreaStats {
   drillType: string;
   declension?: number;
   case?: string;
+  conjugation?: string;
+  tense?: string;
+  person?: number;
   attempted: number;
   correct: number;
 }
 
-// Grouped by drill type, and further by declension + case where the drill records
-// them — "parse, 3rd declension genitive" is a weak spot; "parse" alone isn't useful.
+// Grouped by drill type, and further by declension + case (nouns) or conjugation +
+// tense + person (verbs) where the drill records them — "parse, 3rd declension
+// genitive" or "verb-parse, 3rd conjugation future, 2nd person" is a weak spot;
+// "parse" alone isn't useful. Number is logged but not grouped on, to keep each
+// group big enough to mean something.
 export const getWeakAreas = query({
   args: { userId: v.id("users") },
   handler: async (ctx, args) => {
@@ -35,11 +45,14 @@ export const getWeakAreas = query({
 
     const groups = new Map<string, WeakAreaStats>();
     for (const a of attempts) {
-      const key = [a.drillType, a.declension ?? "", a.case ?? ""].join("|");
+      const key = [a.drillType, a.declension ?? "", a.case ?? "", a.conjugation ?? "", a.tense ?? "", a.person ?? ""].join("|");
       const existing = groups.get(key) ?? {
         drillType: a.drillType,
         declension: a.declension,
         case: a.case,
+        conjugation: a.conjugation,
+        tense: a.tense,
+        person: a.person,
         attempted: 0,
         correct: 0,
       };

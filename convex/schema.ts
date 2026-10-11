@@ -17,8 +17,9 @@ export default defineSchema({
     createdAt: v.number(),
   }).index("by_keyHash", ["keyHash"]),
 
-  // Tutoring-session tracking, written only by the chaoslingua-lite-mcp server —
-  // deliberately separate from `progress` (the app's own drill stats). Lets a tutor
+  // Tutoring-session tracking, written by the chaoslingua-lite-mcp server and by the
+  // app when signed in — deliberately separate from `progress` (the app's own drill
+  // stats). Lets a tutor
   // ask "what's she weak on" instead of just an aggregate accuracy percentage.
   // User-scoped so each tutoring account's weak areas stay isolated from others.
   attempts: defineTable({
@@ -29,6 +30,13 @@ export default defineSchema({
     // Parse drills attribute each answer to the declension + case they tested.
     declension: v.optional(v.number()),
     case: v.optional(v.string()),
+    // Verb drills attribute each answer to the slot they tested. Conjugation is a
+    // string because Suburani's 3rd/4th and the irregulars aren't numbers ("1", "3io",
+    // "irr").
+    tense: v.optional(v.string()),
+    person: v.optional(v.number()),
+    number: v.optional(v.string()),
+    conjugation: v.optional(v.string()),
     correct: v.boolean(),
     timestamp: v.number(),
   })

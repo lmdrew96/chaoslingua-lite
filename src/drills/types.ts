@@ -1,6 +1,6 @@
 import type { Topic } from '../data/course';
-import type { Case, Declension, Parse, ParseNoun } from '../data/nouns';
-import type { Conjugation, DrillVerb, Tense, VerbSlot } from '../data/verbs';
+import type { Case, Declension, GNumber, Parse, ParseNoun } from '../data/nouns';
+import type { Conjugation, DrillVerb, Person, Tense, VerbSlot } from '../data/verbs';
 
 // What gets written to `attempts` alongside the drill type — each drill fills in
 // whatever it can meaningfully attribute an answer to.
@@ -8,6 +8,11 @@ export interface AttemptMeta {
   chapter?: number;
   declension?: Declension;
   case?: Case;
+  // Verb drills: the slot tested. Conjugation is stored as a string ("1", "3io", "irr").
+  tense?: Tense;
+  person?: Person;
+  number?: GNumber;
+  conjugation?: string;
 }
 
 export interface McDrill {

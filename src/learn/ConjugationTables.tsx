@@ -1,6 +1,12 @@
 import { NUMBERS } from '../data/nouns';
 import {
+  CONJUGATION_FROM_INFINITIVE,
   CONJUGATIONS,
+  FUTURE_LOOKALIKE_NOTE,
+  INFINITIVE_TIEBREAK_NOTE,
+  PERSONAL_ENDINGS,
+  PRINCIPAL_PARTS_NOTE,
+  TENSE_SIGNS,
   IRREGULAR_VERBS,
   MODEL_VERBS,
   PERSONS,
@@ -105,22 +111,6 @@ function OtherParts({ verbs }: { verbs: ModelVerb[] }) {
   );
 }
 
-const ENDINGS: Array<[label: string, ending: string]> = [
-  ['I', '-ō / -m'],
-  ['you (sing.)', '-s'],
-  ['he, she, it', '-t'],
-  ['we', '-mus'],
-  ['you (pl.)', '-tis'],
-  ['they', '-nt'],
-];
-
-const CONJ_FROM_INFINITIVE: Array<[ending: string, conj: string, example: string]> = [
-  ['-āre', '1st', 'vocō, vocāre'],
-  ['-ēre', '2nd', 'teneō, tenēre'],
-  ['-ere', '3rd — or 3rd/4th if the first part ends in -iō', 'mittō, mittere · capiō, capere'],
-  ['-īre', '4th', 'audiō, audīre'],
-];
-
 interface ConjugationTablesProps {
   openTenses: Set<Tense>;
   openConjugations: Set<Conjugation>;
@@ -144,7 +134,7 @@ export function ConjugationTables({ openTenses, openConjugations }: ConjugationT
               <strong>PERSONAL ENDINGS</strong> — who is doing it. The same in every conjugation and tense on this page.
             </caption>
             <tbody>
-              {ENDINGS.map(([label, ending]) => (
+              {PERSONAL_ENDINGS.map(({ label, ending }) => (
                 <tr key={label}>
                   <td>{label}</td>
                   <td className="latin-form">{ending}</td>
@@ -154,45 +144,24 @@ export function ConjugationTables({ openTenses, openConjugations }: ConjugationT
           </table>
         </div>
         <ul className="case-use-list verb-callouts">
-          {openTenses.has('impf') && (
-            <li>
-              <strong>Imperfect: -ba-</strong> before the ending, in every conjugation:{' '}
-              <VerbParts stem="vocā" sign="ba" ending="m" />, <VerbParts stem="tenē" sign="bā" ending="s" />,{' '}
-              <VerbParts stem="mittē" sign="ba" ending="t" />, <VerbParts stem="audiē" sign="bā" ending="mus" />,{' '}
-              <VerbParts stem="capiē" sign="ba" ending="nt" />.
+          {TENSE_SIGNS.filter((t) => openTenses.has(t.tense)).map((t) => (
+            <li key={t.heading}>
+              <strong>{t.heading}</strong>
+              {t.note && ` (${t.note})`} —{' '}
+              {t.examples.map((e, i) => (
+                <span key={i}>
+                  {i > 0 && ', '}
+                  <VerbParts {...e} />
+                </span>
+              ))}
+              .
             </li>
-          )}
-          {openTenses.has('fut') && (
-            <>
-              <li>
-                <strong>Future, 1st and 2nd conjugations: -bō, -bi-, -bu-</strong> — <VerbParts stem="vocā" sign="bō" />,{' '}
-                <VerbParts stem="vocā" sign="bi" ending="t" />, <VerbParts stem="tenē" sign="bi" ending="mus" />,{' '}
-                <VerbParts stem="tenē" sign="bu" ending="nt" />.
-              </li>
-              <li>
-                <strong>Future, 3rd, 4th and 3rd/4th: -a- for “I”, -ē- after that</strong> (short -e- before -t and
-                -nt) — <VerbParts stem="mitt" sign="a" ending="m" />, <VerbParts stem="mitt" sign="ē" ending="s" />,{' '}
-                <VerbParts stem="audi" sign="e" ending="t" />, <VerbParts stem="capi" sign="ē" ending="mus" />,{' '}
-                <VerbParts stem="audi" sign="e" ending="nt" />.
-              </li>
-              <li>
-                <strong>So the conjugation decides the tense.</strong> <span className="latin">tenet</span> (2nd) is
-                present, “holds”, but <span className="latin">mittet</span> (3rd) is future, “will send”. In the 3rd
-                conjugation only a vowel separates the two: <span className="latin">mittit</span> /{' '}
-                <span className="latin">mittet</span>, <span className="latin">mittis</span> /{' '}
-                <span className="latin">mittēs</span>.
-              </li>
-            </>
-          )}
+          ))}
+          {openTenses.has('fut') && <li>{FUTURE_LOOKALIKE_NOTE}</li>}
         </ul>
 
         <h3 className="case-use-heading">Principal parts</h3>
-        <p className="learn-note">
-          A verb is listed by its principal parts, the forms you need to build everything else. From ch.7 the vocab
-          lists give three: <span className="latin">nārrō, nārrāre, nārrāvī</span> — “I tell, to tell, I told”.
-          Ch.5–6 give the first two; Book 2 adds a fourth (<span className="latin">līberātus</span>, “freed”). The
-          first two give the tenses on this page; the third gives the perfect, which class reaches in Module 5.
-        </p>
+        <p className="learn-note">{PRINCIPAL_PARTS_NOTE}</p>
 
         <div className="table-scroll">
           <table className="learn-table">
@@ -207,20 +176,17 @@ export function ConjugationTables({ openTenses, openConjugations }: ConjugationT
               </tr>
             </thead>
             <tbody>
-              {CONJ_FROM_INFINITIVE.map(([ending, conj, example]) => (
+              {CONJUGATION_FROM_INFINITIVE.map(({ ending, conjugation, example }) => (
                 <tr key={ending}>
                   <td className="latin-form">{ending}</td>
-                  <td>{conj}</td>
+                  <td>{conjugation}</td>
                   <td className="latin-form">{example}</td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
-        <p className="learn-note">
-          -ēre and -ere differ only by the macron. The first part breaks the tie: an -eō verb (teneō) is 2nd
-          conjugation; mittō is 3rd.
-        </p>
+        <p className="learn-note">{INFINITIVE_TIEBREAK_NOTE}</p>
       </details>
 
       <details className="learn-section">
