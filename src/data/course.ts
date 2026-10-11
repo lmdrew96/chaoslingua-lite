@@ -82,6 +82,17 @@ export const CONJUGATION_UNLOCKS: Unlock<Conjugation>[] = [
   { id: 'irr', opens: '2026-10-07' },
 ];
 
+// Course topics that aren't a chapter, declension, tense, or conjugation — the drills
+// for them stay off until class gets there.
+export type Topic = 'little-words';
+
+export const topicNames: Record<Topic, string> = { 'little-words': 'Little words (Module 4)' };
+
+export const TOPIC_UNLOCKS: Unlock<Topic>[] = [
+  // Module 4: prepositions, conjunctions, adverbs.
+  { id: 'little-words', opens: '2026-10-21' },
+];
+
 // Local date, not UTC — an evening study session shouldn't unlock tomorrow's chapter.
 export const todayKey = (now: Date = new Date()): string => {
   const pad = (n: number) => String(n).padStart(2, '0');

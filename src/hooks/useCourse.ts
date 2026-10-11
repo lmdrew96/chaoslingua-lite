@@ -4,7 +4,9 @@ import {
   CONJUGATION_UNLOCKS,
   DECLENSION_UNLOCKS,
   TENSE_UNLOCKS,
+  TOPIC_UNLOCKS,
   openByDate,
+  type Topic,
   type Unlock,
 } from '../data/course';
 import type { Declension } from '../data/nouns';
@@ -20,9 +22,10 @@ interface Overrides {
   declensions: Record<string, boolean>;
   tenses: Record<string, boolean>;
   conjugations: Record<string, boolean>;
+  topics: Record<string, boolean>;
 }
 
-const EMPTY: Overrides = { chapters: {}, declensions: {}, tenses: {}, conjugations: {} };
+const EMPTY: Overrides = { chapters: {}, declensions: {}, tenses: {}, conjugations: {}, topics: {} };
 
 function loadOverrides(): Overrides {
   try {
@@ -34,6 +37,7 @@ function loadOverrides(): Overrides {
       declensions: parsed.declensions ?? {},
       tenses: parsed.tenses ?? {},
       conjugations: parsed.conjugations ?? {},
+      topics: parsed.topics ?? {},
     };
   } catch (err) {
     console.warn('Ignoring unreadable course settings', err);
@@ -55,6 +59,7 @@ export function useCourse() {
       declensions: effective(DECLENSION_UNLOCKS, overrides.declensions),
       tenses: effective(TENSE_UNLOCKS, overrides.tenses),
       conjugations: effective(CONJUGATION_UNLOCKS, overrides.conjugations),
+      topics: effective(TOPIC_UNLOCKS, overrides.topics),
     }),
     [overrides],
   );
@@ -78,8 +83,9 @@ export function useCourse() {
   const toggleTense = (id: Tense) => toggle('tenses', id, ctx.tenses.has(id), TENSE_UNLOCKS);
   const toggleConjugation = (id: Conjugation) =>
     toggle('conjugations', id, ctx.conjugations.has(id), CONJUGATION_UNLOCKS);
+  const toggleTopic = (id: Topic) => toggle('topics', id, ctx.topics.has(id), TOPIC_UNLOCKS);
   const followSchedule = () => save(EMPTY);
   const customized = Object.values(overrides).some((o) => Object.keys(o).length > 0);
 
-  return { ctx, toggleChapter, toggleDeclension, toggleTense, toggleConjugation, followSchedule, customized };
+  return { ctx, toggleChapter, toggleDeclension, toggleTense, toggleConjugation, toggleTopic, followSchedule, customized };
 }

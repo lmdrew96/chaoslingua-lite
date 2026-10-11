@@ -21,7 +21,7 @@ const MAX_WEAK_SPOT_TYPES = 3;
 function App() {
   const [view, setView] = useState<View>('drill');
   const { account, token, loading: accountLoading, busy, error, createAccount, joinAccount, signOut } = useAccount();
-  const { ctx, toggleChapter, toggleDeclension, toggleTense, toggleConjugation, followSchedule, customized } =
+  const { ctx, toggleChapter, toggleDeclension, toggleTense, toggleConjugation, toggleTopic, followSchedule, customized } =
     useCourse();
   const {
     types,
@@ -95,6 +95,7 @@ function App() {
               onToggleDeclension={toggleDeclension}
               onToggleTense={toggleTense}
               onToggleConjugation={toggleConjugation}
+              onToggleTopic={toggleTopic}
               onFollowSchedule={followSchedule}
               customized={customized}
               types={types}

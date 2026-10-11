@@ -1,3 +1,4 @@
+import type { Topic } from '../data/course';
 import type { Case, Declension, Parse, ParseNoun } from '../data/nouns';
 import type { Conjugation, DrillVerb, Tense, VerbSlot } from '../data/verbs';
 
@@ -59,6 +60,7 @@ export interface DrillContext {
   chapters: Set<number>;
   tenses: Set<Tense>;
   conjugations: Set<Conjugation>;
+  topics: Set<Topic>;
 }
 
 export interface DrillType {

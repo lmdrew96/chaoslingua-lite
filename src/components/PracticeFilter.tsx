@@ -1,5 +1,14 @@
 import { useState } from 'react';
-import { CHAPTER_UNLOCKS, CONJUGATION_UNLOCKS, DECLENSION_UNLOCKS, TENSE_UNLOCKS, openByDate } from '../data/course';
+import {
+  CHAPTER_UNLOCKS,
+  CONJUGATION_UNLOCKS,
+  DECLENSION_UNLOCKS,
+  TENSE_UNLOCKS,
+  TOPIC_UNLOCKS,
+  openByDate,
+  topicNames,
+  type Topic,
+} from '../data/course';
 import { ordinal, type Declension } from '../data/nouns';
 import { conjugationLabel, tenseNames, type Conjugation, type Tense } from '../data/verbs';
 import { ALL_TYPES, labelFor } from '../drills';
@@ -11,6 +20,7 @@ interface PracticeFilterProps {
   onToggleDeclension: (id: Declension) => void;
   onToggleTense: (id: Tense) => void;
   onToggleConjugation: (id: Conjugation) => void;
+  onToggleTopic: (id: Topic) => void;
   onFollowSchedule: () => void;
   customized: boolean;
   types: Set<string>;
@@ -46,6 +56,7 @@ export function PracticeFilter({
   onToggleDeclension,
   onToggleTense,
   onToggleConjugation,
+  onToggleTopic,
   onFollowSchedule,
   customized,
   types,
@@ -68,6 +79,7 @@ export function PracticeFilter({
   const scheduledDeclensions = openByDate(DECLENSION_UNLOCKS);
   const scheduledTenses = openByDate(TENSE_UNLOCKS);
   const scheduledConjugations = openByDate(CONJUGATION_UNLOCKS);
+  const scheduledTopics = openByDate(TOPIC_UNLOCKS);
 
   return (
     <div className="practice-filter">
@@ -192,6 +204,24 @@ export function PracticeFilter({
                 >
                   {conjugationLabel(u.id)}
                   {!scheduledConjugations.has(u.id) && <span className="chip-note"> · class {shortDate(u.opens)}</span>}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="filter-group">
+            <div className="filter-group-label">Topics</div>
+            <div className="chip-row">
+              {TOPIC_UNLOCKS.map((u) => (
+                <button
+                  key={u.id}
+                  type="button"
+                  className={`chip-btn${ctx.topics.has(u.id) ? ' active' : ''}`}
+                  aria-pressed={ctx.topics.has(u.id)}
+                  onClick={() => onToggleTopic(u.id)}
+                >
+                  {topicNames[u.id]}
+                  {!scheduledTopics.has(u.id) && <span className="chip-note"> · class {shortDate(u.opens)}</span>}
                 </button>
               ))}
             </div>
