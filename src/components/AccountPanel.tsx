@@ -18,6 +18,10 @@ type Mode = 'login' | 'create' | 'key';
 
 const MIN_PASSWORD_LENGTH = 10;
 
+// The tutoring MCP server (chaoslingua-lite-mcp) takes the key in its path, so this
+// one URL is everything a claude.ai custom connector needs.
+const MCP_BASE_URL = 'https://chaoslingua-lite-mcp.lmdrew.workers.dev';
+
 export function AccountPanel({ account, email, token, loading, busy, error, onSignUp, onLogIn, onJoin, onSignOut }: AccountPanelProps) {
   const [open, setOpen] = useState(false);
   const [mode, setMode] = useState<Mode>('login');
@@ -29,9 +33,9 @@ export function AccountPanel({ account, email, token, loading, busy, error, onSi
 
   const summary = loading ? 'Checking…' : account ? account.name : 'Not signed in';
 
-  const copyKey = async () => {
+  const copyUrl = async () => {
     if (!token) return;
-    await navigator.clipboard.writeText(token);
+    await navigator.clipboard.writeText(`${MCP_BASE_URL}/${encodeURIComponent(token)}/mcp`);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
@@ -116,8 +120,9 @@ export function AccountPanel({ account, email, token, loading, busy, error, onSi
                 {email ? ` (${email})` : ''}.
               </p>
               <p className="filter-hint">
-                This is your tutoring key — copy it into your MCP tutoring client so both surfaces share the same
-                weak-area data.
+                To tutor with Claude, copy your tutoring URL and add it in claude.ai under Settings → Connectors → Add
+                custom connector. Drills and tutoring then share the same weak-area data. The URL contains your key, so
+                keep it private.
               </p>
 
               {addingLogin && (
@@ -131,8 +136,8 @@ export function AccountPanel({ account, email, token, loading, busy, error, onSi
               )}
 
               <div className="footer-row">
-                <button type="button" className="btn btn-ghost" onClick={copyKey}>
-                  {copied ? 'Copied!' : 'Copy tutoring key'}
+                <button type="button" className="btn btn-ghost" onClick={copyUrl}>
+                  {copied ? 'Copied!' : 'Copy tutoring URL'}
                 </button>
                 <button type="button" className="reset-link" disabled={busy} onClick={handleSignOut}>
                   Sign out
