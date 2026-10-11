@@ -17,10 +17,16 @@ const redis = Redis.fromEnv();
 
 // ─── Key space ───────────────────────────────────────────────────────────────
 
-const accountKey = (email: string) => `cll:account:${email}`;
-const sessionKey = (sid: string) => `cll:session:${sid}`;
-const ownerKey = (token: string) => `cll:tokenowner:${token}`;
-const rateKey = (scope: string, id: string) => `cll:rl:${scope}:${id}`;
+// A tutoring key only exists in one Convex deployment, so logins are kept per
+// deployment: local dev (dev Convex) and the live site share this Redis but never
+// see each other's accounts.
+const DEPLOYMENT = process.env.VITE_CONVEX_URL?.match(/^https:\/\/([^.]+)\./)?.[1] ?? 'unknown';
+const ns = `cll:${DEPLOYMENT}`;
+
+const accountKey = (email: string) => `${ns}:account:${email}`;
+const sessionKey = (sid: string) => `${ns}:session:${sid}`;
+const ownerKey = (token: string) => `${ns}:tokenowner:${token}`;
+const rateKey = (scope: string, id: string) => `${ns}:rl:${scope}:${id}`;
 
 const SESSION_COOKIE = 'cll_session';
 const SESSION_TTL_SECONDS = 60 * 60 * 24 * 30; // 30 days

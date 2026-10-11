@@ -2,12 +2,15 @@ import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
 
 export default defineSchema({
+  // The app's running drill stats, one row per signed-in user. The single row with
+  // no userId predates accounts; the MCP's cll_get_progress still reads it.
   progress: defineTable({
+    userId: v.optional(v.id("users")),
     attempted: v.number(),
     correct: v.number(),
     streak: v.number(),
     updatedAt: v.number(),
-  }),
+  }).index("by_user", ["userId"]),
 
   // Multi-user accounts for the chaoslingua-lite-mcp tutoring server. Plaintext
   // bearer tokens are never stored — only their SHA-256 hash.

@@ -2,11 +2,12 @@ import { defineConfig, loadEnv, type Plugin } from 'vite'
 import react from '@vitejs/plugin-react'
 
 // Vercel serves api/*.ts in production; `vite dev` doesn't, so this routes /api/auth
-// to the same handler locally. Its Upstash env vars come from .env.local.
+// to the same handler locally. Its env vars (Upstash, and the Convex URL that picks
+// the login namespace) come from .env.local.
 const apiInDev = (): Plugin => ({
   name: 'api-in-dev',
   configureServer(server) {
-    Object.assign(process.env, loadEnv(server.config.mode, process.cwd(), 'UPSTASH_'))
+    Object.assign(process.env, loadEnv(server.config.mode, process.cwd(), ['UPSTASH_', 'VITE_CONVEX_URL']))
     server.middlewares.use('/api/auth', async (req, res) => {
       try {
         const chunks: Buffer[] = []

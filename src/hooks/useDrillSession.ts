@@ -15,24 +15,40 @@ const SESSION_GOAL = 12;
 const ZERO_STATS: SessionStats = { attempted: 0, correct: 0, streak: 0 };
 
 export function useDrillSession(types: Set<string>, ctx: DrillContext, userId: Id<'users'> | null) {
-  const progress = useQuery(api.progress.getProgress);
+  // Stats belong to the signed-in account. Signed out, they start at zero and aren't saved.
+  const progress = useQuery(api.progress.getProgress, userId ? { userId } : 'skip');
   const saveProgress = useMutation(api.progress.saveProgress);
   const logAttempt = useMutation(api.attempts.logTutoringAttempt);
 
   const [stats, setStats] = useState<SessionStats>(ZERO_STATS);
+  // Whose stats are on screen: undefined until the first load, null for signed out.
+  const [statsOwner, setStatsOwner] = useState<Id<'users'> | null | undefined>(undefined);
   const [current, setCurrent] = useState<Drill | null>(null);
   // Bumped on every new drill so the card can remount even when two drills look alike.
   const [drillSeq, setDrillSeq] = useState(0);
-  const hydrated = useRef(false);
+  const started = useRef(false);
 
   useEffect(() => {
-    if (progress && !hydrated.current) {
-      hydrated.current = true;
-      setStats({ attempted: progress.attempted, correct: progress.correct, streak: progress.streak });
-      setCurrent(makeDrill(types, ctx));
-      setDrillSeq((n) => n + 1);
+    if (started.current) return;
+    started.current = true;
+    setCurrent(makeDrill(types, ctx));
+    setDrillSeq((n) => n + 1);
+  }, [types, ctx]);
+
+  // Swap stats when the account changes: log out → zero, log in → that account's.
+  useEffect(() => {
+    if (userId === null) {
+      if (statsOwner !== null) {
+        setStats(ZERO_STATS);
+        setStatsOwner(null);
+      }
+      return;
     }
-  }, [progress, types, ctx]);
+    if (progress && statsOwner !== userId) {
+      setStats({ attempted: progress.attempted, correct: progress.correct, streak: progress.streak });
+      setStatsOwner(userId);
+    }
+  }, [userId, progress, statsOwner]);
 
   const handleAnswer = (isCorrect: boolean, meta?: AttemptMeta) => {
     const next: SessionStats = {
@@ -41,9 +57,9 @@ export function useDrillSession(types: Set<string>, ctx: DrillContext, userId: I
       streak: isCorrect ? stats.streak + 1 : 0,
     };
     setStats(next);
-    void saveProgress(next);
-    if (userId && current) {
-      void logAttempt({ userId, drillType: current.type, ...(meta ?? current.meta), correct: isCorrect });
+    if (userId) {
+      void saveProgress({ userId, ...next });
+      if (current) void logAttempt({ userId, drillType: current.type, ...(meta ?? current.meta), correct: isCorrect });
     }
   };
 
@@ -54,12 +70,12 @@ export function useDrillSession(types: Set<string>, ctx: DrillContext, userId: I
 
   const reset = () => {
     setStats(ZERO_STATS);
-    void saveProgress(ZERO_STATS);
+    if (userId) void saveProgress({ userId, ...ZERO_STATS });
     nextDrill();
   };
 
   return {
-    loading: !hydrated.current,
+    loading: statsOwner !== userId,
     stats,
     current,
     drillSeq,
