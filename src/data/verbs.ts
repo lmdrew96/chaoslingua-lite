@@ -105,10 +105,13 @@ export const TENSE_SIGNS: TenseSign[] = [
   },
 ];
 
+// The notes below mark Latin words *like this* and emphasis **like this**, so they
+// read fine as plain text (the MCP tutor) and Learn can style them.
+
 // Why the conjugation matters for the future: its sign looks like another
 // conjugation's present.
 export const FUTURE_LOOKALIKE_NOTE =
-  'So the conjugation decides the tense. tenet (2nd) is present, “holds”, but mittet (3rd) is future, “will send”. In the 3rd conjugation only a vowel separates the two: mittit / mittet, mittis / mittēs.';
+  '**So the conjugation decides the tense.** *tenet* (2nd) is present, “holds”, but *mittet* (3rd) is future, “will send”. In the 3rd conjugation only a vowel separates the two: *mittit* / *mittet*, *mittis* / *mittēs*.';
 
 export const CONJUGATION_FROM_INFINITIVE: Array<{ ending: string; conjugation: string; example: string }> = [
   { ending: '-āre', conjugation: '1st', example: 'vocō, vocāre' },
@@ -121,7 +124,7 @@ export const INFINITIVE_TIEBREAK_NOTE =
   '-ēre and -ere differ only by the macron. The first part breaks the tie: an -eō verb (teneō) is 2nd conjugation; mittō is 3rd.';
 
 export const PRINCIPAL_PARTS_NOTE =
-  'A verb is listed by its principal parts, the forms you need to build everything else. From ch.7 the vocab lists give three: nārrō, nārrāre, nārrāvī — “I tell, to tell, I told”. Ch.5–6 give the first two; Book 2 adds a fourth (līberātus, “freed”). The first two give the present, future and imperfect; the third gives the perfect, which class reaches in Module 5.';
+  'A verb is listed by its principal parts, the forms you need to build everything else. From ch.7 the vocab lists give three: *nārrō, nārrāre, nārrāvī* — “I tell, to tell, I told”. Ch.5–6 give the first two; Book 2 adds a fourth (*līberātus*, “freed”). The first two give the present, future and imperfect; the third gives the perfect, which class reaches in Module 5.';
 
 export type TenseTable = Record<GNumber, Record<Person, string>>;
 

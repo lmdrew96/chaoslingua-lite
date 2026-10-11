@@ -111,6 +111,25 @@ function OtherParts({ verbs }: { verbs: ModelVerb[] }) {
   );
 }
 
+// Renders a note's *Latin* in the serif Latin style and its **emphasis** in bold.
+function Note({ text }: { text: string }) {
+  return (
+    <>
+      {text.split(/(\*\*[^*]+\*\*|\*[^*]+\*)/).map((part, i) =>
+        part.startsWith('**') ? (
+          <strong key={i}>{part.slice(2, -2)}</strong>
+        ) : part.startsWith('*') ? (
+          <span key={i} className="latin">
+            {part.slice(1, -1)}
+          </span>
+        ) : (
+          part
+        ),
+      )}
+    </>
+  );
+}
+
 interface ConjugationTablesProps {
   openTenses: Set<Tense>;
   openConjugations: Set<Conjugation>;
@@ -157,11 +176,17 @@ export function ConjugationTables({ openTenses, openConjugations }: ConjugationT
               .
             </li>
           ))}
-          {openTenses.has('fut') && <li>{FUTURE_LOOKALIKE_NOTE}</li>}
+          {openTenses.has('fut') && (
+            <li>
+              <Note text={FUTURE_LOOKALIKE_NOTE} />
+            </li>
+          )}
         </ul>
 
         <h3 className="case-use-heading">Principal parts</h3>
-        <p className="learn-note">{PRINCIPAL_PARTS_NOTE}</p>
+        <p className="learn-note">
+          <Note text={PRINCIPAL_PARTS_NOTE} />
+        </p>
 
         <div className="table-scroll">
           <table className="learn-table">
@@ -186,7 +211,9 @@ export function ConjugationTables({ openTenses, openConjugations }: ConjugationT
             </tbody>
           </table>
         </div>
-        <p className="learn-note">{INFINITIVE_TIEBREAK_NOTE}</p>
+        <p className="learn-note">
+          <Note text={INFINITIVE_TIEBREAK_NOTE} />
+        </p>
       </details>
 
       <details className="learn-section">
