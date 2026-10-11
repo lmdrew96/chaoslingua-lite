@@ -109,11 +109,13 @@ const claimToken = async (token: string, email: string): Promise<void> => {
   await redis.set(ownerKey(token), email);
 };
 
-// Tutoring keys are crypto.randomUUID() (src/lib/crypto.ts).
-const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
+// Tutoring keys come in two shapes: the app's crypto.randomUUID() (src/lib/crypto.ts)
+// and the MCP's create-user script, `cll_` + 64 hex. Kept exactly as given — Convex
+// matches on the SHA-256 of the exact string.
+const TOKEN_RE = /^(?:[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|cll_[0-9a-f]{64})$/;
 const parseToken = (raw: unknown): string | null => {
-  const t = String(raw ?? '').trim().toLowerCase();
-  return UUID_RE.test(t) ? t : null;
+  const t = String(raw ?? '').trim();
+  return TOKEN_RE.test(t) ? t : null;
 };
 
 // ─── Sessions ────────────────────────────────────────────────────────────────
@@ -242,7 +244,7 @@ const handle = async (req: Request): Promise<Response> => {
     // The browser creates (or already has) the Convex user, then signs up with its
     // key — so signing up adopts the history already logged under that key.
     const token = parseToken(body.token);
-    if (!token) return fail('Missing tutoring key.');
+    if (!token) return fail("That tutoring key isn't one this app recognizes.");
     if (await isRateLimited('signup', ip, 5, 900)) return fail('Too many sign-ups from here. Try again in a few minutes.', 429);
     // Signup deliberately DOES reveal that an address is taken, unlike login: the
     // alternative is someone who can't tell why their account won't create.
