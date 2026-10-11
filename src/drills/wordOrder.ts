@@ -7,11 +7,11 @@
 // noun, so it always stays next to its own noun, and only goes first where no other
 // noun sits right before it.
 //
-// Forms come from sourced paradigms only (forms.ts); verbs from src/data/verbs.ts.
+// Forms come from sourced paradigms only (forms.ts), verbs included.
 
 import { DATIVE_VERBS, DECODE_VERBS } from '../data/verbs';
 import { pick, shuffle } from '../lib/random';
-import { capitalize, english, giveables, people, type Sourced } from './forms';
+import { capitalize, english, giveables, people, pickVerb, verbEn, verbForm, type Sourced } from './forms';
 import type { DrillContext, DrillType, McDrill } from './types';
 
 type Role = 'nom' | 'dat' | 'acc' | 'verb';
@@ -44,13 +44,12 @@ const pickDistinct = (pools: Sourced[][]): Sourced[] | null => {
 // "The X gives the (Y's) thing to the Z" with a dative verb, else "The X greets the
 // (Y's) Z". Null when the gates leave too few people or verbs for that shape.
 const build = (ctx: DrillContext, useDative: boolean, withGen: boolean): McDrill | null => {
-  const verbs = (useDative ? DATIVE_VERBS : DECODE_VERBS).filter((v) => ctx.chapters.has(v.chapter));
+  const verb = pickVerb(ctx, useDative ? DATIVE_VERBS : DECODE_VERBS);
   const things = giveables(ctx);
-  if (!verbs.length || (useDative && !things.length)) return null;
+  if (!verb || (useDative && !things.length)) return null;
   const cast = pickDistinct([people(ctx, 'acc'), people(ctx, useDative ? 'dat' : 'acc'), ...(withGen ? [people(ctx, 'gen')] : [])]);
   if (!cast) return null;
 
-  const verb = pick(verbs);
   const [subject, second, owner] = cast;
   const object = useDative ? pick(things) : second;
   const recipient = useDative ? second : null;
@@ -59,7 +58,7 @@ const build = (ctx: DrillContext, useDative: boolean, withGen: boolean): McDrill
     { role: 'nom', words: [subject.forms.sg.nom] },
     ...(recipient ? [{ role: 'dat' as const, words: [recipient.forms.sg.dat] }] : []),
     { role: 'acc', words: owner ? [object.forms.sg.acc, owner.forms.sg.gen] : [object.forms.sg.acc] },
-    { role: 'verb', words: [verb.la] },
+    { role: 'verb', words: [verbForm(verb, 'sg')] },
   ];
 
   const typical = [...blocks].sort((a, b) => TYPICAL.indexOf(a.role) - TYPICAL.indexOf(b.role));
@@ -81,8 +80,8 @@ const build = (ctx: DrillContext, useDative: boolean, withGen: boolean): McDrill
 
   const objectEn = owner ? `the ${english(owner)}’s ${english(object)}` : `the ${english(object)}`;
   const sentence = recipient
-    ? `The ${english(subject)} ${verb.en} ${objectEn} to the ${english(recipient)}.`
-    : `The ${english(subject)} ${verb.en} ${objectEn}.`;
+    ? `The ${english(subject)} ${verbEn(verb, 'sg')} ${objectEn} to the ${english(recipient)}.`
+    : `The ${english(subject)} ${verbEn(verb, 'sg')} ${objectEn}.`;
 
   const breakdown = typical
     .map((b) =>
@@ -100,7 +99,7 @@ const build = (ctx: DrillContext, useDative: boolean, withGen: boolean): McDrill
     options: shuffle([answer, ...distractors]),
     answer,
     explanation: `Latin tends to run nominative → dative → accusative → verb, with a genitive right after its noun: ${breakdown}. That’s what to expect, not a rule. The endings decide the meaning, and authors move words for emphasis: amīcam Rūfīna videt, “It’s her friend that Rufina sees.”`,
-    meta: { chapter: Math.max(...cast.map((c) => c.chapter), object.chapter, verb.chapter) },
+    meta: { chapter: Math.max(...cast.map((c) => c.chapter), object.chapter, verb.role.chapter) },
   };
 };
 

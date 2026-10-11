@@ -1,9 +1,12 @@
 // Sourced full paradigms for vocab nouns — the only place sentence drills get a
 // dative, ablative, or genitive from. Endings are never applied by rule.
 
+import { englishPredicate } from '../data/englishVerbs';
 import { MODEL_NOUNS, type Case, type GNumber } from '../data/nouns';
 import { IMPORTED_PARADIGMS } from '../data/paradigms.generated';
+import { TENSES, drillableVerbs, lemmaOf, type DecodeVerb, type DrillVerb, type Tense } from '../data/verbs';
 import { drillableNouns, type VocabEntry } from '../data/vocab';
+import { pick } from '../lib/random';
 import type { DrillContext } from './types';
 
 export type Forms = Record<GNumber, Record<Case, string>>;
@@ -59,3 +62,32 @@ export const places = (ctx: DrillContext): Sourced[] =>
     const forms = PLACES.includes(v.id) ? sourcedForms(v) : null;
     return forms && forms.sg.abl !== forms.sg.acc ? [{ ...v, forms }] : [];
   });
+
+// Verbs for sentence drills: a verb from a role list (verbs.ts) with its sourced
+// table, in a random open tense.
+export interface VerbChoice<R extends DecodeVerb = DecodeVerb> {
+  role: R;
+  verb: DrillVerb;
+  tense: Tense;
+}
+
+const openTenses = (ctx: DrillContext, verb: DrillVerb): Tense[] =>
+  TENSES.filter((t) => ctx.tenses.has(t) && verb.forms[t]);
+
+// A verb from the role list whose sourced table is in the pool, in a random open
+// tense. Null when none qualifies (e.g. dō while its import awaits review).
+export const pickVerb = <R extends DecodeVerb>(ctx: DrillContext, roles: R[]): VerbChoice<R> | null => {
+  const pool = drillableVerbs(ctx.chapters, ctx.conjugations);
+  const usable = roles.flatMap((role) => {
+    if (!ctx.chapters.has(role.chapter)) return [];
+    const verb = pool.find((v) => lemmaOf(v) === role.lemma);
+    return verb && openTenses(ctx, verb).length ? [{ role, verb }] : [];
+  });
+  if (!usable.length) return null;
+  const { role, verb } = pick(usable);
+  return { role, verb, tense: pick(openTenses(ctx, verb)) };
+};
+
+// 3rd person, since every subject here is a noun.
+export const verbForm = (v: VerbChoice, n: GNumber): string => v.verb.forms[v.tense]![n][3];
+export const verbEn = (v: VerbChoice, n: GNumber): string => englishPredicate(v.role.en, v.tense, n, 3);

@@ -216,72 +216,62 @@ export const drillableVerbs = (chapters: Set<number>, conjugations: Set<Conjugat
   return pool;
 };
 
-// 3rd-person singular present forms for the decode drill, from the Suburani vocab
-// lists (src/data/vocab.ts). Verified the same way as the noun forms:
-//   - vocat, videt, laudat appear verbatim in the Suburani Reference Grammar.
-//   - The others follow its present-tense table exactly: 1st conj. vocō → vocat
-//     (salūtō, spectō, exspectō, rogō), 2nd conj. teneō → tenet (timeō), 4th conj.
-//     audiō → audit.
-// English is the listed gloss in the 3rd person ("I look at, watch" → "watches").
+// Semantic role lists for the decode drill: which verbs fit which sentence frame.
+// Only the dictionary form and English are listed here — every form the drill shows
+// comes from the verb's sourced table (drillableVerbs), so a verb drops out until its
+// table is in the pool. `en` is the English base form, inflected per person, number,
+// and tense by englishVerbs.ts.
 
 export interface DecodeVerb {
   chapter: number;
-  la: string;
+  lemma: string;
   en: string;
 }
 
+// "The X greets the Y."
 export const DECODE_VERBS: DecodeVerb[] = [
-  { chapter: 2, la: 'salūtat', en: 'greets' },
-  { chapter: 2, la: 'spectat', en: 'watches' },
-  { chapter: 2, la: 'videt', en: 'sees' },
-  { chapter: 2, la: 'vocat', en: 'calls' },
-  { chapter: 4, la: 'laudat', en: 'praises' },
-  { chapter: 5, la: 'audit', en: 'hears' },
-  { chapter: 5, la: 'timet', en: 'fears' },
-  { chapter: 6, la: 'exspectat', en: 'waits for' },
-  { chapter: 6, la: 'rogat', en: 'asks' },
+  { chapter: 2, lemma: 'salūtō', en: 'greet' },
+  { chapter: 2, lemma: 'spectō', en: 'watch' },
+  { chapter: 2, lemma: 'videō', en: 'see' },
+  { chapter: 2, lemma: 'vocō', en: 'call' },
+  { chapter: 4, lemma: 'laudō', en: 'praise' },
+  { chapter: 5, lemma: 'audiō', en: 'hear' },
+  { chapter: 5, lemma: 'timeō', en: 'fear' },
+  { chapter: 6, lemma: 'exspectō', en: 'wait for' },
+  { chapter: 6, lemma: 'rogō', en: 'ask' },
 ];
-
-// Verbs for the decode drill's dative and ablative tiers, verified the same way:
-//   - dat and ambulat appear verbatim in the Reference Grammar's uses-of-the-cases
-//     examples (puella amīcō dōnum dat; puella cum amīcō in forō ambulat).
-//   - offert follows the irregular ferō → fert in its table.
-//   - The rest follow the present-tense table: mittō → mittit (trādit, ostendit,
-//     currit, discēdit), audiō → audit (venit), capiō → capit (fugit), teneō → tenet
-//     (sedet), vocō → vocat (labōrat).
 
 // "The X gives Y to Z" — a giver (nom), a thing (acc), and a recipient (dat).
 export const DATIVE_VERBS: DecodeVerb[] = [
-  { chapter: 5, la: 'dat', en: 'gives' },
-  { chapter: 9, la: 'trādit', en: 'hands over' },
-  { chapter: 12, la: 'offert', en: 'offers' },
-  { chapter: 14, la: 'ostendit', en: 'shows' },
+  { chapter: 5, lemma: 'dō', en: 'give' },
+  { chapter: 9, lemma: 'trādō', en: 'hand over' },
+  { chapter: 12, lemma: 'offerō', en: 'offer' },
+  { chapter: 14, lemma: 'ostendō', en: 'show' },
 ];
 
 // Intransitive verbs for a preposition + ablative phrase. `en` reads before the
-// preposition's English ("walks" + "with the girl", "runs" + "away from the king").
+// preposition's English ("walk" + "with the girl", "run" + "away from the king").
 export interface PrepVerb extends DecodeVerb {
   prep: 'cum' | 'ab';
 }
 
 export const PREP_VERBS: PrepVerb[] = [
-  { chapter: 1, la: 'labōrat', en: 'works', prep: 'cum' },
-  { chapter: 3, la: 'ambulat', en: 'walks', prep: 'cum' },
-  { chapter: 3, la: 'currit', en: 'runs', prep: 'cum' },
-  { chapter: 4, la: 'venit', en: 'comes', prep: 'cum' },
-  { chapter: 6, la: 'sedet', en: 'sits', prep: 'cum' },
-  { chapter: 6, la: 'discēdit', en: 'goes', prep: 'ab' },
-  { chapter: 11, la: 'fugit', en: 'runs', prep: 'ab' },
+  { chapter: 1, lemma: 'labōrō', en: 'work', prep: 'cum' },
+  { chapter: 3, lemma: 'ambulō', en: 'walk', prep: 'cum' },
+  { chapter: 3, lemma: 'currō', en: 'run', prep: 'cum' },
+  { chapter: 4, lemma: 'veniō', en: 'come', prep: 'cum' },
+  { chapter: 6, lemma: 'sedeō', en: 'sit', prep: 'cum' },
+  { chapter: 6, lemma: 'discēdō', en: 'go', prep: 'ab' },
+  { chapter: 11, lemma: 'fugiō', en: 'run', prep: 'ab' },
 ];
 
 // Motion verbs for the decode drill's route tier (ē/ex + abl → in + acc). `en` reads
-// before the route ("runs" + "out of the city into the forest"). festīnat follows
-// vocō → vocat; the rest are verified above.
+// before the route ("run" + "out of the city into the forest").
 export const ROUTE_VERBS: DecodeVerb[] = [
-  { chapter: 3, la: 'ambulat', en: 'walks' },
-  { chapter: 3, la: 'currit', en: 'runs' },
-  { chapter: 3, la: 'festīnat', en: 'hurries' },
-  { chapter: 11, la: 'fugit', en: 'flees' },
+  { chapter: 3, lemma: 'ambulō', en: 'walk' },
+  { chapter: 3, lemma: 'currō', en: 'run' },
+  { chapter: 3, lemma: 'festīnō', en: 'hurry' },
+  { chapter: 11, lemma: 'fugiō', en: 'flee' },
 ];
 
 // One cell of a verb's table.
