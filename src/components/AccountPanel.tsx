@@ -8,13 +8,19 @@ interface AccountPanelProps {
   loading: boolean;
   busy: boolean;
   error: string | null;
+  notice: string | null;
+  // Set when the page was opened from a password-reset email.
+  resetToken: string | null;
   onSignUp: (name: string, email: string, password: string) => void;
   onLogIn: (email: string, password: string) => void;
   onJoin: (token: string) => void;
   onSignOut: () => void;
+  onRequestReset: (email: string) => void;
+  onConfirmReset: (password: string) => void;
+  onCancelReset: () => void;
 }
 
-type Mode = 'login' | 'create' | 'key';
+type Mode = 'login' | 'create' | 'key' | 'forgot';
 
 const MIN_PASSWORD_LENGTH = 10;
 
@@ -22,8 +28,25 @@ const MIN_PASSWORD_LENGTH = 10;
 // one URL is everything a claude.ai custom connector needs.
 const MCP_BASE_URL = 'https://chaoslingua-lite-mcp.lmdrew.workers.dev';
 
-export function AccountPanel({ account, email, token, loading, busy, error, onSignUp, onLogIn, onJoin, onSignOut }: AccountPanelProps) {
-  const [open, setOpen] = useState(false);
+export function AccountPanel({
+  account,
+  email,
+  token,
+  loading,
+  busy,
+  error,
+  notice,
+  resetToken,
+  onSignUp,
+  onLogIn,
+  onJoin,
+  onSignOut,
+  onRequestReset,
+  onConfirmReset,
+  onCancelReset,
+}: AccountPanelProps) {
+  // A reset link opens straight to the new-password form.
+  const [open, setOpen] = useState(resetToken !== null);
   const [mode, setMode] = useState<Mode>('login');
   const [name, setName] = useState('');
   const [emailInput, setEmailInput] = useState('');
@@ -105,6 +128,73 @@ export function AccountPanel({ account, email, token, loading, busy, error, onSi
     </form>
   );
 
+  const messages = (
+    <>
+      {error && <div className="filter-warning">{error}</div>}
+      {notice && <p className="filter-hint">{notice}</p>}
+    </>
+  );
+
+  const resetForm = (
+    <>
+      <p className="filter-hint">Choose a new password. Every other device logged in to this account will be logged out.</p>
+      <form
+        className="login-form"
+        onSubmit={(e) => {
+          e.preventDefault();
+          if (!busy && password.length >= MIN_PASSWORD_LENGTH) onConfirmReset(password);
+        }}
+      >
+        <input
+          type="password"
+          placeholder={`New password (${MIN_PASSWORD_LENGTH}+ characters)`}
+          autoComplete="new-password"
+          value={password}
+          disabled={busy}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <button type="submit" className="btn btn-primary" disabled={busy || password.length < MIN_PASSWORD_LENGTH}>
+          {busy ? 'Working…' : 'Set new password'}
+        </button>
+      </form>
+      {messages}
+      <div className="footer-row">
+        <button
+          type="button"
+          className="reset-link"
+          onClick={() => {
+            onCancelReset();
+            clear();
+          }}
+        >
+          Cancel
+        </button>
+      </div>
+    </>
+  );
+
+  const forgotForm = (
+    <form
+      className="login-form"
+      onSubmit={(e) => {
+        e.preventDefault();
+        if (!busy && emailInput.trim()) onRequestReset(emailInput.trim());
+      }}
+    >
+      <input
+        type="email"
+        placeholder="Your account's email"
+        autoComplete="email"
+        value={emailInput}
+        disabled={busy}
+        onChange={(e) => setEmailInput(e.target.value)}
+      />
+      <button type="submit" className="btn btn-primary" disabled={busy || !emailInput.trim()}>
+        {busy ? 'Sending…' : 'Send reset link'}
+      </button>
+    </form>
+  );
+
   return (
     <div className="account-panel">
       <button type="button" className="pill pill-button" onClick={() => setOpen((o) => !o)} aria-expanded={open}>
@@ -113,7 +203,9 @@ export function AccountPanel({ account, email, token, loading, busy, error, onSi
 
       {open && (
         <div className="filter-panel">
-          {account ? (
+          {resetToken ? (
+            resetForm
+          ) : account ? (
             <>
               <p className="filter-hint">
                 Signed in as {account.name}
@@ -131,9 +223,9 @@ export function AccountPanel({ account, email, token, loading, busy, error, onSi
                     Add an email and password to log in on other devices without copying your key. Your history stays.
                   </p>
                   {credentialFields}
-                  {error && <div className="filter-warning">{error}</div>}
                 </>
               )}
+              {messages}
 
               <div className="footer-row">
                 <button type="button" className="btn btn-ghost" onClick={copyUrl}>
@@ -174,11 +266,13 @@ export function AccountPanel({ account, email, token, loading, busy, error, onSi
                     {busy ? 'Checking…' : 'Use this key'}
                   </button>
                 </div>
+              ) : mode === 'forgot' ? (
+                forgotForm
               ) : (
                 credentialFields
               )}
 
-              {error && <div className="filter-warning">{error}</div>}
+              {messages}
 
               <div className="footer-row">
                 {mode !== 'login' && (
@@ -194,6 +288,11 @@ export function AccountPanel({ account, email, token, loading, busy, error, onSi
                 {mode !== 'key' && (
                   <button type="button" className="reset-link" onClick={() => switchMode('key')}>
                     Use a tutoring key
+                  </button>
+                )}
+                {mode === 'login' && (
+                  <button type="button" className="reset-link" onClick={() => switchMode('forgot')}>
+                    Forgot password?
                   </button>
                 )}
               </div>

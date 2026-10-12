@@ -20,7 +20,23 @@ const MAX_WEAK_SPOT_TYPES = 3;
 
 function App() {
   const [view, setView] = useState<View>('drill');
-  const { account, email, token, loading: accountLoading, busy, error, signUp, logIn, joinAccount, signOut } = useAccount();
+  const {
+    account,
+    email,
+    token,
+    loading: accountLoading,
+    busy,
+    error,
+    notice,
+    resetToken,
+    signUp,
+    logIn,
+    joinAccount,
+    signOut,
+    requestReset,
+    confirmReset,
+    cancelReset,
+  } = useAccount();
   const { ctx, toggleChapter, toggleDeclension, toggleTense, toggleConjugation, toggleTopic, followSchedule, customized } =
     useCourse();
   const {
@@ -68,10 +84,15 @@ function App() {
           loading={accountLoading}
           busy={busy}
           error={error}
+          notice={notice}
+          resetToken={resetToken}
           onSignUp={signUp}
           onLogIn={logIn}
           onJoin={joinAccount}
           onSignOut={signOut}
+          onRequestReset={requestReset}
+          onConfirmReset={confirmReset}
+          onCancelReset={cancelReset}
         />
 
         <div className="tabs">

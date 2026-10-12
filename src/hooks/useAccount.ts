@@ -30,6 +30,15 @@ const authRequest = async (body: Record<string, unknown>): Promise<{ account: Lo
   return { account: data?.account ?? null };
 };
 
+// A password-reset link opens the app with ?reset=<token>.
+const readResetToken = (): string | null => new URLSearchParams(window.location.search).get('reset');
+
+const dropResetToken = () => {
+  const url = new URL(window.location.href);
+  url.searchParams.delete('reset');
+  window.history.replaceState(null, '', url);
+};
+
 export function useAccount() {
   // The tutoring key is still what identifies you to Convex and the MCP server; an
   // email login is a way to get it back on another device.
@@ -37,6 +46,9 @@ export function useAccount() {
   const [email, setEmail] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  // A confirmation to show in place of an error (e.g. "check your email").
+  const [notice, setNotice] = useState<string | null>(null);
+  const [resetToken, setResetToken] = useState<string | null>(readResetToken);
 
   const convex = useConvex();
   const createUser = useMutation(api.users.createUser);
@@ -68,6 +80,7 @@ export function useAccount() {
   const run = async (fallback: string, work: () => Promise<void>) => {
     setBusy(true);
     setError(null);
+    setNotice(null);
     try {
       await work();
     } catch (err) {
@@ -99,6 +112,30 @@ export function useAccount() {
       storeToken(account.token);
     });
 
+  // Always the same answer, whether or not the address has an account.
+  const requestReset = (resetEmail: string) =>
+    run("Couldn't send the reset link — try again.", async () => {
+      await authRequest({ action: 'reset-request', email: resetEmail });
+      setNotice('If that address has an account, a reset link is on its way. It works once, for 30 minutes.');
+    });
+
+  // Sets the new password and logs this browser in; every other session is ended.
+  const confirmReset = (password: string) =>
+    run("Couldn't reset the password — try again.", async () => {
+      const { account } = await authRequest({ action: 'reset-confirm', resetToken, password });
+      if (!account) throw new Error("Couldn't reset the password — try again.");
+      setEmail(account.email);
+      storeToken(account.token);
+      setResetToken(null);
+      dropResetToken();
+      setNotice('Password changed. You’re logged in.');
+    });
+
+  const cancelReset = () => {
+    setResetToken(null);
+    dropResetToken();
+  };
+
   const joinAccount = (candidateToken: string) =>
     run("Couldn't check that key — try again.", async () => {
       const result = await convex.query(api.users.resolveApiKey, { token: candidateToken });
@@ -118,5 +155,21 @@ export function useAccount() {
   const account: Account | null = resolved ? { userId: resolved.userId, name: resolved.name } : null;
   const loading = token !== null && resolved === undefined;
 
-  return { account, email, token, loading, busy, error, signUp, logIn, joinAccount, signOut };
+  return {
+    account,
+    email,
+    token,
+    loading,
+    busy,
+    error,
+    notice,
+    resetToken,
+    signUp,
+    logIn,
+    joinAccount,
+    signOut,
+    requestReset,
+    confirmReset,
+    cancelReset,
+  };
 }

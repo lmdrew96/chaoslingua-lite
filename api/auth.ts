@@ -25,11 +25,15 @@ const ns = `cll:${DEPLOYMENT}`;
 
 const accountKey = (email: string) => `${ns}:account:${email}`;
 const sessionKey = (sid: string) => `${ns}:session:${sid}`;
+// Every session id for an email, so a password reset can end them all.
+const sessionsKey = (email: string) => `${ns}:sessions:${email}`;
+const resetKey = (token: string) => `${ns}:reset:${token}`;
 const ownerKey = (token: string) => `${ns}:tokenowner:${token}`;
 const rateKey = (scope: string, id: string) => `${ns}:rl:${scope}:${id}`;
 
 const SESSION_COOKIE = 'cll_session';
 const SESSION_TTL_SECONDS = 60 * 60 * 24 * 30; // 30 days
+const RESET_TTL_SECONDS = 60 * 30; // 30 minutes
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -125,6 +129,10 @@ const randomB64Url = (bytes: number): string => Buffer.from(crypto.getRandomValu
 const createSession = async (email: string): Promise<string> => {
   const sid = randomB64Url(32);
   await redis.set(sessionKey(sid), email, { ex: SESSION_TTL_SECONDS });
+  // The index outlives none of its sessions; ids whose session already expired are
+  // harmless to delete again.
+  await redis.sadd(sessionsKey(email), sid);
+  await redis.expire(sessionsKey(email), SESSION_TTL_SECONDS);
   return sid;
 };
 
@@ -134,7 +142,18 @@ const readSession = async (sid: string | undefined): Promise<string | null> => {
 };
 
 const destroySession = async (sid: string | undefined): Promise<void> => {
-  if (sid) await redis.del(sessionKey(sid));
+  if (!sid) return;
+  const email = await readSession(sid);
+  await redis.del(sessionKey(sid));
+  if (email) await redis.srem(sessionsKey(email), sid);
+};
+
+// Logs every browser out of an account. Sessions made before the index existed aren't
+// in it, so they last until their own 30-day expiry.
+const destroyAllSessions = async (email: string): Promise<void> => {
+  const sids = await redis.smembers(sessionsKey(email));
+  if (sids.length) await redis.del(...sids.map(sessionKey));
+  await redis.del(sessionsKey(email));
 };
 
 const sessionCookie = (sid: string): string =>
@@ -196,6 +215,29 @@ const clearRateLimit = async (scope: string, id: string): Promise<void> => {
   }
 };
 
+// ─── Password reset email ────────────────────────────────────────────────────
+
+// Resend's REST API (https://resend.com/docs/api-reference/emails/send-email), called
+// directly rather than through its SDK to keep this one file self-contained.
+// RESET_EMAIL_FROM is a sender on a domain verified in Resend, e.g.
+// "ChaosLingua Lite <noreply@example.com>".
+const resetEmailConfigured = (): boolean => Boolean(process.env.RESEND_API_KEY && process.env.RESET_EMAIL_FROM);
+
+const sendResetEmail = async (to: string, link: string): Promise<void> => {
+  const res = await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${process.env.RESEND_API_KEY}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      from: process.env.RESET_EMAIL_FROM,
+      to: [to],
+      subject: 'Reset your ChaosLingua Lite password',
+      text: `Someone asked to reset the password for this address on ChaosLingua Lite.\n\nSet a new one here (the link works once, for 30 minutes):\n${link}\n\nIf that wasn't you, ignore this email — your password hasn't changed.`,
+      html: `<p>Someone asked to reset the password for this address on ChaosLingua Lite.</p><p><a href="${link}">Set a new password</a> — the link works once, for 30 minutes.</p><p>If that wasn't you, ignore this email. Your password hasn't changed.</p>`,
+    }),
+  });
+  if (!res.ok) throw new Error(`Resend → HTTP ${res.status}: ${await res.text()}`);
+};
+
 // ─── Route ───────────────────────────────────────────────────────────────────
 
 const json = (body: unknown, init?: ResponseInit) => Response.json(body, init);
@@ -231,11 +273,31 @@ const handle = async (req: Request): Promise<Response> => {
     return json({ account: null }, { headers: { 'Set-Cookie': clearedCookie() } });
   }
 
+  const password = String(body.password ?? '');
+  const ip = clientIp(req);
+
+  // ── Password reset, step 2: the emailed link's token sets a new password ─────
+
+  if (action === 'reset-confirm') {
+    if (password.length < MIN_PASSWORD_LENGTH) return fail(`Password must be at least ${MIN_PASSWORD_LENGTH} characters.`);
+    if (await isRateLimited('reset-confirm', ip, 10, 900)) return fail('Too many attempts. Try again in a few minutes.', 429);
+    // Single use: the token is gone the moment it's read.
+    const resetToken = String(body.resetToken ?? '');
+    const owner = resetToken ? await redis.getdel<string>(resetKey(resetToken)) : null;
+    const account = owner ? await getAccount(owner) : null;
+    if (!account) return fail('That reset link has expired or was already used. Ask for a new one.', 400);
+
+    await putAccount({ ...account, ...(await hashPassword(password)) });
+    await destroyAllSessions(account.email);
+    await clearRateLimit('login-email', account.email);
+
+    const sid = await createSession(account.email);
+    return json({ account: publicAccount(account) }, { headers: { 'Set-Cookie': sessionCookie(sid) } });
+  }
+
   // ── Credentialed actions ────────────────────────────────────────────────────
 
   const email = normalizeEmail(String(body.email ?? ''));
-  const password = String(body.password ?? '');
-  const ip = clientIp(req);
 
   if (!EMAIL_RE.test(email)) return fail('Enter a valid email address.');
 
@@ -258,6 +320,31 @@ const handle = async (req: Request): Promise<Response> => {
 
     const sid = await createSession(email);
     return json({ account: publicAccount(account) }, { headers: { 'Set-Cookie': sessionCookie(sid) } });
+  }
+
+  // ── Password reset, step 1: email a single-use link ──────────────────────────
+
+  if (action === 'reset-request') {
+    if (!resetEmailConfigured()) return fail("Password reset email isn't set up yet. Log in with your tutoring key instead.", 503);
+    if (await isRateLimited('reset-ip', ip, 5, 900)) return fail('Too many requests. Try again in a few minutes.', 429);
+    if (await isRateLimited('reset-email', email, 3, 3600)) return fail('Too many requests for that address. Try again later.', 429);
+
+    // The same answer whether or not the address has an account, and even if the
+    // email fails to send — anything else enumerates accounts.
+    const account = await getAccount(email);
+    if (account) {
+      const resetToken = randomB64Url(32);
+      await redis.set(resetKey(resetToken), account.email, { ex: RESET_TTL_SECONDS });
+      // The link points back at whichever host was asked: the live site, a preview, or
+      // local dev.
+      const link = `${new URL(req.url).origin}/?reset=${resetToken}`;
+      try {
+        await sendResetEmail(account.email, link);
+      } catch (err) {
+        console.error('reset email failed to send', err);
+      }
+    }
+    return json({ sent: true });
   }
 
   if (action === 'login') {
