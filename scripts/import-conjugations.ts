@@ -1,5 +1,5 @@
-// Imports present-system verb paradigms (present, imperfect, future active indicative)
-// for the Suburani vocab from Wiktionary, via kaikki.org's per-word JSONL extracts,
+// Imports verb paradigms (present and perfect systems, active indicative) for the
+// Suburani vocab from Wiktionary, via kaikki.org's per-word JSONL extracts,
 // into src/data/conjugations.generated.ts. The sibling of import-paradigms.ts.
 //
 //   pnpm import-conjugations
@@ -7,9 +7,18 @@
 // Rules (see ChaosPatch 76d527b2):
 //   - Match on lemma (macron-insensitive), then the listed infinitive when the vocab
 //     gives one, then the headword spelled exactly as Suburani spells it.
-//   - First form listed per tense/person/number slot wins.
+//   - Present system: first form listed per tense/person/number slot wins.
+//   - Perfect system: the first form listed that is built on the perfect stem — the
+//     3rd principal part minus -ī, from Suburani where it gives one (textbook tables,
+//     ch.7+ vocab), else Wiktionary's first-listed perfect. That skips syncopated
+//     alternatives (vocāstī) and picks eō's iistī over īstī, as Book 2 does.
 //   - All 5 Suburani model verbs and 7 irregulars are round-tripped first. Any
-//     mismatch with the textbook tables fails the run.
+//     mismatch with the textbook tables fails the run. The irregulars' perfect
+//     tables come from here (Book 2 gives only two cells per tense), into
+//     IRREGULAR_PERFECTS.
+//   - A vocab verb's perfect system with no Suburani 3rd principal part to check it
+//     against (ch.1–6), or one that disagrees with it, is imported but kept out of
+//     drills until approved in paradigmReview.ts VERB_PERFECT_APPROVED.
 //   - Nothing is dropped silently. Unmatched verbs are reported; irregulars, ch.1–4
 //     verbs (listed without an infinitive, so the conjugation comes from Wiktionary
 //     alone), and disagreements with the Suburani list are imported but kept out of
@@ -19,22 +28,28 @@
 import { writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { NUMBERS, type GNumber } from '../src/data/nouns.ts';
-import { VERB_APPROVED_FOR_DRILLS, VERB_FORM_OVERRIDES, VERB_SKIPS } from '../src/data/paradigmReview.ts';
+import { VERB_APPROVED_FOR_DRILLS, VERB_FORM_OVERRIDES, VERB_PERFECT_APPROVED, VERB_SKIPS } from '../src/data/paradigmReview.ts';
 import { vocab } from '../src/data/vocab.ts';
 import {
+  IRREGULAR_PERFECT_CELLS,
   IRREGULAR_VERBS,
   MODEL_VERBS,
+  PERFECT_SYSTEM,
   PERSONS,
   conjugationLabel,
   lemmaOf,
   type Conjugation,
   type Person,
+  type Tense,
   type TenseTable,
 } from '../src/data/verbs.ts';
 
 const PRESENT_SYSTEM = ['pres', 'impf', 'fut'] as const;
 type PresentTense = (typeof PRESENT_SYSTEM)[number];
 type Forms = Record<PresentTense, TenseTable>;
+type PerfectForms = Partial<Record<Tense, TenseTable>>;
+// Every form listed per slot, in Wiktionary's order.
+type Candidates = Partial<Record<Tense, Partial<Record<GNumber, Partial<Record<Person, string[]>>>>>>;
 
 interface KaikkiForm {
   form: string;
@@ -105,16 +120,18 @@ const describe = (e: KaikkiEntry) => {
   };
 };
 
-const tenseOf = (tags: string[]): PresentTense | undefined => {
-  if (tags.includes('perfect') || tags.includes('pluperfect')) return undefined;
+const tenseOf = (tags: string[]): Tense | undefined => {
+  if (tags.includes('pluperfect')) return 'plup';
+  if (tags.includes('perfect')) return tags.includes('future') ? 'futperf' : 'perf';
   if (tags.includes('present')) return 'pres';
   if (tags.includes('imperfect')) return 'impf';
   if (tags.includes('future')) return 'fut';
   return undefined;
 };
 
-const extract = (e: KaikkiEntry): { forms: Partial<Record<PresentTense, Partial<Record<GNumber, Partial<Record<Person, string>>>>>>; infinitive?: string; missing: string[] } => {
+const extract = (e: KaikkiEntry): { forms: Partial<Record<PresentTense, Partial<Record<GNumber, Partial<Record<Person, string>>>>>>; candidates: Candidates; infinitive?: string; missing: string[] } => {
   const forms: Partial<Record<PresentTense, Partial<Record<GNumber, Partial<Record<Person, string>>>>>> = {};
+  const candidates: Candidates = {};
   let infinitive: string | undefined;
   for (const f of e.forms ?? []) {
     const tags = f.tags ?? [];
@@ -128,18 +145,54 @@ const extract = (e: KaikkiEntry): { forms: Partial<Record<PresentTense, Partial<
     const p = tags.map((x) => PERSON_TAGS[x]).find(Boolean);
     const n = tags.map((x) => NUMBER_TAGS[x]).find(Boolean);
     if (!t || !p || !n) continue;
-    forms[t] ??= {};
-    forms[t][n] ??= {};
-    forms[t][n][p] ??= f.form; // first listed wins
+    if (PERFECT_SYSTEM.includes(t)) {
+      candidates[t] ??= {};
+      candidates[t][n] ??= {};
+      (candidates[t][n][p] ??= []).push(f.form);
+      continue;
+    }
+    const pt = t as PresentTense;
+    forms[pt] ??= {};
+    forms[pt][n] ??= {};
+    forms[pt][n][p] ??= f.form; // first listed wins
   }
   const missing = PRESENT_SYSTEM.flatMap((t) =>
     NUMBERS.flatMap((n) => PERSONS.filter((p) => !forms[t]?.[n]?.[p]).map((p) => `${t}.${p}${n}`)),
   );
-  return { forms, infinitive, missing };
+  return { forms, candidates, infinitive, missing };
+};
+
+// The perfect system built on `stem`: per slot, the first listed form that starts with
+// it. Null when Wiktionary lists no such form for some slot.
+const perfectOn = (candidates: Candidates, stem: string): { forms: PerfectForms } | { missing: string[] } => {
+  const missing = PERFECT_SYSTEM.flatMap((t) =>
+    NUMBERS.flatMap((n) =>
+      PERSONS.filter((p) => !candidates[t]?.[n]?.[p]?.some((f) => f.startsWith(stem))).map((p) => `${t}.${p}${n}`),
+    ),
+  );
+  if (missing.length) return { missing };
+  const forms = Object.fromEntries(
+    PERFECT_SYSTEM.map((t) => [
+      t,
+      Object.fromEntries(
+        NUMBERS.map((n) => [n, Object.fromEntries(PERSONS.map((p) => [p, candidates[t]![n]![p]!.find((f) => f.startsWith(stem))!]))]),
+      ),
+    ]),
+  ) as PerfectForms;
+  return { forms };
 };
 
 type Resolved =
-  | { ok: true; forms: Forms; infinitive: string; conjugation: Conjugation; irregular: boolean; url: string; expansion: string }
+  | {
+      ok: true;
+      forms: Forms;
+      candidates: Candidates;
+      infinitive: string;
+      conjugation: Conjugation;
+      irregular: boolean;
+      url: string;
+      expansion: string;
+    }
   | { ok: false; reason: string };
 
 const resolveVerb = async (lemma: string, infinitive: string | null): Promise<Resolved> => {
@@ -177,9 +230,18 @@ const resolveVerb = async (lemma: string, infinitive: string | null): Promise<Re
       Object.fromEntries(NUMBERS.map((n) => [n, Object.fromEntries(PERSONS.map((p) => [p, fix(x.forms[t]![n]![p]!)]))])),
     ]),
   ) as Forms;
+  const candidates: Candidates = Object.fromEntries(
+    Object.entries(x.candidates).map(([t, byN]) => [
+      t,
+      Object.fromEntries(
+        Object.entries(byN).map(([n, byP]) => [n, Object.fromEntries(Object.entries(byP).map(([p, fs]) => [p, fs.map(fix)]))]),
+      ),
+    ]),
+  );
   return {
     ok: true,
     forms,
+    candidates,
     infinitive: fix(x.infinitive),
     conjugation: d.conjugation!,
     irregular: d.irregular,
@@ -188,8 +250,10 @@ const resolveVerb = async (lemma: string, infinitive: string | null): Promise<Re
   };
 };
 
-// 1. Round-trip the textbook model verbs and irregulars.
+// 1. Round-trip the textbook model verbs and irregulars, and build the irregulars'
+// perfect tables from the cells Book 2 gives.
 const failures: string[] = [];
+const irregularPerfects: Record<string, PerfectForms> = {};
 for (const v of [...MODEL_VERBS, ...IRREGULAR_VERBS]) {
   const lemma = lemmaOf(v);
   const r = await resolveVerb(lemma, v.infinitive);
@@ -204,21 +268,48 @@ for (const v of [...MODEL_VERBS, ...IRREGULAR_VERBS]) {
       for (const p of PERSONS)
         if (r.forms[t][n][p] !== v.forms[t]![n][p])
           failures.push(`${lemma} ${t}.${p}${n}: Wiktionary "${r.forms[t][n][p]}" ≠ Suburani "${v.forms[t]![n][p]}"`);
+
+  // The perfect system: model verbs check every cell, irregulars the ones Book 2 gives.
+  const cells = v.conjugation === 'irr' ? IRREGULAR_PERFECT_CELLS[v.id] : undefined;
+  const first = cells ? cells.perf?.[0] : v.forms.perf?.sg[1];
+  if (!first) {
+    failures.push(`${lemma}: no textbook perfect to check against`);
+    continue;
+  }
+  const perf = perfectOn(r.candidates, first.slice(0, -1));
+  if ('missing' in perf) {
+    failures.push(`${lemma}: no perfect-system form on stem "${first.slice(0, -1)}" for ${perf.missing.join(', ')}`);
+    continue;
+  }
+  for (const t of PERFECT_SYSTEM) {
+    const expected = cells
+      ? (cells[t] ?? []).map((f, i) => [i === 0 ? 'sg.1' : 'sg.2', f] as const)
+      : NUMBERS.flatMap((n) => PERSONS.map((p) => [`${n}.${p}`, v.forms[t]![n][p]] as const));
+    for (const [slot, f] of expected) {
+      const [n, p] = slot.split('.') as [GNumber, string];
+      const got = perf.forms[t]![n][Number(p) as Person];
+      if (got !== f) failures.push(`${lemma} ${t}.${p}${n}: Wiktionary "${got}" ≠ Suburani "${f}"`);
+    }
+  }
+  if (cells) irregularPerfects[v.id] = perf.forms;
 }
 if (failures.length) {
   console.error('✗ Model-verb round-trip failed — fix the rule before importing:');
   for (const f of failures) console.error(`  - ${f}`);
   process.exit(1);
 }
-console.log(`✓ All ${MODEL_VERBS.length} model verbs and ${IRREGULAR_VERBS.length} irregulars round-trip exactly.`);
+console.log(
+  `✓ All ${MODEL_VERBS.length} model verbs and ${IRREGULAR_VERBS.length} irregulars round-trip exactly, perfect system included.`,
+);
 
 // 2. Import the vocab verbs.
 interface Imported {
   conjugation: Conjugation;
   infinitive: string;
-  forms: Forms;
+  forms: Forms & PerfectForms;
   source: string;
   review?: string;
+  perfectReview?: string;
 }
 
 // Vocab verbs that are also textbook verbs (vocō, teneō, sum) — the round-trip above
@@ -229,11 +320,13 @@ const imported: Record<string, Imported> = {};
 const unmatched: string[] = [];
 const skipped: string[] = [];
 const flagged: string[] = [];
+const perfectFlagged: string[] = [];
+const noPerfect: string[] = [];
 
 for (const v of vocab.filter((e) => e.pos === 'Verb')) {
   // "resistō, resistere, restitī + dat." → resistō, resistere
   const parts = v.la.replace(/\s*\+\s*\w+\.$/, '').split(',').map((s) => s.trim());
-  const [lemma, infinitive = null] = parts;
+  const [lemma, infinitive = null, third = null] = parts;
   const skip =
     VERB_SKIPS[v.id] ??
     (/or$/.test(lemma) ? 'deponent (passive forms, active meaning)' : undefined) ??
@@ -260,12 +353,37 @@ for (const v of vocab.filter((e) => e.pos === 'Verb')) {
 
   const review = reasons.length && !VERB_APPROVED_FOR_DRILLS.includes(v.id) ? reasons.join('; ') : undefined;
   if (review) flagged.push(`${v.la} (${v.id}): ${review}`);
+
+  // The perfect system, on Suburani's perfect stem where the vocab lists one.
+  const wiktFirst = r.candidates.perf?.sg?.[1]?.[0];
+  const listed = third?.endsWith('ī') ? third : null;
+  let perfect: PerfectForms = {};
+  let perfectReview: string | undefined;
+  // A 3rd principal part like "ausus sum" is semi-deponent: its perfect is passive in
+  // form, so there's no active perfect system to import.
+  if (third && !listed) noPerfect.push(`${v.la} (${v.id}): semi-deponent (perfect ${third})`);
+  else if (!textbook.has(lemma) && wiktFirst) {
+    const onListed = listed ? perfectOn(r.candidates, listed.slice(0, -1)) : null;
+    const chosen = onListed && 'forms' in onListed ? onListed : perfectOn(r.candidates, wiktFirst.slice(0, -1));
+    if ('forms' in chosen) {
+      perfect = chosen.forms;
+      const reason = !listed
+        ? `perfect ${wiktFirst} is from Wiktionary only (the vocab lists no 3rd principal part)`
+        : onListed && 'forms' in onListed
+          ? undefined
+          : `Wiktionary's perfect ${wiktFirst} ≠ Suburani's 3rd principal part ${listed}`;
+      perfectReview = reason && !VERB_PERFECT_APPROVED.includes(v.id) ? reason : undefined;
+      if (perfectReview) perfectFlagged.push(`${v.la} (${v.id}): ${perfectReview}`);
+    } else noPerfect.push(`${v.la} (${v.id}): missing ${chosen.missing.join(', ')}`);
+  } else if (!textbook.has(lemma)) noPerfect.push(`${v.la} (${v.id}): Wiktionary lists no active perfect`);
+
   imported[v.id] = {
     conjugation: r.conjugation,
     infinitive: r.infinitive,
-    forms: r.forms,
+    forms: { ...r.forms, ...perfect },
     source: r.url,
     ...(review ? { review } : {}),
+    ...(perfectReview ? { perfectReview } : {}),
   };
 }
 
@@ -273,7 +391,7 @@ for (const v of vocab.filter((e) => e.pos === 'Verb')) {
 const out = `// AUTO-GENERATED by scripts/import-conjugations.ts — do not hand-edit. Rerun
 // \`pnpm import-conjugations\` after vocab changes; put decisions in paradigmReview.ts.
 //
-// Present-system paradigms from Wiktionary (https://en.wiktionary.org), extracted by
+// Active-indicative paradigms from Wiktionary (https://en.wiktionary.org), extracted by
 // kaikki.org. Wiktionary content is licensed CC BY-SA 4.0.
 
 import type { Conjugation, Tense, TenseTable } from './verbs';
@@ -288,9 +406,15 @@ export interface ImportedConjugation {
   source: string;
   // Set when the import found something for Nae to confirm; kept out of drills.
   review?: string;
+  // Set when the perfect system needs confirming; drills use the present system only.
+  perfectReview?: string;
 }
 
 export const IMPORTED_CONJUGATIONS: Record<string, ImportedConjugation> = ${JSON.stringify(imported, null, 2)};
+
+// The irregulars' perfect systems, checked against the cells Book 2 gives (verbs.ts
+// IRREGULAR_PERFECT_CELLS). Keyed by textbook verb id.
+export const IRREGULAR_PERFECTS: Record<string, Partial<Record<Tense, TenseTable>>> = ${JSON.stringify(irregularPerfects, null, 2)};
 `;
 writeFileSync(resolve('src/data/conjugations.generated.ts'), out);
 
@@ -299,6 +423,14 @@ console.log(`✓ Imported ${Object.keys(imported).length} vocab verbs (${ready} 
 if (flagged.length) {
   console.log(`\n⚠ ${flagged.length} need review (kept out of drills until approved in VERB_APPROVED_FOR_DRILLS):`);
   for (const f of flagged) console.log(`  - ${f}`);
+}
+if (perfectFlagged.length) {
+  console.log(`\n⚠ ${perfectFlagged.length} perfect systems need review (drills use the present system until approved in VERB_PERFECT_APPROVED):`);
+  for (const f of perfectFlagged) console.log(`  - ${f}`);
+}
+if (noPerfect.length) {
+  console.log(`\n· ${noPerfect.length} imported without a perfect system:`);
+  for (const f of noPerfect) console.log(`  - ${f}`);
 }
 if (unmatched.length) {
   console.log(`\n⚠ ${unmatched.length} not imported:`);

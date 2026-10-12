@@ -3,6 +3,7 @@ import { conjugateDrill } from './conjugate';
 import { decodeDrill } from './decode';
 import { adverbDrill, littleWordDrill, partOfSpeechDrill, prepositionDrill } from './littleWords';
 import { parseDrill } from './parse';
+import { principalPartsDrill } from './principalParts';
 import { verbParseDrill } from './verbParse';
 import { wordOrderDrill } from './wordOrder';
 import type { Drill, DrillContext, DrillType } from './types';
@@ -12,6 +13,7 @@ export const DRILL_TYPES: DrillType[] = [
   parseDrill,
   verbParseDrill,
   conjugateDrill,
+  principalPartsDrill,
   decodeDrill,
   wordOrderDrill,
   prepositionDrill,

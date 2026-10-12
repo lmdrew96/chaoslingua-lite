@@ -3,6 +3,7 @@ import {
   CONJUGATION_FROM_INFINITIVE,
   FUTURE_LOOKALIKE_NOTE,
   INFINITIVE_TIEBREAK_NOTE,
+  PERFECT_ENDINGS,
   PERSONAL_ENDINGS,
   PRINCIPAL_PARTS_NOTE,
   TENSE_SIGNS,
@@ -152,7 +153,8 @@ export function ConjugationTables({ openTenses, openConjugations }: ConjugationT
         <div className="table-scroll">
           <table className="learn-table">
             <caption>
-              <strong>PERSONAL ENDINGS</strong> — who is doing it. The same in every conjugation and tense on this page.
+              <strong>PERSONAL ENDINGS</strong> — who is doing it. The same in every conjugation and{' '}
+              {openTenses.has('perf') ? 'every tense on this page except the perfect.' : 'tense on this page.'}
             </caption>
             <tbody>
               {PERSONAL_ENDINGS.map(({ label, ending }) => (
@@ -164,6 +166,23 @@ export function ConjugationTables({ openTenses, openConjugations }: ConjugationT
             </tbody>
           </table>
         </div>
+        {openTenses.has('perf') && (
+          <div className="table-scroll">
+            <table className="learn-table">
+              <caption>
+                <strong>PERFECT ENDINGS</strong> — the perfect tense has its own, the same in every conjugation.
+              </caption>
+              <tbody>
+                {PERFECT_ENDINGS.map(({ label, ending }) => (
+                  <tr key={label}>
+                    <td>{label}</td>
+                    <td className="latin-form">{ending}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
         <ul className="case-use-list verb-callouts">
           {TENSE_SIGNS.filter((t) => openTenses.has(t.tense)).map((t) => (
             <li key={t.heading}>

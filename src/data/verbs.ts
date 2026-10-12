@@ -4,9 +4,12 @@
 // than Book 1, which only gives the future for the 1st and 2nd conjugations.
 // Active indicative only: LATN 101 doesn't cover the passive or subjunctive, and
 // those Book 2 tables have typos (mittm, teneānt, audīāmus, ferotur).
-// Like the noun tables, every form is copied, not generated from endings.
+// Like the noun tables, every form is copied, not generated from endings. The
+// irregulars' perfect system is the exception: Book 2 gives only "I" and "you (sing.)"
+// and calls the rest regular, so the rest comes from the import, which checks it
+// against those textbook cells (IRREGULAR_PERFECT_CELLS).
 
-import { IMPORTED_CONJUGATIONS } from './conjugations.generated';
+import { IMPORTED_CONJUGATIONS, IRREGULAR_PERFECTS } from './conjugations.generated';
 import type { GNumber } from './nouns';
 import { vocab } from './vocab';
 
@@ -19,6 +22,7 @@ export const PERSONS: Person[] = [1, 2, 3];
 // Suburani's table order.
 export const TENSES: Tense[] = ['pres', 'fut', 'impf', 'perf', 'futperf', 'plup'];
 export const CONJUGATIONS: Conjugation[] = [1, 2, 3, 4, '3io', 'irr'];
+export const PERFECT_SYSTEM: Tense[] = ['perf', 'futperf', 'plup'];
 
 export const tenseNames: Record<Tense, string> = {
   pres: 'present',
@@ -58,6 +62,17 @@ export const PERSONAL_ENDINGS: Array<{ label: string; ending: string }> = [
   { label: 'we', ending: '-mus' },
   { label: 'you (pl.)', ending: '-tis' },
   { label: 'they', ending: '-nt' },
+];
+
+// The perfect system's own endings — the perfect tense only; the future perfect and
+// pluperfect use the usual ones after their sign.
+export const PERFECT_ENDINGS: Array<{ label: string; ending: string }> = [
+  { label: 'I', ending: '-ī' },
+  { label: 'you (sing.)', ending: '-istī' },
+  { label: 'he, she, it', ending: '-it' },
+  { label: 'we', ending: '-imus' },
+  { label: 'you (pl.)', ending: '-istis' },
+  { label: 'they', ending: '-ērunt' },
 ];
 
 // Tense signs, each with forms from the model tables split stem · sign · ending (the
@@ -103,6 +118,39 @@ export const TENSE_SIGNS: TenseSign[] = [
       { stem: 'audi', sign: 'e', ending: 'nt' },
     ],
   },
+  {
+    tense: 'perf',
+    heading: 'Perfect: the perfect stem (3rd principal part minus -ī) + the perfect endings',
+    examples: [
+      { stem: 'vocāv', ending: 'ī' },
+      { stem: 'tenu', ending: 'istī' },
+      { stem: 'mīs', ending: 'it' },
+      { stem: 'audīv', ending: 'imus' },
+      { stem: 'cēp', ending: 'ērunt' },
+    ],
+  },
+  {
+    tense: 'futperf',
+    heading: 'Future perfect: perfect stem + -er- / -eri-',
+    note: '-erō for “I”, -erint for “they”',
+    examples: [
+      { stem: 'vocāv', sign: 'er', ending: 'ō' },
+      { stem: 'tenu', sign: 'eri', ending: 's' },
+      { stem: 'mīs', sign: 'eri', ending: 't' },
+      { stem: 'cēp', sign: 'eri', ending: 'nt' },
+    ],
+  },
+  {
+    tense: 'plup',
+    heading: 'Pluperfect: perfect stem + -era-',
+    examples: [
+      { stem: 'vocāv', sign: 'era', ending: 'm' },
+      { stem: 'tenu', sign: 'erā', ending: 's' },
+      { stem: 'mīs', sign: 'era', ending: 't' },
+      { stem: 'audīv', sign: 'erā', ending: 'mus' },
+      { stem: 'cēp', sign: 'era', ending: 'nt' },
+    ],
+  },
 ];
 
 // The notes below mark Latin words *like this* and emphasis **like this**, so they
@@ -136,7 +184,7 @@ export interface ModelVerb {
   infinitive: string;
   // Null where Suburani gives none (possum, volō, mālō).
   imperative: { sg: string; pl: string } | null;
-  // Present system now; the perfect system fills in with Module 5.
+  // Irregulars may lack the perfect system until the import has supplied it.
   forms: Partial<Record<Tense, TenseTable>>;
 }
 
@@ -154,6 +202,9 @@ export const MODEL_VERBS: ModelVerb[] = [
       pres: table('vocō vocās vocat vocāmus vocātis vocant'),
       fut: table('vocābō vocābis vocābit vocābimus vocābitis vocābunt'),
       impf: table('vocābam vocābās vocābat vocābāmus vocābātis vocābant'),
+      perf: table('vocāvī vocāvistī vocāvit vocāvimus vocāvistis vocāvērunt'),
+      futperf: table('vocāverō vocāveris vocāverit vocāverimus vocāveritis vocāverint'),
+      plup: table('vocāveram vocāverās vocāverat vocāverāmus vocāverātis vocāverant'),
     },
   },
   {
@@ -162,6 +213,9 @@ export const MODEL_VERBS: ModelVerb[] = [
       pres: table('teneō tenēs tenet tenēmus tenētis tenent'),
       fut: table('tenēbō tenēbis tenēbit tenēbimus tenēbitis tenēbunt'),
       impf: table('tenēbam tenēbās tenēbat tenēbāmus tenēbātis tenēbant'),
+      perf: table('tenuī tenuistī tenuit tenuimus tenuistis tenuērunt'),
+      futperf: table('tenuerō tenueris tenuerit tenuerimus tenueritis tenuerint'),
+      plup: table('tenueram tenuerās tenuerat tenuerāmus tenuerātis tenuerant'),
     },
   },
   {
@@ -170,6 +224,9 @@ export const MODEL_VERBS: ModelVerb[] = [
       pres: table('mittō mittis mittit mittimus mittitis mittunt'),
       fut: table('mittam mittēs mittet mittēmus mittētis mittent'),
       impf: table('mittēbam mittēbās mittēbat mittēbāmus mittēbātis mittēbant'),
+      perf: table('mīsī mīsistī mīsit mīsimus mīsistis mīsērunt'),
+      futperf: table('mīserō mīseris mīserit mīserimus mīseritis mīserint'),
+      plup: table('mīseram mīserās mīserat mīserāmus mīserātis mīserant'),
     },
   },
   {
@@ -178,6 +235,9 @@ export const MODEL_VERBS: ModelVerb[] = [
       pres: table('audiō audīs audit audīmus audītis audiunt'),
       fut: table('audiam audiēs audiet audiēmus audiētis audient'),
       impf: table('audiēbam audiēbās audiēbat audiēbāmus audiēbātis audiēbant'),
+      perf: table('audīvī audīvistī audīvit audīvimus audīvistis audīvērunt'),
+      futperf: table('audīverō audīveris audīverit audīverimus audīveritis audīverint'),
+      plup: table('audīveram audīverās audīverat audīverāmus audīverātis audīverant'),
     },
   },
   {
@@ -186,11 +246,26 @@ export const MODEL_VERBS: ModelVerb[] = [
       pres: table('capiō capis capit capimus capitis capiunt'),
       fut: table('capiam capiēs capiet capiēmus capiētis capient'),
       impf: table('capiēbam capiēbās capiēbat capiēbāmus capiēbātis capiēbant'),
+      perf: table('cēpī cēpistī cēpit cēpimus cēpistis cēpērunt'),
+      futperf: table('cēperō cēperis cēperit cēperimus cēperitis cēperint'),
+      plup: table('cēperam cēperās cēperat cēperāmus cēperātis cēperant'),
     },
   },
 ];
 
-export const IRREGULAR_VERBS: ModelVerb[] = [
+// Book 2's perfect-system cells for the irregulars: "I" and "you (sing.)" of each tense
+// (ferō: only the 3rd principal part, tulī). The import checks its tables against these.
+export const IRREGULAR_PERFECT_CELLS: Record<string, Partial<Record<Tense, string[]>>> = {
+  sum: { perf: ['fuī', 'fuistī'], futperf: ['fuerō', 'fueris'], plup: ['fueram', 'fuerās'] },
+  possum: { perf: ['potuī', 'potuistī'], futperf: ['potuerō', 'potueris'], plup: ['potueram', 'potuerās'] },
+  eo: { perf: ['iī', 'iistī'], futperf: ['ierō', 'ieris'], plup: ['ieram', 'ierās'] },
+  volo: { perf: ['voluī', 'voluistī'], futperf: ['voluerō', 'volueris'], plup: ['volueram', 'voluerās'] },
+  nolo: { perf: ['nōluī', 'nōluistī'], futperf: ['nōluerō', 'nōlueris'], plup: ['nōlueram', 'nōluerās'] },
+  malo: { perf: ['māluī', 'māluistī'], futperf: ['māluerō', 'mālueris'], plup: ['mālueram', 'māluerās'] },
+  fero: { perf: ['tulī'] },
+};
+
+const IRREGULAR_PRESENT: ModelVerb[] = [
   {
     id: 'sum', conjugation: 'irr', gloss: 'be', infinitive: 'esse', imperative: { sg: 'es', pl: 'este' },
     forms: {
@@ -251,6 +326,11 @@ export const IRREGULAR_VERBS: ModelVerb[] = [
   },
 ];
 
+export const IRREGULAR_VERBS: ModelVerb[] = IRREGULAR_PRESENT.map((v) => ({
+  ...v,
+  forms: { ...v.forms, ...IRREGULAR_PERFECTS[v.id] },
+}));
+
 export const lemmaOf = (v: Pick<ModelVerb, 'forms'>): string => v.forms.pres!.sg[1];
 
 // What the course opens verbs by: the conjugation, except that sum gets its own gate —
@@ -292,12 +372,16 @@ export const drillableVerbs = (chapters: Set<number>, gates: Set<VerbGate>): Dri
     const lemma = imported.forms.pres!.sg[1];
     if (seen.has(lemma)) continue;
     seen.add(lemma);
+    // A perfect system awaiting Nae's confirm pass stays out; the present system drills.
+    const forms = imported.perfectReview
+      ? Object.fromEntries(Object.entries(imported.forms).filter(([t]) => !PERFECT_SYSTEM.includes(t as Tense)))
+      : imported.forms;
     pool.push({
       id: v.id,
       conjugation: imported.conjugation,
       gloss: verbGloss(v.en),
       infinitive: imported.infinitive,
-      forms: imported.forms,
+      forms,
       chapter: v.chapter,
     });
   }
@@ -391,11 +475,12 @@ const ENDINGS: Record<GNumber, Record<Person, RegExp>> = {
 // irregulars, and anything unexpected — so feedback just shows the parse. Present
 // forms have no tense sign; their stem keeps the joining vowel (vocā·mus, mittu·nt).
 export const segmentsOf = (
-  verb: Pick<DrillVerb, 'conjugation'>,
+  verb: Pick<DrillVerb, 'conjugation' | 'forms'>,
   slot: VerbSlot,
   form: string,
 ): { stem: string; sign?: string; ending: string } | null => {
   if (verb.conjugation === 'irr') return null;
+  if (PERFECT_SYSTEM.includes(slot.tense)) return perfectSegments(verb, slot, form);
   const ending = form.match(ENDINGS[slot.number][slot.person])?.[0];
   if (!ending) return null;
   const rest = form.slice(0, -ending.length);
@@ -412,6 +497,31 @@ export const segmentsOf = (
     return sign(/^(.+)([aēe])$/);
   }
   return null;
+};
+
+const PERFECT_ENDING_RES: Record<GNumber, Record<Person, RegExp>> = {
+  sg: { 1: /^ī$/, 2: /^istī$/, 3: /^it$/ },
+  pl: { 1: /^imus$/, 2: /^istis$/, 3: /^ērunt$/ },
+};
+
+// The perfect system splits on the perfect stem (the 3rd principal part minus -ī):
+// mīs·istī, vocāv·era·nt, cēp·eri·nt.
+export const perfectStem = (verb: Pick<DrillVerb, 'forms'>): string | null => {
+  const first = verb.forms.perf?.sg[1];
+  return first?.endsWith('ī') ? first.slice(0, -1) : null;
+};
+
+const perfectSegments = (
+  verb: Pick<DrillVerb, 'forms'>,
+  slot: VerbSlot,
+  form: string,
+): { stem: string; sign?: string; ending: string } | null => {
+  const stem = perfectStem(verb);
+  if (!stem || !form.startsWith(stem)) return null;
+  const rest = form.slice(stem.length);
+  if (slot.tense === 'perf') return PERFECT_ENDING_RES[slot.number][slot.person].test(rest) ? { stem, ending: rest } : null;
+  const m = rest.match(slot.tense === 'plup' ? /^(er[aā])(m|s|t|mus|tis|nt)$/ : /^(eri?)(ō|s|t|mus|tis|nt)$/);
+  return m ? { stem, sign: m[1], ending: m[2] } : null;
 };
 
 // What a verb drill logs to `attempts` for the slot it tested.

@@ -58,3 +58,8 @@ export const VERB_APPROVED_FOR_DRILLS: string[] = [
   'ch3-ambulō', 'ch3-clāmō', 'ch3-currō', 'ch3-dīcō', 'ch3-festīnō', 'ch3-vincō',
   'ch4-laudō', 'ch4-tollō', 'ch4-veniō',
 ];
+
+// Vocab verbs whose imported perfect system Nae has checked (the perfect stem has no
+// Suburani 3rd principal part to check it against, or disagrees with it). Keyed by
+// vocab id.
+export const VERB_PERFECT_APPROVED: string[] = [];
