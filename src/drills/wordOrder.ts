@@ -110,4 +110,8 @@ const makeWordOrder = (ctx: DrillContext): McDrill | null => {
   return build(ctx, dative, gen) ?? build(ctx, !dative, gen) ?? build(ctx, dative, !gen) ?? build(ctx, !dative, !gen);
 };
 
-export const wordOrderDrill: DrillType = { type: 'word-order', label: 'Word order', make: makeWordOrder };
+export const wordOrderDrill: DrillType = {
+  type: 'word-order', label: 'Word order',
+  description: 'Pick the word order a Latin reader would most expect for a sentence.',
+  make: makeWordOrder
+};

@@ -12,7 +12,7 @@ import {
 } from '../data/course';
 import { ordinal, type Declension } from '../data/nouns';
 import { gateLabel, tenseNames, type Tense, type VerbGate } from '../data/verbs';
-import { ALL_TYPES, labelFor } from '../drills';
+import { ALL_TYPES, descriptionFor, labelFor } from '../drills';
 import type { DrillContext } from '../drills/types';
 
 interface PracticeFilterProps {
@@ -101,12 +101,13 @@ export function PracticeFilter({
                 <button
                   key={type}
                   type="button"
-                  className={`chip-btn${types.has(type) ? ' active' : ''}`}
+                  className={`chip-btn chip-described${types.has(type) ? ' active' : ''}`}
                   aria-pressed={types.has(type)}
                   disabled={types.has(type) && types.size === 1}
                   onClick={() => onToggleType(type)}
                 >
-                  {labelFor(type)}
+                  <span className="chip-label">{labelFor(type)}</span>
+                  <span className="chip-desc">{descriptionFor(type)}</span>
                 </button>
               ))}
             </div>

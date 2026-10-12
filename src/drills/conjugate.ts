@@ -78,4 +78,8 @@ const makeConjugate = (ctx: DrillContext): McDrill | null => {
   return null;
 };
 
-export const conjugateDrill: DrillType = { type: 'conjugate', label: 'Conjugate', make: makeConjugate };
+export const conjugateDrill: DrillType = {
+  type: 'conjugate', label: 'Conjugate',
+  description: 'Given a verb plus a person, number and tense, pick (or type) the right form.',
+  make: makeConjugate
+};

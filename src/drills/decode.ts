@@ -386,4 +386,9 @@ const takeQueued = (): McDrill | null => {
   return next;
 };
 
-export const decodeDrill: DrillType = { type: 'decode', label: 'Decode', make: makeDecode, takeQueued };
+export const decodeDrill: DrillType = {
+  type: 'decode', label: 'Decode',
+  description: 'Read a short sentence and work out who does what from the endings, not the word order.',
+  make: makeDecode,
+  takeQueued
+};

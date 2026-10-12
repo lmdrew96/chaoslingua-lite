@@ -51,7 +51,11 @@ const makePreposition = (ctx: DrillContext): McDrill | null => {
   };
 };
 
-export const prepositionDrill: DrillType = { type: 'preposition', label: 'Prepositions', make: makePreposition };
+export const prepositionDrill: DrillType = {
+  type: 'preposition', label: 'Prepositions',
+  description: 'Name the case a preposition takes and what it means with it.',
+  make: makePreposition
+};
 
 // ── Little-word meanings ─────────────────────────────────────────────────────
 
@@ -97,7 +101,11 @@ const makeLittleWord = (ctx: DrillContext): McDrill | null => {
   };
 };
 
-export const littleWordDrill: DrillType = { type: 'little-words', label: 'Little words', make: makeLittleWord };
+export const littleWordDrill: DrillType = {
+  type: 'little-words', label: 'Little words',
+  description: 'Say what a conjunction or adverb from your chapters means.',
+  make: makeLittleWord
+};
 
 // ── Part of speech ───────────────────────────────────────────────────────────
 
@@ -139,7 +147,11 @@ const makePartOfSpeech = (ctx: DrillContext): McDrill | null => {
   };
 };
 
-export const partOfSpeechDrill: DrillType = { type: 'part-of-speech', label: 'Part of speech', make: makePartOfSpeech };
+export const partOfSpeechDrill: DrillType = {
+  type: 'part-of-speech', label: 'Part of speech',
+  description: 'Say what part of speech a word is.',
+  make: makePartOfSpeech
+};
 
 // ── Adjective → adverb ───────────────────────────────────────────────────────
 
@@ -167,4 +179,8 @@ const makeAdverb = (ctx: DrillContext): McDrill | null => {
   };
 };
 
-export const adverbDrill: DrillType = { type: 'adverb', label: 'Adverbs', make: makeAdverb };
+export const adverbDrill: DrillType = {
+  type: 'adverb', label: 'Adverbs',
+  description: 'Given an adjective, pick the adverb made from it.',
+  make: makeAdverb
+};
