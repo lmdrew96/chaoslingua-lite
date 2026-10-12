@@ -3,7 +3,7 @@
 // Learn read these lists, they don't hardcode them.
 
 import type { Declension } from './nouns';
-import type { Conjugation, Tense } from './verbs';
+import type { Tense, VerbGate } from './verbs';
 
 export interface Unlock<T> {
   id: T;
@@ -73,13 +73,17 @@ export const TENSE_UNLOCKS: Unlock<Tense>[] = [
   { id: 'plup', opens: '2026-11-02' },
 ];
 
-export const CONJUGATION_UNLOCKS: Unlock<Conjugation>[] = [
+// Class has covered the 1st conjugation so far; the rest stay closed until their class
+// dates are known (they can still be toggled on). sum has been in use since Module 1.
+export const CONJUGATION_UNLOCKS: Unlock<VerbGate>[] = [
   { id: 1, opens: '2026-10-07' },
-  { id: 2, opens: '2026-10-07' },
-  { id: 3, opens: '2026-10-07' },
-  { id: 4, opens: '2026-10-07' },
-  { id: '3io', opens: '2026-10-07' },
-  { id: 'irr', opens: '2026-10-07' },
+  { id: 2, opens: null },
+  { id: 3, opens: null },
+  { id: 4, opens: null },
+  { id: '3io', opens: null },
+  { id: 'sum', opens: '2026-08-25' },
+  // possum, eō, volō, nōlō, mālō, ferō and their compounds.
+  { id: 'irr', opens: null },
 ];
 
 // Course topics that aren't a chapter, declension, tense, or conjugation — the drills

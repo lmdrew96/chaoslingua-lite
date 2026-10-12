@@ -253,6 +253,18 @@ export const IRREGULAR_VERBS: ModelVerb[] = [
 
 export const lemmaOf = (v: Pick<ModelVerb, 'forms'>): string => v.forms.pres!.sg[1];
 
+// What the course opens verbs by: the conjugation, except that sum gets its own gate —
+// class has used it since Module 1, long before the other irregulars. A verb's
+// conjugation stays 'irr' for grading and stats; only the unlock differs.
+export type VerbGate = Conjugation | 'sum';
+export const VERB_GATES: VerbGate[] = [...CONJUGATIONS.filter((c) => c !== 'irr'), 'sum', 'irr'];
+
+export const gateOf = (v: Pick<ModelVerb, 'conjugation' | 'forms'>): VerbGate =>
+  v.conjugation === 'irr' && lemmaOf(v) === 'sum' ? 'sum' : v.conjugation;
+
+export const gateLabel = (g: VerbGate): string =>
+  g === 'sum' ? 'sum' : g === 'irr' ? 'other irregulars' : conjugationLabel(g);
+
 // What a verb drill needs — textbook verbs and imported vocab verbs both fit.
 export interface DrillVerb {
   id: string;
@@ -266,16 +278,16 @@ export interface DrillVerb {
 // "I look at, watch" → "look at"; "take, catch, capture" → "take".
 const verbGloss = (en: string): string => en.replace(/^I /, '').split(/[,;]/)[0].trim();
 
-// The textbook verbs for every open conjugation (always — they're the tables class
+// The textbook verbs for every open gate (always — they're the tables class
 // learns from), plus vocab verbs of open chapters whose Wiktionary import passed
 // review. A vocab verb that's also a textbook verb (vocō, sum) uses the textbook table.
-export const drillableVerbs = (chapters: Set<number>, conjugations: Set<Conjugation>): DrillVerb[] => {
-  const pool: DrillVerb[] = [...MODEL_VERBS, ...IRREGULAR_VERBS].filter((v) => conjugations.has(v.conjugation));
+export const drillableVerbs = (chapters: Set<number>, gates: Set<VerbGate>): DrillVerb[] => {
+  const pool: DrillVerb[] = [...MODEL_VERBS, ...IRREGULAR_VERBS].filter((v) => gates.has(gateOf(v)));
   const seen = new Set([...MODEL_VERBS, ...IRREGULAR_VERBS].map(lemmaOf));
   for (const v of vocab) {
     const imported = IMPORTED_CONJUGATIONS[v.id];
     if (v.pos !== 'Verb' || !chapters.has(v.chapter) || !imported || imported.review) continue;
-    if (!conjugations.has(imported.conjugation)) continue;
+    if (!gates.has(gateOf(imported))) continue;
     // Skip repeats: legō is listed in ch.1 and again in ch.16.
     const lemma = imported.forms.pres!.sg[1];
     if (seen.has(lemma)) continue;

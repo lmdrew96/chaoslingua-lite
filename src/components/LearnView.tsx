@@ -1,5 +1,5 @@
 import type { Declension } from '../data/nouns';
-import type { Conjugation, Tense } from '../data/verbs';
+import type { Tense, VerbGate } from '../data/verbs';
 import { glossary } from '../learn/glossary';
 import { CaseUses } from '../learn/CaseUses';
 import { ConjugationTables } from '../learn/ConjugationTables';
@@ -10,7 +10,7 @@ interface LearnViewProps {
   openChapters: Set<number>;
   openDeclensions: Set<Declension>;
   openTenses: Set<Tense>;
-  openConjugations: Set<Conjugation>;
+  openConjugations: Set<VerbGate>;
 }
 
 export function LearnView({ openChapters, openDeclensions, openTenses, openConjugations }: LearnViewProps) {

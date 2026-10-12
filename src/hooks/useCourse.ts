@@ -10,7 +10,7 @@ import {
   type Unlock,
 } from '../data/course';
 import type { Declension } from '../data/nouns';
-import type { Conjugation, Tense } from '../data/verbs';
+import type { Tense, VerbGate } from '../data/verbs';
 import type { DrillContext } from '../drills/types';
 
 const STORAGE_KEY = 'chaoslingua-lite:courseOverrides';
@@ -81,7 +81,7 @@ export function useCourse() {
   const toggleChapter = (id: number) => toggle('chapters', id, ctx.chapters.has(id), CHAPTER_UNLOCKS);
   const toggleDeclension = (id: Declension) => toggle('declensions', id, ctx.declensions.has(id), DECLENSION_UNLOCKS);
   const toggleTense = (id: Tense) => toggle('tenses', id, ctx.tenses.has(id), TENSE_UNLOCKS);
-  const toggleConjugation = (id: Conjugation) =>
+  const toggleConjugation = (id: VerbGate) =>
     toggle('conjugations', id, ctx.conjugations.has(id), CONJUGATION_UNLOCKS);
   const toggleTopic = (id: Topic) => toggle('topics', id, ctx.topics.has(id), TOPIC_UNLOCKS);
   const followSchedule = () => save(EMPTY);

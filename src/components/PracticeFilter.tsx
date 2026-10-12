@@ -10,7 +10,7 @@ import {
   type Topic,
 } from '../data/course';
 import { ordinal, type Declension } from '../data/nouns';
-import { conjugationLabel, tenseNames, type Conjugation, type Tense } from '../data/verbs';
+import { gateLabel, tenseNames, type Tense, type VerbGate } from '../data/verbs';
 import { ALL_TYPES, labelFor } from '../drills';
 import type { DrillContext } from '../drills/types';
 
@@ -19,7 +19,7 @@ interface PracticeFilterProps {
   onToggleChapter: (id: number) => void;
   onToggleDeclension: (id: Declension) => void;
   onToggleTense: (id: Tense) => void;
-  onToggleConjugation: (id: Conjugation) => void;
+  onToggleConjugation: (id: VerbGate) => void;
   onToggleTopic: (id: Topic) => void;
   onFollowSchedule: () => void;
   customized: boolean;
@@ -202,7 +202,7 @@ export function PracticeFilter({
                   disabled={ctx.conjugations.has(u.id) && ctx.conjugations.size === 1}
                   onClick={() => onToggleConjugation(u.id)}
                 >
-                  {conjugationLabel(u.id)}
+                  {gateLabel(u.id)}
                   {!scheduledConjugations.has(u.id) && <span className="chip-note"> · class {shortDate(u.opens)}</span>}
                 </button>
               ))}

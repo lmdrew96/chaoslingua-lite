@@ -1,6 +1,6 @@
 import type { Topic } from '../data/course';
 import type { Case, Declension, GNumber, Parse, ParseNoun } from '../data/nouns';
-import type { Conjugation, DrillVerb, Person, Tense, VerbSlot } from '../data/verbs';
+import type { DrillVerb, Person, Tense, VerbGate, VerbSlot } from '../data/verbs';
 
 // What gets written to `attempts` alongside the drill type — each drill fills in
 // whatever it can meaningfully attribute an answer to.
@@ -64,7 +64,7 @@ export interface DrillContext {
   declensions: Set<Declension>;
   chapters: Set<number>;
   tenses: Set<Tense>;
-  conjugations: Set<Conjugation>;
+  conjugations: Set<VerbGate>;
   topics: Set<Topic>;
 }
 

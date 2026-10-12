@@ -1,7 +1,6 @@
 import { NUMBERS } from '../data/nouns';
 import {
   CONJUGATION_FROM_INFINITIVE,
-  CONJUGATIONS,
   FUTURE_LOOKALIKE_NOTE,
   INFINITIVE_TIEBREAK_NOTE,
   PERSONAL_ENDINGS,
@@ -11,13 +10,16 @@ import {
   MODEL_VERBS,
   PERSONS,
   TENSES,
+  VERB_GATES,
   conjugationLabel,
+  gateLabel,
+  gateOf,
   personLabels,
   tenseFrames,
   tenseNames,
-  type Conjugation,
   type ModelVerb,
   type Tense,
+  type VerbGate,
 } from '../data/verbs';
 import { VerbParts } from '../components/VerbParts';
 
@@ -132,7 +134,7 @@ function Note({ text }: { text: string }) {
 
 interface ConjugationTablesProps {
   openTenses: Set<Tense>;
-  openConjugations: Set<Conjugation>;
+  openConjugations: Set<VerbGate>;
 }
 
 // Unlike the declension tables, only open tenses and conjugations show: these are the
@@ -140,8 +142,8 @@ interface ConjugationTablesProps {
 export function ConjugationTables({ openTenses, openConjugations }: ConjugationTablesProps) {
   const tenses = TENSES.filter((t) => openTenses.has(t));
   const models = MODEL_VERBS.filter((v) => openConjugations.has(v.conjugation));
-  const showIrregulars = openConjugations.has('irr');
-  const closedConjugations = CONJUGATIONS.filter((c) => !openConjugations.has(c));
+  const irregulars = IRREGULAR_VERBS.filter((v) => openConjugations.has(gateOf(v)));
+  const closedConjugations = VERB_GATES.filter((g) => !openConjugations.has(g));
 
   return (
     <>
@@ -221,7 +223,7 @@ export function ConjugationTables({ openTenses, openConjugations }: ConjugationT
           Conjugation tables
           {closedConjugations.length > 0 && (
             <span className="locked-tag">
-              🔒 hidden until class: {closedConjugations.map(conjugationLabel).join(', ')}
+              🔒 hidden until class: {closedConjugations.map(gateLabel).join(', ')}
             </span>
           )}
         </summary>
@@ -230,17 +232,19 @@ export function ConjugationTables({ openTenses, openConjugations }: ConjugationT
         {!tenses.length && <p className="learn-note">No tenses are open yet.</p>}
       </details>
 
-      {showIrregulars && (
+      {irregulars.length > 0 && (
         <details className="learn-section">
           <summary>Irregular verbs</summary>
           {tenses.map((t) => (
-            <TenseTable key={t} verbs={IRREGULAR_VERBS} tense={t} />
+            <TenseTable key={t} verbs={irregulars} tense={t} />
           ))}
-          <OtherParts verbs={IRREGULAR_VERBS} />
-          <p className="learn-note">
-            Compounds follow the same pattern: <span className="latin">absum</span> like sum,{' '}
-            <span className="latin">redeō</span> like eō, <span className="latin">offerō</span> like ferō.
-          </p>
+          <OtherParts verbs={irregulars} />
+          {openConjugations.has('irr') && (
+            <p className="learn-note">
+              Compounds follow the same pattern: <span className="latin">absum</span> like sum,{' '}
+              <span className="latin">redeō</span> like eō, <span className="latin">offerō</span> like ferō.
+            </p>
+          )}
         </details>
       )}
     </>
