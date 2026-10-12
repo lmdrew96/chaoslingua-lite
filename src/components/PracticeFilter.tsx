@@ -140,6 +140,9 @@ export function PracticeFilter({
                     </button>
                   </div>
                 )}
+                {types.has('verb-parse') && (
+                  <p className="filter-hint">Verb parses also ask which conjugation the verb belongs to.</p>
+                )}
               </div>
             </div>
           )}
