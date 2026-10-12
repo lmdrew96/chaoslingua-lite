@@ -11,10 +11,11 @@ import {
   MODEL_VERBS,
   PERSONS,
   TENSES,
-  VERB_GATES,
+  PRESENT_GATES,
   conjugationLabel,
   gateLabel,
-  gateOf,
+  lemmaOf,
+  textbookVerbOpen,
   personLabels,
   tenseFrames,
   tenseNames,
@@ -136,15 +137,19 @@ function Note({ text }: { text: string }) {
 interface ConjugationTablesProps {
   openTenses: Set<Tense>;
   openConjugations: Set<VerbGate>;
+  openChapters: Set<number>;
 }
 
 // Unlike the declension tables, only open tenses and conjugations show: these are the
 // charts Nae studies from for open-chart quizzes, so they match what class has covered.
-export function ConjugationTables({ openTenses, openConjugations }: ConjugationTablesProps) {
+export function ConjugationTables({ openTenses, openConjugations, openChapters }: ConjugationTablesProps) {
   const tenses = TENSES.filter((t) => openTenses.has(t));
   const models = MODEL_VERBS.filter((v) => openConjugations.has(v.conjugation));
-  const irregulars = IRREGULAR_VERBS.filter((v) => openConjugations.has(gateOf(v)));
-  const closedConjugations = VERB_GATES.filter((g) => !openConjugations.has(g));
+  const irregulars = IRREGULAR_VERBS.filter((v) => textbookVerbOpen(v, openConjugations, openChapters));
+  const closedConjugations = [
+    ...PRESENT_GATES.filter((g) => !openConjugations.has(g)).map(gateLabel),
+    ...IRREGULAR_VERBS.filter((v) => !irregulars.includes(v)).map(lemmaOf),
+  ];
 
   return (
     <>
@@ -242,7 +247,7 @@ export function ConjugationTables({ openTenses, openConjugations }: ConjugationT
           Conjugation tables
           {closedConjugations.length > 0 && (
             <span className="locked-tag">
-              🔒 hidden until class: {closedConjugations.map(gateLabel).join(', ')}
+              🔒 hidden until class: {closedConjugations.join(', ')}
             </span>
           )}
         </summary>
@@ -258,7 +263,7 @@ export function ConjugationTables({ openTenses, openConjugations }: ConjugationT
             <TenseTable key={t} verbs={irregulars} tense={t} />
           ))}
           <OtherParts verbs={irregulars} />
-          {openConjugations.has('irr') && (
+          {irregulars.length === IRREGULAR_VERBS.length && (
             <p className="learn-note">
               Compounds follow the same pattern: <span className="latin">absum</span> like sum,{' '}
               <span className="latin">redeō</span> like eō, <span className="latin">offerō</span> like ferō.

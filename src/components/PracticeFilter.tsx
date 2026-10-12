@@ -3,6 +3,7 @@ import {
   CHAPTER_UNLOCKS,
   CONJUGATION_UNLOCKS,
   DECLENSION_UNLOCKS,
+  PERFECT_UNLOCKS,
   TENSE_UNLOCKS,
   TOPIC_UNLOCKS,
   openByDate,
@@ -20,6 +21,7 @@ interface PracticeFilterProps {
   onToggleDeclension: (id: Declension) => void;
   onToggleTense: (id: Tense) => void;
   onToggleConjugation: (id: VerbGate) => void;
+  onTogglePerfect: (id: VerbGate) => void;
   onToggleTopic: (id: Topic) => void;
   onFollowSchedule: () => void;
   customized: boolean;
@@ -56,6 +58,7 @@ export function PracticeFilter({
   onToggleDeclension,
   onToggleTense,
   onToggleConjugation,
+  onTogglePerfect,
   onToggleTopic,
   onFollowSchedule,
   customized,
@@ -79,6 +82,7 @@ export function PracticeFilter({
   const scheduledDeclensions = openByDate(DECLENSION_UNLOCKS);
   const scheduledTenses = openByDate(TENSE_UNLOCKS);
   const scheduledConjugations = openByDate(CONJUGATION_UNLOCKS);
+  const scheduledPerfect = openByDate(PERFECT_UNLOCKS);
   const scheduledTopics = openByDate(TOPIC_UNLOCKS);
 
   return (
@@ -225,6 +229,28 @@ export function PracticeFilter({
                 </button>
               ))}
             </div>
+          </div>
+
+          <div className="filter-group">
+            <div className="filter-group-label">Perfect system</div>
+            <div className="chip-row">
+              {PERFECT_UNLOCKS.map((u) => (
+                <button
+                  key={u.id}
+                  type="button"
+                  className={`chip-btn${ctx.perfectGates.has(u.id) ? ' active' : ''}`}
+                  aria-pressed={ctx.perfectGates.has(u.id)}
+                  onClick={() => onTogglePerfect(u.id)}
+                >
+                  {gateLabel(u.id)}
+                  {!scheduledPerfect.has(u.id) && <span className="chip-note"> · class {shortDate(u.opens)}</span>}
+                </button>
+              ))}
+            </div>
+            <p className="filter-hint">
+              Which verbs drill the perfect, future perfect and pluperfect once those tenses are on. Irregulars other
+              than sum open with the chapter that introduces them.
+            </p>
           </div>
 
           <div className="filter-group">

@@ -73,16 +73,29 @@ export const TENSE_UNLOCKS: Unlock<Tense>[] = [
   { id: 'plup', opens: '2026-11-02' },
 ];
 
-// Class has covered the 1st conjugation so far; the rest stay closed until their class
-// dates are known (they can still be toggled on). sum has been in use since Module 1.
+// Present system, from the Module 3 Canvas pages. sum has been in use since Module 1.
+// The other irregulars aren't listed: each opens with the chapter whose vocab
+// introduces it (verbs.ts IRREGULAR_CHAPTERS — possum, volō, nōlō with ch.5).
 export const CONJUGATION_UNLOCKS: Unlock<VerbGate>[] = [
   { id: 1, opens: '2026-10-07' },
-  { id: 2, opens: null },
-  { id: 3, opens: null },
-  { id: 4, opens: null },
-  { id: '3io', opens: null },
+  { id: 2, opens: '2026-10-12' },
+  { id: 3, opens: '2026-10-14' },
+  { id: '3io', opens: '2026-10-14' },
+  { id: 4, opens: '2026-10-16' },
   { id: 'sum', opens: '2026-08-25' },
-  // possum, eō, volō, nōlō, mālō, ferō and their compounds.
+];
+
+// Perfect system per conjugation, from the Module 5 Canvas page. A perfect-system form
+// drills only when both its tense (TENSE_UNLOCKS) and its group's gate here are open.
+// The Module 5 page lists only the 1st–3rd; the rest wait for class dates.
+export const PERFECT_UNLOCKS: Unlock<VerbGate>[] = [
+  { id: 1, opens: '2026-11-02' },
+  { id: 2, opens: '2026-11-04' },
+  { id: 3, opens: '2026-11-09' },
+  { id: '3io', opens: null },
+  { id: 4, opens: null },
+  { id: 'sum', opens: null },
+  // possum, eō, volō, nōlō, mālō, ferō and the irregular vocab verbs.
   { id: 'irr', opens: null },
 ];
 

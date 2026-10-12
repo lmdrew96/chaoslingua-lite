@@ -25,7 +25,7 @@ const OPTIONS = 4;
 
 const pool = (ctx: DrillContext): Map<Conjugation, DrillVerb[]> => {
   const byConj = new Map<Conjugation, DrillVerb[]>();
-  for (const v of drillableVerbs(ctx.chapters, ctx.conjugations)) {
+  for (const v of drillableVerbs(ctx.chapters, ctx.conjugations, ctx.perfectGates)) {
     if (!TENSES.some((t) => ctx.tenses.has(t) && v.forms[t])) continue;
     byConj.set(v.conjugation, [...(byConj.get(v.conjugation) ?? []), v]);
   }

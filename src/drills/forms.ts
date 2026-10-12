@@ -77,7 +77,7 @@ const openTenses = (ctx: DrillContext, verb: DrillVerb): Tense[] =>
 // A verb from the role list whose sourced table is in the pool, in a random open
 // tense. Null when none qualifies (e.g. dō while its import awaits review).
 export const pickVerb = <R extends DecodeVerb>(ctx: DrillContext, roles: R[]): VerbChoice<R> | null => {
-  const pool = drillableVerbs(ctx.chapters, ctx.conjugations);
+  const pool = drillableVerbs(ctx.chapters, ctx.conjugations, ctx.perfectGates);
   const usable = roles.flatMap((role) => {
     if (!ctx.chapters.has(role.chapter)) return [];
     const verb = pool.find((v) => lemmaOf(v) === role.lemma);

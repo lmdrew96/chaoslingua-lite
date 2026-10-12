@@ -334,16 +334,41 @@ export const IRREGULAR_VERBS: ModelVerb[] = IRREGULAR_PRESENT.map((v) => ({
 export const lemmaOf = (v: Pick<ModelVerb, 'forms'>): string => v.forms.pres!.sg[1];
 
 // What the course opens verbs by: the conjugation, except that sum gets its own gate —
-// class has used it since Module 1, long before the other irregulars. A verb's
+// class has used it since Module 1 — and 'irr' covers the other irregulars. A verb's
 // conjugation stays 'irr' for grading and stats; only the unlock differs.
 export type VerbGate = Conjugation | 'sum';
+// Perfect-system gates (course.ts PERFECT_UNLOCKS) cover every group, one 'irr' gate
+// for the other irregulars.
 export const VERB_GATES: VerbGate[] = [...CONJUGATIONS.filter((c) => c !== 'irr'), 'sum', 'irr'];
+// Present-system gates (course.ts CONJUGATION_UNLOCKS). The other irregulars aren't
+// here: each opens with the chapter whose vocab introduces it (IRREGULAR_CHAPTERS).
+export const PRESENT_GATES: VerbGate[] = VERB_GATES.filter((g) => g !== 'irr');
 
 export const gateOf = (v: Pick<ModelVerb, 'conjugation' | 'forms'>): VerbGate =>
   v.conjugation === 'irr' && lemmaOf(v) === 'sum' ? 'sum' : v.conjugation;
 
 export const gateLabel = (g: VerbGate): string =>
   g === 'sum' ? 'sum' : g === 'irr' ? 'other irregulars' : conjugationLabel(g);
+
+const headword = (la: string): string => la.split(',')[0].trim();
+
+// The chapter whose vocab list first gives each textbook irregular (possum ch.5, ferō
+// ch.10). Null — closed for good — if no list gives it.
+export const IRREGULAR_CHAPTERS: Record<string, number | null> = Object.fromEntries(
+  IRREGULAR_VERBS.filter((v) => v.id !== 'sum').map((v) => {
+    const chapters = vocab.filter((e) => e.pos === 'Verb' && headword(e.la) === lemmaOf(v)).map((e) => e.chapter);
+    return [v.id, chapters.length ? Math.min(...chapters) : null];
+  }),
+);
+
+// Whether a textbook verb's present system is open: its conjugation's gate, or for an
+// irregular other than sum, its vocab chapter.
+export const textbookVerbOpen = (v: ModelVerb, gates: Set<VerbGate>, chapters: Set<number>): boolean => {
+  const gate = gateOf(v);
+  if (gate !== 'irr') return gates.has(gate);
+  const chapter = IRREGULAR_CHAPTERS[v.id];
+  return chapter != null && chapters.has(chapter);
+};
 
 // What a verb drill needs — textbook verbs and imported vocab verbs both fit.
 export interface DrillVerb {
@@ -358,24 +383,32 @@ export interface DrillVerb {
 // "I look at, watch" → "look at"; "take, catch, capture" → "take".
 const verbGloss = (en: string): string => en.replace(/^I /, '').split(/[,;]/)[0].trim();
 
-// The textbook verbs for every open gate (always — they're the tables class
-// learns from), plus vocab verbs of open chapters whose Wiktionary import passed
-// review. A vocab verb that's also a textbook verb (vocō, sum) uses the textbook table.
-export const drillableVerbs = (chapters: Set<number>, gates: Set<VerbGate>): DrillVerb[] => {
-  const pool: DrillVerb[] = [...MODEL_VERBS, ...IRREGULAR_VERBS].filter((v) => gates.has(gateOf(v)));
+// Drops the perfect system from a table.
+const presentOnly = (forms: Partial<Record<Tense, TenseTable>>): Partial<Record<Tense, TenseTable>> =>
+  Object.fromEntries(Object.entries(forms).filter(([t]) => !PERFECT_SYSTEM.includes(t as Tense)));
+
+// The textbook verbs that are open (always — they're the tables class learns from),
+// plus vocab verbs of open chapters whose Wiktionary import passed review. A vocab
+// verb that's also a textbook verb (vocō, sum) uses the textbook table. Irregular
+// vocab verbs (redeō, offerō) open with their chapter, like the textbook irregulars.
+// A verb's perfect system drills only once its own perfect gate is open, whatever
+// the tense gates say.
+export const drillableVerbs = (chapters: Set<number>, gates: Set<VerbGate>, perfectGates: Set<VerbGate>): DrillVerb[] => {
+  const pool: DrillVerb[] = [...MODEL_VERBS, ...IRREGULAR_VERBS]
+    .filter((v) => textbookVerbOpen(v, gates, chapters))
+    .map((v) => (perfectGates.has(gateOf(v)) ? v : { ...v, forms: presentOnly(v.forms) }));
   const seen = new Set([...MODEL_VERBS, ...IRREGULAR_VERBS].map(lemmaOf));
   for (const v of vocab) {
     const imported = IMPORTED_CONJUGATIONS[v.id];
     if (v.pos !== 'Verb' || !chapters.has(v.chapter) || !imported || imported.review) continue;
-    if (!gates.has(gateOf(imported))) continue;
+    const gate = gateOf(imported);
+    if (gate !== 'irr' && !gates.has(gate)) continue;
     // Skip repeats: legō is listed in ch.1 and again in ch.16.
     const lemma = imported.forms.pres!.sg[1];
     if (seen.has(lemma)) continue;
     seen.add(lemma);
     // A perfect system awaiting Nae's confirm pass stays out; the present system drills.
-    const forms = imported.perfectReview
-      ? Object.fromEntries(Object.entries(imported.forms).filter(([t]) => !PERFECT_SYSTEM.includes(t as Tense)))
-      : imported.forms;
+    const forms = imported.perfectReview || !perfectGates.has(gate) ? presentOnly(imported.forms) : imported.forms;
     pool.push({
       id: v.id,
       conjugation: imported.conjugation,

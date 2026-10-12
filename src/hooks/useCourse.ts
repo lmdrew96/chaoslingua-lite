@@ -3,6 +3,7 @@ import {
   CHAPTER_UNLOCKS,
   CONJUGATION_UNLOCKS,
   DECLENSION_UNLOCKS,
+  PERFECT_UNLOCKS,
   TENSE_UNLOCKS,
   TOPIC_UNLOCKS,
   openByDate,
@@ -22,10 +23,11 @@ interface Overrides {
   declensions: Record<string, boolean>;
   tenses: Record<string, boolean>;
   conjugations: Record<string, boolean>;
+  perfect: Record<string, boolean>;
   topics: Record<string, boolean>;
 }
 
-const EMPTY: Overrides = { chapters: {}, declensions: {}, tenses: {}, conjugations: {}, topics: {} };
+const EMPTY: Overrides = { chapters: {}, declensions: {}, tenses: {}, conjugations: {}, perfect: {}, topics: {} };
 
 function loadOverrides(): Overrides {
   try {
@@ -37,6 +39,7 @@ function loadOverrides(): Overrides {
       declensions: parsed.declensions ?? {},
       tenses: parsed.tenses ?? {},
       conjugations: parsed.conjugations ?? {},
+      perfect: parsed.perfect ?? {},
       topics: parsed.topics ?? {},
     };
   } catch (err) {
@@ -59,6 +62,7 @@ export function useCourse() {
       declensions: effective(DECLENSION_UNLOCKS, overrides.declensions),
       tenses: effective(TENSE_UNLOCKS, overrides.tenses),
       conjugations: effective(CONJUGATION_UNLOCKS, overrides.conjugations),
+      perfectGates: effective(PERFECT_UNLOCKS, overrides.perfect),
       topics: effective(TOPIC_UNLOCKS, overrides.topics),
     }),
     [overrides],
@@ -83,9 +87,20 @@ export function useCourse() {
   const toggleTense = (id: Tense) => toggle('tenses', id, ctx.tenses.has(id), TENSE_UNLOCKS);
   const toggleConjugation = (id: VerbGate) =>
     toggle('conjugations', id, ctx.conjugations.has(id), CONJUGATION_UNLOCKS);
+  const togglePerfect = (id: VerbGate) => toggle('perfect', id, ctx.perfectGates.has(id), PERFECT_UNLOCKS);
   const toggleTopic = (id: Topic) => toggle('topics', id, ctx.topics.has(id), TOPIC_UNLOCKS);
   const followSchedule = () => save(EMPTY);
   const customized = Object.values(overrides).some((o) => Object.keys(o).length > 0);
 
-  return { ctx, toggleChapter, toggleDeclension, toggleTense, toggleConjugation, toggleTopic, followSchedule, customized };
+  return {
+    ctx,
+    toggleChapter,
+    toggleDeclension,
+    toggleTense,
+    toggleConjugation,
+    togglePerfect,
+    toggleTopic,
+    followSchedule,
+    customized,
+  };
 }

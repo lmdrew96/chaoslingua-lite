@@ -29,7 +29,7 @@ export function LearnView({ openChapters, openDeclensions, openTenses, openConju
       </details>
       <CaseUses />
       <DeclensionTables openDeclensions={openDeclensions} />
-      <ConjugationTables openTenses={openTenses} openConjugations={openConjugations} />
+      <ConjugationTables openTenses={openTenses} openConjugations={openConjugations} openChapters={openChapters} />
       <VocabList openChapters={openChapters} />
     </div>
   );

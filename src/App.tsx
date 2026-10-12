@@ -37,7 +37,7 @@ function App() {
     confirmReset,
     cancelReset,
   } = useAccount();
-  const { ctx, toggleChapter, toggleDeclension, toggleTense, toggleConjugation, toggleTopic, followSchedule, customized } =
+  const { ctx, toggleChapter, toggleDeclension, toggleTense, toggleConjugation, togglePerfect, toggleTopic, followSchedule, customized } =
     useCourse();
   const {
     types,
@@ -118,6 +118,7 @@ function App() {
               onToggleDeclension={toggleDeclension}
               onToggleTense={toggleTense}
               onToggleConjugation={toggleConjugation}
+              onTogglePerfect={togglePerfect}
               onToggleTopic={toggleTopic}
               onFollowSchedule={followSchedule}
               customized={customized}

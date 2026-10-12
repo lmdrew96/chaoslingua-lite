@@ -33,7 +33,7 @@ const patterns = (stem: string): string[] => {
 
 const pool = (ctx: DrillContext): DrillVerb[] =>
   ctx.tenses.has('perf')
-    ? drillableVerbs(ctx.chapters, ctx.conjugations).filter(
+    ? drillableVerbs(ctx.chapters, ctx.conjugations, ctx.perfectGates).filter(
         (v) => v.conjugation !== 'irr' && v.forms.perf && /ō$/.test(lemmaOf(v)),
       )
     : [];

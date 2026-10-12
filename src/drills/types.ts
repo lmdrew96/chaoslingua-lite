@@ -65,6 +65,8 @@ export interface DrillContext {
   chapters: Set<number>;
   tenses: Set<Tense>;
   conjugations: Set<VerbGate>;
+  // Groups whose perfect system is open (course.ts PERFECT_UNLOCKS).
+  perfectGates: Set<VerbGate>;
   topics: Set<Topic>;
 }
 
