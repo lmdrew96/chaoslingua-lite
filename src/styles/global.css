@@ -307,6 +307,7 @@ h2 { font-size: 1.4rem; font-weight: 500; margin-bottom: 4px; }
 
 .chip-label { font-weight: 600; }
 .chip-desc { font-size: 0.75rem; font-weight: 400; opacity: 0.85; line-height: 1.35; }
+.chip-btn.active .chip-desc { opacity: 1; }
 
 .filter-warning {
   margin-top: 14px;
