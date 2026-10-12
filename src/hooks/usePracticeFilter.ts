@@ -2,6 +2,12 @@ import { useState } from 'react';
 import { ALL_TYPES } from '../drills';
 
 const STORAGE_KEY = 'chaoslingua-lite:practiceTypes';
+// Every type the saved selection has been offered. A type missing from it was added
+// after the selection was saved, so it joins the selection instead of staying off.
+const SEEN_KEY = 'chaoslingua-lite:seenPracticeTypes';
+// The types that existed before the seen list did (v0.27) — a selection saved back then
+// has had the chance to turn these off, but not the later ones.
+const LEGACY_TYPES = ['parse', 'decode', 'word-order'];
 const ASK_CONJ_KEY = 'chaoslingua-lite:askConjugation';
 const TYPE_KEY = 'chaoslingua-lite:typeAnswers';
 
@@ -23,21 +29,36 @@ function saveFlag(key: string, on: boolean) {
   }
 }
 
+const readList = (key: string): string[] | null => {
+  const raw = localStorage.getItem(key);
+  if (!raw) return null;
+  const parsed: unknown = JSON.parse(raw);
+  return Array.isArray(parsed) ? parsed.filter((t): t is string => typeof t === 'string') : null;
+};
+
+function persist(types: Set<string>) {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify([...types]));
+    localStorage.setItem(SEEN_KEY, JSON.stringify(ALL_TYPES));
+  } catch (err) {
+    console.warn('Could not save practice filter', err);
+  }
+}
+
 function loadStored(): string[] {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return [...ALL_TYPES];
-    const parsed: unknown = JSON.parse(raw);
-    const types = Array.isArray(parsed) ? parsed.filter((t): t is string => ALL_TYPES.includes(t)) : [];
-    return types.length ? types : [...ALL_TYPES];
+    const saved = readList(STORAGE_KEY);
+    if (!saved) return [...ALL_TYPES];
+    const seen = readList(SEEN_KEY) ?? LEGACY_TYPES;
+    const types = ALL_TYPES.filter((t) => saved.includes(t) || !seen.includes(t));
+    const result = types.length ? types : [...ALL_TYPES];
+    // Record the new types as offered, so turning one off later sticks.
+    if (ALL_TYPES.some((t) => !seen.includes(t))) persist(new Set(result));
+    return result;
   } catch (err) {
     console.warn('Ignoring unreadable practice filter', err);
     return [...ALL_TYPES];
   }
-}
-
-function persist(types: Set<string>) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify([...types]));
 }
 
 export function usePracticeFilter() {
