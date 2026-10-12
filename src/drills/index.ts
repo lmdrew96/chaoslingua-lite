@@ -26,6 +26,8 @@ export const ALL_TYPES: string[] = DRILL_TYPES.map((d) => d.type);
 
 export const labelFor = (type: string): string => DRILL_TYPES.find((d) => d.type === type)?.label ?? type;
 
+export const descriptionFor = (type: string): string => DRILL_TYPES.find((d) => d.type === type)?.description ?? '';
+
 // Serves any queued follow-up first (a minimal pair's partner), then tries the selected
 // types in random order until one can build a drill under the current gates. Falls
 // back to any type if the selection is empty.

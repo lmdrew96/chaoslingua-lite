@@ -63,4 +63,8 @@ const makePrincipalParts = (ctx: DrillContext): McDrill | null => {
   };
 };
 
-export const principalPartsDrill: DrillType = { type: 'principal-parts', label: 'Principal parts', make: makePrincipalParts };
+export const principalPartsDrill: DrillType = {
+  type: 'principal-parts', label: 'Principal parts',
+  description: 'Given a verb’s first two principal parts, pick the third: its perfect.',
+  make: makePrincipalParts
+};

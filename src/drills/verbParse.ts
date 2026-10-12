@@ -59,4 +59,8 @@ const makeVerbParse = (ctx: DrillContext): VerbParseDrill | null => {
   return null;
 };
 
-export const verbParseDrill: DrillType = { type: 'verb-parse', label: 'Parse verb', make: makeVerbParse };
+export const verbParseDrill: DrillType = {
+  type: 'verb-parse', label: 'Parse verb',
+  description: 'See a verb form; name its person, number, tense and what it means.',
+  make: makeVerbParse
+};

@@ -73,6 +73,8 @@ export interface DrillContext {
 export interface DrillType {
   type: string;
   label: string;
+  // One line on what the drill asks, shown under its chip in the practice filter.
+  description: string;
   // Null when the current gates leave nothing to draw from.
   make: (ctx: DrillContext) => Drill | null;
   // A follow-up drill that must come next (e.g. a minimal-pair partner), if any.

@@ -83,4 +83,8 @@ const makeParse = (ctx: DrillContext): ParseDrill | null => {
   return null;
 };
 
-export const parseDrill: DrillType = { type: 'parse', label: 'Parse', make: makeParse };
+export const parseDrill: DrillType = {
+  type: 'parse', label: 'Parse',
+  description: 'See a noun form; name its case, number, declension and what it means.',
+  make: makeParse
+};
