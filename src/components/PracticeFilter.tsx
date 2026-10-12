@@ -165,7 +165,6 @@ export function PracticeFilter({
                   type="button"
                   className={`chip-btn${ctx.declensions.has(u.id) ? ' active' : ''}`}
                   aria-pressed={ctx.declensions.has(u.id)}
-                  disabled={ctx.declensions.has(u.id) && ctx.declensions.size === 1}
                   onClick={() => onToggleDeclension(u.id)}
                 >
                   {ordinal(u.id)}
