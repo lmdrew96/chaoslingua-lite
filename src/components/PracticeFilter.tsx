@@ -184,7 +184,6 @@ export function PracticeFilter({
                   type="button"
                   className={`chip-btn${ctx.tenses.has(u.id) ? ' active' : ''}`}
                   aria-pressed={ctx.tenses.has(u.id)}
-                  disabled={ctx.tenses.has(u.id) && ctx.tenses.size === 1}
                   onClick={() => onToggleTense(u.id)}
                 >
                   {tenseNames[u.id]}
@@ -203,7 +202,6 @@ export function PracticeFilter({
                   type="button"
                   className={`chip-btn${ctx.conjugations.has(u.id) ? ' active' : ''}`}
                   aria-pressed={ctx.conjugations.has(u.id)}
-                  disabled={ctx.conjugations.has(u.id) && ctx.conjugations.size === 1}
                   onClick={() => onToggleConjugation(u.id)}
                 >
                   {gateLabel(u.id)}
@@ -262,7 +260,6 @@ export function PracticeFilter({
                   type="button"
                   className={`chip-btn${ctx.chapters.has(u.id) ? ' active' : ''}`}
                   aria-pressed={ctx.chapters.has(u.id)}
-                  disabled={ctx.chapters.has(u.id) && ctx.chapters.size === 1}
                   onClick={() => onToggleChapter(u.id)}
                 >
                   Ch. {u.id}
