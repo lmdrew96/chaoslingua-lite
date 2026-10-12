@@ -349,6 +349,10 @@ h2 { font-size: 1.4rem; font-weight: 500; margin-bottom: 4px; }
   margin: 0;
 }
 
+/* Toggles whose hint sits right under the one it explains. */
+.option-stack { display: grid; gap: 6px; }
+.option-stack .filter-hint + .chip-row { margin-top: 6px; }
+
 .learn-section {
   margin-top: 20px;
 }

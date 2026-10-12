@@ -116,27 +116,31 @@ export function PracticeFilter({
           {(types.has('parse') || types.has('verb-parse')) && (
             <div className="filter-group">
               <div className="filter-group-label">Parse options</div>
-              <div className="chip-row">
-                <button
-                  type="button"
-                  className={`chip-btn${speedMode ? ' active' : ''}`}
-                  aria-pressed={speedMode}
-                  onClick={onToggleSpeedMode}
-                >
-                  ⏱ Speed mode
-                </button>
-                {types.has('verb-parse') && (
+              <div className="option-stack">
+                <div className="chip-row">
                   <button
                     type="button"
-                    className={`chip-btn${askConjugation ? ' active' : ''}`}
-                    aria-pressed={askConjugation}
-                    onClick={onToggleAskConjugation}
+                    className={`chip-btn${speedMode ? ' active' : ''}`}
+                    aria-pressed={speedMode}
+                    onClick={onToggleSpeedMode}
                   >
-                    Ask the verb’s conjugation
+                    ⏱ Speed mode
                   </button>
+                </div>
+                <p className="filter-hint">Times each parse and tracks a streak of correct ones. Grading stays the same.</p>
+                {types.has('verb-parse') && (
+                  <div className="chip-row">
+                    <button
+                      type="button"
+                      className={`chip-btn${askConjugation ? ' active' : ''}`}
+                      aria-pressed={askConjugation}
+                      onClick={onToggleAskConjugation}
+                    >
+                      Ask the verb’s conjugation
+                    </button>
+                  </div>
                 )}
               </div>
-              <p className="filter-hint">Times each parse and tracks a streak of correct ones. Grading stays the same.</p>
             </div>
           )}
 
